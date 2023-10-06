@@ -1,6 +1,6 @@
 # [diplomka68.html](https://www.cs.cas.cz/~martin/diplomka68.html)
 
-## Modely
+## Models
 
 ### [Wheatley](models/Wheatley/README.md)
 
