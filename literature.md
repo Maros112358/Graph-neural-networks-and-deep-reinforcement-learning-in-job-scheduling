@@ -14,6 +14,10 @@
 
 - did not find the source code for the model
 
+### [Learning to Dispatch for Job Shop Scheduling via Deep Reinforcement Learning](https://browse.arxiv.org/pdf/2010.12367.pdf)
+
+- code for the model: https://github.com/zcaicaros/L2D
+
 ## Other literature
 
 ### [Job-Shop Scheduling](https://www.researchgate.net/publication/2244529_Job-Shop_Scheduling)
