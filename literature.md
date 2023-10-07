@@ -16,7 +16,9 @@
 
 ### [Learning to Dispatch for Job Shop Scheduling via Deep Reinforcement Learning](https://browse.arxiv.org/pdf/2010.12367.pdf)
 
-- code for the model: https://github.com/zcaicaros/L2D
+- official implementation: [L2D](models/L2D/)
+- formulates dispatching as Markov Decision Process with reward minimizing the makespan
+- the agent is designed as Graph Isomorphism Network (GIN), which is a recent GNN variant
 
 ## Other literature
 

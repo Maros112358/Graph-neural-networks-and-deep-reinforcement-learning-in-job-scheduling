@@ -5,7 +5,6 @@ import numpy as np
 import argparse
 from Params import configs
 import time
-
 device = configs.device
 
 parser = argparse.ArgumentParser(description='Arguments for test_learned_on_benchmark')
@@ -41,12 +40,13 @@ ppo = PPO(configs.lr, configs.gamma, configs.k_epochs, configs.eps_clip,
           num_mlp_layers_critic=configs.num_mlp_layers_critic,
           hidden_dim_critic=configs.hidden_dim_critic)
 path = './SavedNetwork/{}.pth'.format(str(N_JOBS_N) + '_' + str(N_MACHINES_N) + '_' + str(LOW) + '_' + str(HIGH))
-ppo.policy.load_state_dict(torch.load(path))
+ppo.policy.load_state_dict(torch.load(path, map_location=torch.device('cpu')))
 g_pool_step = g_pool_cal(graph_pool_type=configs.graph_pool_type,
                          batch_size=torch.Size([1, env.number_of_tasks, env.number_of_tasks]),
                          n_nodes=env.number_of_tasks,
                          device=device)
 
+print("file", './BenchDataNmpy/' + benchmark + str(N_JOBS_P) + 'x' + str(N_MACHINES_P) + '.npy')
 dataLoaded = np.load('./BenchDataNmpy/' + benchmark + str(N_JOBS_P) + 'x' + str(N_MACHINES_P) + '.npy')
 dataset = []
 for i in range(dataLoaded.shape[0]):
