@@ -8,6 +8,8 @@
 
 ### [L2D](models/L2D/README.md)
 
+- model runs for all available benchmarks -> [SHOWCASE](models/L2D/Showcase.ipynb)
+
 ## Benchmarks
 
 ### [Adams, Balas and Zawacks](benchmarks/abz_instances)
