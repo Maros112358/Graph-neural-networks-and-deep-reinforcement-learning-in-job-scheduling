@@ -10,3 +10,4 @@
 
 ## Benchmarks
 
+### [Taillard’s instances](benchmarks/Taillard/README.md)
