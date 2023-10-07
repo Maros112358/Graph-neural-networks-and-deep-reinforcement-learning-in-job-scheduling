@@ -1,6 +1,6 @@
 # [diplomka68.html](https://www.cs.cas.cz/~martin/diplomka68.html)
 
-## [Models](models/README.md)
+## Models
 
 ### [Wheatley](models/Wheatley/README.md)
 
@@ -8,7 +8,7 @@
 
 ### [L2D](models/L2D/README.md)
 
-## [Benchmarks](benchmarks)
+## Benchmarks
 
 ### [Adams, Balas and Zawacks](benchmarks/abz_instances)
 
