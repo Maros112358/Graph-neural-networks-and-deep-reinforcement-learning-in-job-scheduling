@@ -6,3 +6,4 @@
 
 - same paper [Wheatley](/models/Wheatley/README.md) is based on
 
+## [SHOWCASE](Showcase.ipynb)
