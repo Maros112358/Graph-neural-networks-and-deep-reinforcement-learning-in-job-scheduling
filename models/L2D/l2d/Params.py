@@ -40,4 +40,4 @@ parser.add_argument('--vloss_coef', type=float, default=1, help='critic loss coe
 parser.add_argument('--ploss_coef', type=float, default=2, help='policy loss coefficient')
 parser.add_argument('--entloss_coef', type=float, default=0.01, help='entropy loss coefficient')
 
-configs = parser.parse_args()
+configs = parser.parse_args("")
