@@ -25,3 +25,7 @@
 ### [Combining Reinforcement Learning Algorithms with Graph Neural Networks to Solve Dynamic Job Shop Scheduling Problems](https://www.researchgate.net/publication/370959257_Combining_Reinforcement_Learning_Algorithms_with_Graph_Neural_Networks_to_Solve_Dynamic_Job_Shop_Scheduling_Problems)
 
 - no code found
+
+### [A Reinforcement Learning Environment For Job-Shop Scheduling](https://browse.arxiv.org/pdf/2104.03760.pdf)
+
+- #TODO: Read
