@@ -6,5 +6,7 @@
 
 ### [fjsp-drl](models/fjsp-drl/README.md)
 
+### [L2D](models/L2D/README.md)
+
 ## Benchmarks
 
