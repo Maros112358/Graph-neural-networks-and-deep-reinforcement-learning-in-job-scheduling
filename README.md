@@ -2,11 +2,11 @@
 
 ## Models
 
-### [Wheatley](models/Wheatley/README.md)
+### [Wheatley](models/Wheatley/)
 
-### [fjsp-drl](models/fjsp-drl/README.md)
+### [fjsp-drl](models/fjsp-drl/)
 
-### [L2D](models/L2D/README.md)
+### [L2D](models/L2D/)
 
 - model runs for all available benchmarks -> [SHOWCASE](models/L2D/Showcase.ipynb)
 
