@@ -46,6 +46,6 @@
     "num_sample": 100,
     "num_average": 10,
     "public_ins": true,
-    "data_path": "1005"
+    "data_path": "Public"
   }
 }
