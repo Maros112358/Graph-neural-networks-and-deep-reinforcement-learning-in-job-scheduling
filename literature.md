@@ -20,6 +20,14 @@
 - formulates dispatching as Markov Decision Process with reward minimizing the makespan
 - the agent is designed as Graph Isomorphism Network (GIN), which is a recent GNN variant
 
+### [Flexible Job Shop Scheduling via Graph Neural Network and Deep Reinforcement Learning](https://ieeexplore.ieee.org/document/9826438)
+
+- official implementation: [fjsp-drl](models/fjsp-drl/)
+- works with Flexible Job-shop Scheduling Problem (FJSP) which is a more general case than JSSP
+- formulates dispatching as Markov Decision Process with reward minimizing the makespan
+- the formulation of FJSP ased on a novel heterogeneous graph representation of scheduling states
+- the agent uses a heterogeneous-graph-neural-network (HGNN)
+
 ## Other literature
 
 ### [Job-Shop Scheduling](https://www.researchgate.net/publication/2244529_Job-Shop_Scheduling)

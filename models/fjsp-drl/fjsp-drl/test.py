@@ -23,7 +23,7 @@ def setup_seed(seed):
 def main():
     # PyTorch initialization
     # gpu_tracker = MemTracker()  # Used to monitor memory (of gpu)
-    pynvml.nvmlInit()
+    # pynvml.nvmlInit()
     handle = pynvml.nvmlDeviceGetHandleByIndex(0)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     if device.type=='cuda':

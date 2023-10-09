@@ -9,16 +9,8 @@ import pandas as pd
 import torch
 import numpy as np
 
-import pynvml
 import PPO_model
 from env.load_data import nums_detec
-
-def setup_seed(seed):
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
-    np.random.seed(seed)
-    random.seed(seed)
-    torch.backends.cudnn.deterministic = True
 
 def main():
     # PyTorch initialization
@@ -176,6 +168,7 @@ def schedule(env, model, memories, flag_sample=False):
     # Get state and completion signal
     state = env.state
     dones = env.done_batch
+    print("dones", dones)
     done = False  # Unfinished at the beginning
     last_time = time.time()
     i = 0
@@ -186,29 +179,24 @@ def schedule(env, model, memories, flag_sample=False):
         state, rewards, dones = env.step(actions)  # environment transit
         done = dones.all()
     spend_time = time.time() - last_time  # The time taken to solve this environment (instance)
-    # print("spend_time: ", spend_time)
 
-    # Verify the solution
     gantt_result = env.validate_gantt()[0]
     if not gantt_result:
-        print("Scheduling Error！！！！！！")
+        raise Exception("Scheduling error")
 
     print("HEY",  copy.deepcopy(env.makespan_batch))
     return copy.deepcopy(env.makespan_batch), spend_time
 
 
-if __name__ == '__main__':
 
-    # main()
-    # import sys
-    # sys.exit(1)
+
+if __name__ == '__main__':
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     if device.type=='cuda':
         torch.cuda.set_device(device)
         torch.set_default_tensor_type('torch.cuda.FloatTensor')
     else:
         torch.set_default_tensor_type('torch.FloatTensor')
-    # Load config and init objects
     with open("./config.json", 'r') as load_f:
         load_dict = json.load(load_f)
 
@@ -216,15 +204,12 @@ if __name__ == '__main__':
     model_paras["actor_in_dim"] = model_paras["out_size_ma"] * 2 + model_paras["out_size_ope"] * 2
     model_paras["critic_in_dim"] = model_paras["out_size_ma"] + model_paras["out_size_ope"]
     model_paras['device'] = device
-    
     env_paras = load_dict['env_paras']
     env_paras['device'] = device
     env_paras['batch_size'] = 1
 
 
-
     memories = PPO_model.Memory()
-
     model_CKPT = torch.load('./model/save_10_5.pt')
     model = PPO_model.PPO(model_paras, load_dict['train_paras'])
     model.policy.load_state_dict(model_CKPT)
