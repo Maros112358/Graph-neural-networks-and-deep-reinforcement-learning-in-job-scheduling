@@ -6,6 +6,8 @@
 
 ### [fjsp-drl](models/fjsp-drl/)
 
+- model runs for all available benchmarks -> [SHOWCASE](models/fjsp-drl/fjsp-drl/Showcase%20fjsp-drl.ipynb)
+
 ### [L2D](models/L2D/)
 
 - model runs for all available benchmarks -> [SHOWCASE](models/L2D/Showcase.ipynb)
