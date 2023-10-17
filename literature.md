@@ -39,3 +39,7 @@
 ### [A Reinforcement Learning Environment For Job-Shop Scheduling](https://browse.arxiv.org/pdf/2104.03760.pdf)
 
 - #TODO: Read
+
+## Github repo
+
+## [Master's Thesis - Graph Neural Networks for Compact Representation for Job Shop Scheduling Problems: A Comparative Benchmark](https://github.com/MattJud/gnn_jssp)
