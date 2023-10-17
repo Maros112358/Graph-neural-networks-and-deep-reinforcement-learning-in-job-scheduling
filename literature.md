@@ -28,6 +28,10 @@
 - the formulation of FJSP ased on a novel heterogeneous graph representation of scheduling states
 - the agent uses a heterogeneous-graph-neural-network (HGNN)
 
+### [Deep Reinforcement Learning Based on Graph Neural Networks for Job-shop Scheduling](https://ieeexplore.ieee.org/abstract/document/10226873)
+
+- github: https://github.com/Jerry-Github-Cloud/IEEE-ICCE-RL-JSP
+
 ## Other literature
 
 ### [Job-Shop Scheduling](https://www.researchgate.net/publication/2244529_Job-Shop_Scheduling)
