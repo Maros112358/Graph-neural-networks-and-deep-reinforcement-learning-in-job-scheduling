@@ -12,6 +12,8 @@
 
 - model runs for all available benchmarks -> [SHOWCASE](models/L2D/Showcase.ipynb)
 
+### [IEEE-ICCE-RL-JSP](models/IEEE-ICCE-RL-JSP/)
+
 ## Benchmarks
 
 ### [Adams, Balas and Zawacks](benchmarks/abz_instances)
