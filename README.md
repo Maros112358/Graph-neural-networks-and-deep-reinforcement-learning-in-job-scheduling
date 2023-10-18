@@ -14,6 +14,8 @@
 
 ### [IEEE-ICCE-RL-JSP](models/IEEE-ICCE-RL-JSP/)
 
+### [FJSPDRL](models/FJSPDRL/)
+
 ## Benchmarks
 
 ### [Adams, Balas and Zawacks](benchmarks/abz_instances)
