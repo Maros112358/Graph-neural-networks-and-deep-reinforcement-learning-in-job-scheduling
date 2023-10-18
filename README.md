@@ -14,6 +14,8 @@
 
 ### [IEEE-ICCE-RL-JSP](models/IEEE-ICCE-RL-JSP/)
 
+- models with pre-trained weights do not run, so I have to train my own model using provided script
+
 ### [FJSPDRL](models/FJSPDRL/)
 
 ## Benchmarks
