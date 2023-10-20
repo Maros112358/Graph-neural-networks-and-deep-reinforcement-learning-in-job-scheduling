@@ -1,4 +1,3 @@
-*.csv
 *.xls
 *.xlsx
 *.ppt
@@ -13,8 +12,7 @@ log/
 model/
 result/
 timeline/
-weight/
-
+*agent/SoftDQN/weight/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

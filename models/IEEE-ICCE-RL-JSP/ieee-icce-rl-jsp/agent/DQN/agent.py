@@ -33,7 +33,6 @@ class DQN_Agent:
 
     def add_transition(self, transition):
         state, action, reward, next_state, done = transition
-        # print(f"state: {state}")
         self.dqn.append(state, action, reward, next_state, done)
         if self.total_steps >= self.args.warmup:
             self.dqn.update(self.total_steps)

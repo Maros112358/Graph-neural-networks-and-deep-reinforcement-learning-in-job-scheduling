@@ -148,7 +148,6 @@ class DQN:
             
             with torch.no_grad():
                 if self.args.double:
-                    # print("Double DQN")
                     _, a_next = torch.max(self._behavior_net(next_state), dim=1, keepdim=False)
                     q_next = self._target_net(next_state)[:,a_next][0]
                 else:

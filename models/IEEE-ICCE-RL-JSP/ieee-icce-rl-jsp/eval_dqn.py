@@ -1,8 +1,10 @@
 import os
+import time
 import torch
 import random
 import argparse
 import numpy as np
+import pandas as pd
 from datetime import datetime
 from multiprocessing import Process
 from collections import defaultdict, Counter
@@ -17,6 +19,7 @@ np.random.seed(seed)
 random.seed(seed)
 torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
+
 
 
 def eval_dqn(weight_path, instance_path):
@@ -49,7 +52,8 @@ def eval_dqn(weight_path, instance_path):
         f"{env.rules_count}\t"
         f"{round((toc - tic).total_seconds(), 2)}\t")
 
-def eval_ta(weight_path):
+def eval_ta(weight_path, model_name):
+    print("Evaluating model with name", model_name)
     total_gap = 0
     total_case_num = 0
     total_rules_count = Counter()
@@ -65,7 +69,7 @@ def eval_ta(weight_path):
         '50x20',
         '100x20',
     ]
-    # size_list = ['15x15', '20x15',]
+    rows = []
     tic = datetime.now()
     for size in size_list:
         size_gap = 0
@@ -74,19 +78,33 @@ def eval_ta(weight_path):
         for line in lines:
             case_num += 1
             line = line.rstrip('\n').split(',')
-            instance, op_ms = line[0], int(line[3])
+            instance, J, M, op_ms = line[0],int(line[1]), int(line[2]), int(line[3])
             env = JSP_Env(args)
             agent = DQN_Agent(args, out_dim=len(env.rules))
             agent.load(weight_path)
             avai_ops = env.load_instance("./JSPLIB/instances/" + instance)
             state = env.get_graph_data(args.device)
+            start_time = time.time()
             while True:
                 action = agent.select_action(
                     state, random=False, test_only=True)
                 state, reward, done, info = env.step(action)
                 if done:
+                    end_time = time.time()
                     makespan = env.get_makespan()
-                    size_gap += (makespan - op_ms) / op_ms
+                    instance_gap = (makespan - op_ms) / op_ms
+                    size_gap += instance_gap
+                    print(f"{model_name, instance, J, M, makespan, instance_gap, start_time - end_time=}")
+                    row = {
+                        'Model': model_name,
+                        'Instance': instance,
+                        'J': J,
+                        'M': M,
+                        'Makespan': makespan,
+                        'Gap': instance_gap,
+                        'Time': start_time - end_time
+                    }
+                    rows.append(row)
                     break
             total_rules_count += Counter(env.rules_count)
         total_gap += size_gap
@@ -96,11 +114,11 @@ def eval_ta(weight_path):
     print(f"total gap: {round(total_gap / total_case_num, 3)}")
     print(f"total rules count: {total_rules_count}")
     print(f"{round((toc - tic).total_seconds(), 2)}")
-
+    return rows
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('-d', '--device', default='cuda')
+    parser.add_argument('-d', '--device', default='cpu')
     # arguments for DQN
     parser.add_argument('--warmup', default=10000, type=int)
     parser.add_argument('--episode', default=100000, type=int)
@@ -121,7 +139,18 @@ if __name__ == "__main__":
         help='Maximum Process Time of an Operation')
     args = parser.parse_args()
 
-    weight_path = "agent/SoftDQN/weight/20230215_225054/DQN_ep4020"
-    print(weight_path)
-    eval_ta(weight_path)
+    # pandas
+
+    rows = []
+    for x in os.listdir("agent/DQN/weight"):
+        if x.startswith("DQN_ep"):
+            rows += eval_ta(os.path.join("agent/DQN/weight", x), x)
+
+    
+
+    DF = pd.DataFrame(rows)
+    DF.to_csv('eval_dqn.csv', index=False)
+    # weight_path = "agent/DQN/weight/DQN_ep1400"
+    # print(weight_path)
+    # eval_ta(weight_path)
 
