@@ -22,7 +22,8 @@ torch.backends.cudnn.deterministic = True
 
 
 
-def eval_dqn(weight_path, instance_path):
+def eval_dqn(weight_path, instance_path, args):
+    start = time.time()
     env = JSP_Env(args)
     agent = DQN_Agent(args, out_dim=len(env.rules))
     agent.load(weight_path)
@@ -41,16 +42,17 @@ def eval_dqn(weight_path, instance_path):
     tardiness = env.get_tardiness()
     setup_count = env.jsp_instance.setup_count
     toc = datetime.now()
-    print(
-        f"{instance_path}\t"
-        f"{job_num}\t"
-        f"{machine_num}\t"
-        f"{weight_path}\t"
-        f"{makespan}\t"
-        f"{tardiness}\t"
-        f"{setup_count}\t"
-        f"{env.rules_count}\t"
-        f"{round((toc - tic).total_seconds(), 2)}\t")
+    # print(
+    #     f"{instance_path}\t"
+    #     f"{job_num}\t"
+    #     f"{machine_num}\t"
+    #     f"{weight_path}\t"
+    #     f"{makespan}\t"
+    #     f"{tardiness}\t"
+    #     f"{setup_count}\t"
+    #     f"{env.rules_count}\t"
+    #     f"{round((toc - tic).total_seconds(), 2)}\t")
+    return makespan, time.time() - start
 
 def eval_ta(weight_path, model_name):
     print("Evaluating model with name", model_name)
