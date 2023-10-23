@@ -18,6 +18,8 @@
 
 ### [FJSPDRL](models/FJSPDRL/)
 
+- progress halted due to very bad code in the original repo
+
 ## Benchmarks
 
 ### [Adams, Balas and Zawacks](benchmarks/abz_instances)
