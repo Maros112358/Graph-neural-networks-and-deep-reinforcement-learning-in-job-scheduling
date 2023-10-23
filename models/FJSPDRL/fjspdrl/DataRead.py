@@ -83,7 +83,11 @@ def getdata(filename='./FJSSPinstances/0_BehnkeGeiger/Behnke1.fjs'):
         'operations_times':operations_times,
         'largeM':largeM,
     }
+
     return Data
+
+if __name__ == "__main__":
+    print(getdata())
 #data=getdata('./FJSSPinstances/1_Brandimarte/BrandimarteMk6.fjs')
 #print(data)
     # print(largeM)

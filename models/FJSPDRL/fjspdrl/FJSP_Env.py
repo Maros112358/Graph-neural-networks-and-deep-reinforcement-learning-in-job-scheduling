@@ -149,11 +149,12 @@ class FJSP(gym.Env, EzPickle):
 
     @override
     def reset(self, data):
-        #data (batch_size,n_job,n_mch,n_mch)
+        # (batch_size,n_job,n_mch,n_mch)
 
         self.batch_sie = data.shape[0]
+        print(f"{self.batch_sie=}")
         for i in range(self.batch_sie):
-
+            print(f"{i=}")
             first_col = np.arange(start=0, stop=self.number_of_tasks, step=1).reshape(self.number_of_jobs, -1)[:, 0]
             self.first_col.append(first_col)
         # the task id for last column
@@ -163,12 +164,12 @@ class FJSP(gym.Env, EzPickle):
         self.last_col = np.array(self.last_col)
 
         self.step_count = 0
-        self.m = -1 * np.ones((self.batch_sie,self.number_of_jobs,self.number_of_machines), dtype=np.int)
+        self.m = -1 * np.ones((self.batch_sie,self.number_of_jobs,self.number_of_machines), dtype=int)
 
         self.dur = data.astype(np.single)#single单精度浮点数
         self.dur_cp = deepcopy(self.dur)
         # record action history
-        self.partial_sol_sequeence = -1 * np.ones((self.batch_sie,self.number_of_jobs*self.number_of_machines),dtype=np.int)
+        self.partial_sol_sequeence = -1 * np.ones((self.batch_sie,self.number_of_jobs*self.number_of_machines),dtype=int)
 
         self.flags = []
         self.posRewards = np.zeros(self.batch_sie)
@@ -311,8 +312,8 @@ class DFJSP_GANTT_CHART():
         plt.figure(figsize=((self.total_n_job * 1.5, self.number_of_machines)))
         y_value = list(range(1, 21))
 
-        plt.xlabel('Makespan', size=20, fontdict={'family': 'SimSun'})
-        plt.ylabel('机器号', size=20, fontdict={'family': 'SimSun'})
+        plt.xlabel('Makespan', size=20)
+        plt.ylabel('机器号', size=20)
         plt.yticks(y_value, fontproperties='Times New Roman', size=20)
         plt.xticks(fontproperties='Times New Roman', size=20)
 

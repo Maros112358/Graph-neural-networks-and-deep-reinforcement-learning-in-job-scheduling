@@ -17,12 +17,14 @@ def validate(vali_set,batch_size, policy_jo,policy_mc):
     policy_job.eval()
     policy_mch.eval()
     def eval_model_bat(bat,i):
+        # print(f"{bat.shape=}")
         C_max = []
         with torch.no_grad():
             data = bat.numpy()
+            print(f"{configs.n_j, configs.n_m, data[0].shape=}")
 
             env = FJSP(n_j=configs.n_j, n_m=configs.n_m)
-            gantt_chart = DFJSP_GANTT_CHART( configs.n_j, configs.n_m)
+            # gantt_chart = DFJSP_GANTT_CHART( configs.n_j, configs.n_m)
             device = torch.device(configs.device)
             g_pool_step = g_pool_cal(graph_pool_type=configs.graph_pool_type,
                                      batch_size=torch.Size(
@@ -67,12 +69,12 @@ def validate(vali_set,batch_size, policy_jo,policy_mc):
 
                 _, mch_a = pi_mch.squeeze(-1).max(1)
 
-                adj, fea, reward, done, candidate, mask,job,_,mch_time,job_time = env.step(action.cpu().numpy(), mch_a,gantt_chart)
+                adj, fea, reward, done, candidate, mask,job,_,mch_time,job_time = env.step(action.cpu().numpy(), mch_a)
                 #rewards += reward
 
                 j += 1
                 if env.done():
-                    plt.savefig("./3020_%s.svg"%i, format='svg',dpi=300, bbox_inches='tight')
+                    # plt.savefig("./3020_%s.svg"%i, format='svg',dpi=300, bbox_inches='tight')
                     #plt.show()
                     break
             cost = env.mchsEndTimes.max(-1).max(-1)
@@ -148,8 +150,8 @@ if __name__ == '__main__':
     job_path = os.path.join(filepath,job_path)
     mch_path = os.path.join(filepath, mch_path)
 
-    ppo.policy_job.load_state_dict(torch.load(job_path))
-    ppo.policy_mch.load_state_dict(torch.load(mch_path))
+    ppo.policy_job.load_state_dict(torch.load(job_path, map_location=torch.device('cpu')))
+    ppo.policy_mch.load_state_dict(torch.load(mch_path, map_location=torch.device('cpu')))
     num_val = 10
     batch_size = 1
     SEEDs = [200]
@@ -165,11 +167,13 @@ if __name__ == '__main__':
             validat_dataset = np.load(file="FJSP_J%sM%s_unew_test_data.npy" % (configs.n_j, configs.n_m))
             print(validat_dataset.shape[0])
         else:
+            print("HERE")
             validat_dataset = FJSPDataset(configs.n_j, configs.n_m, configs.low, configs.high, num_val, SEED)
+        print(f"{validat_dataset.data.shape=}")
         valid_loader = DataLoader(validat_dataset, batch_size=batch_size)
         vali_result = validate(valid_loader,batch_size, ppo.policy_job, ppo.policy_mch)
         #mean_makespan.append(vali_result)
-        print(vali_result,np.array(vali_result).mean())
+        print('testik', vali_result,np.array(vali_result).mean())
 
     # print(min(result))
 
