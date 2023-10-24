@@ -28,7 +28,7 @@
 
 ### [DRL-for-Job-Shop-Scheduling](https://github.com/hexiao5886/DRL-for-Job-Shop-Scheduling/tree/master)
 
-## [Masters Thesis - Devloping the scheduler for the standard JSSP using GNN based RL.](https://github.com/sachin301195/Thesis/tree/main)
+### [Masters Thesis - Devloping the scheduler for the standard JSSP using GNN based RL.](https://github.com/sachin301195/Thesis/tree/main)
 
 ## [RL-Scheduling](https://github.com/hliangzhao/RL-Scheduling)
 
