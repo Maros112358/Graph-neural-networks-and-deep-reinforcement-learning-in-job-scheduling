@@ -4,6 +4,8 @@
 
 ### [Wheatley](models/Wheatley/)
 
+- trained my own 30x20 model to compare with L2D, but can't evalute the model right now, asked for help https://github.com/jolibrain/wheatley/issues/75
+
 ### [fjsp-drl](models/fjsp-drl/)
 
 - model runs for all available benchmarks -> [SHOWCASE](models/fjsp-drl/fjsp-drl/Showcase%20fjsp-drl.ipynb)
