@@ -18,7 +18,9 @@
 
 ### [FJSPDRL](models/FJSPDRL/)
 
-- progress halted due to very bad code in the original repo
+- this is outdated repository for the article, the new one is [End-to-end-DRL-for-FJSP](models/End-to-end-DRL-for-FJSP/)
+
+### [End-to-end-DRL-for-FJSP](models/End-to-end-DRL-for-FJSP/)
 
 ## Benchmarks
 
