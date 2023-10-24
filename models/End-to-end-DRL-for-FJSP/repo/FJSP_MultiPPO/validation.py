@@ -148,8 +148,8 @@ if __name__ == '__main__':
     job_path = os.path.join(filepath,job_path)
     mch_path = os.path.join(filepath, mch_path)
 
-    ppo.policy_job.load_state_dict(torch.load(job_path))
-    ppo.policy_mch.load_state_dict(torch.load(mch_path))
+    ppo.policy_job.load_state_dict(torch.load(job_path, map_location=torch.device('cpu')))
+    ppo.policy_mch.load_state_dict(torch.load(mch_path, map_location=torch.device('cpu')))
     num_val = 10
     batch_size = 1
     SEEDs = [200]

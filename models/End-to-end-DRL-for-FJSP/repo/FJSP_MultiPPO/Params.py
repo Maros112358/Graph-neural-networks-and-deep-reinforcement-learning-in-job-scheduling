@@ -2,7 +2,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Arguments for ppo_jssp')
 # args for device
-parser.add_argument('--device', type=str, default="cuda", help='Number of jobs of instances')
+parser.add_argument('--device', type=str, default="cpu", help='Number of jobs of instances')
 # args for env
 parser.add_argument('--n_j', type=int, default=30, help='Number of jobs of instance')
 parser.add_argument('--n_m', type=int, default=20, help='Number of machines instance')
@@ -31,7 +31,7 @@ parser.add_argument('--hidden_dim_critic', type=int, default=32, help='hidden di
 # args for PPO
 
 parser.add_argument('--ppo_step', type=int, default=3, help='No. of envs for training')
-parser.add_argument('--batch_size', type=int, default=128, help='No. of envs for training')
+parser.add_argument('--batch_size', type=int, default=16, help='No. of envs for training')
 parser.add_argument('--num_ins', type=int, default=12800, help='No. of envs for training')
 
 parser.add_argument('--max_updates', type=int, default=10000, help='No. of episodes of each env for training')

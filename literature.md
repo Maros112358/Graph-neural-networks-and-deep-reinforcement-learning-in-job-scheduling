@@ -48,4 +48,6 @@
 
 ## [Master's Thesis - Graph Neural Networks for Compact Representation for Job Shop Scheduling Problems: A Comparative Benchmark](https://github.com/MattJud/gnn_jssp)
 
+## [Masters Thesis - Devloping the scheduler for the standard JSSP using GNN based RL.](https://github.com/sachin301195/Thesis/tree/main)
+
 ## [Implementations of combinatorial optimization ML papers](https://github.com/valeman/awesome-ml4co/blob/841a4f24c893bf45e83147414548763b22e54685/data/papers.csv#L166)

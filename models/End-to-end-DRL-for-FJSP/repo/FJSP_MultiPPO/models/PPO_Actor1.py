@@ -201,7 +201,7 @@ class Job_Actor(nn.Module):
 
             log_a = dist.log_prob(a_index.to(self.device))
             entropy = dist.entropy()
-            action1 = old_action.type(torch.long).cuda()
+            action1 = old_action.type(torch.long)
             batch_x = dur.reshape(dummy.size(0), self.n_j*self.n_m, -1).to(self.device)
             mask_mch = mask_mch.reshape(dummy.size(0), -1, self.n_m)
             mask_mch_action = torch.gather(mask_mch, 1,

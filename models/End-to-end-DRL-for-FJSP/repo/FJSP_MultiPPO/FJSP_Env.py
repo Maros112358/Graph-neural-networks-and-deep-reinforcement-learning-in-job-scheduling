@@ -163,12 +163,12 @@ class FJSP(gym.Env, EzPickle):
         self.last_col = np.array(self.last_col)
 
         self.step_count = 0
-        self.m = -1 * np.ones((self.batch_sie,self.number_of_jobs,self.number_of_machines), dtype=np.int)
+        self.m = -1 * np.ones((self.batch_sie,self.number_of_jobs,self.number_of_machines), dtype=int)
 
         self.dur = data.astype(np.single)#single单精度浮点数
         self.dur_cp = deepcopy(self.dur)
         # record action history
-        self.partial_sol_sequeence = -1 * np.ones((self.batch_sie,self.number_of_jobs*self.number_of_machines),dtype=np.int)
+        self.partial_sol_sequeence = -1 * np.ones((self.batch_sie,self.number_of_jobs*self.number_of_machines),dtype=int)
 
         self.flags = []
         self.posRewards = np.zeros(self.batch_sie)
@@ -184,6 +184,7 @@ class FJSP(gym.Env, EzPickle):
             self_as_nei = np.eye(self.number_of_tasks, dtype=np.single)
             adj = self_as_nei + conj_nei_up_stream
             self.adj.append(adj)
+        self.adj = np.array(self.adj)
         self.adj = torch.tensor(self.adj)
 
         '''for i in range(self.batch_sie):

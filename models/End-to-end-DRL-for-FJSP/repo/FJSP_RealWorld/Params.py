@@ -2,7 +2,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Arguments for ppo_jssp')
 # args for device
-parser.add_argument('--device', type=str, default="cuda", help='Number of jobs of instances')
+parser.add_argument('--device', type=str, default="cpu", help='Number of jobs of instances')
 # args for env
 parser.add_argument('--n_j', type=int, default=15, help='Number of jobs of instance')
 parser.add_argument('--n_m', type=int, default=15, help='Number of machines instance')

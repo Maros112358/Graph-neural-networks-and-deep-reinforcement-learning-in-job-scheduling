@@ -12,6 +12,68 @@ import torch
 import os
 from Params import configs
 
+def parse_instance_taillard(filename):
+    '''Parses instance written in Taillard specification: http://jobshop.jjvh.nl/explanation.php
+    
+      Args:
+        filename - file containing the instance in Taillard specification
+
+      Returns:
+        number of jobs,
+        number of machines,
+        the processor times for each operation,
+        the order for visiting the machines
+    '''
+
+    with open(filename, 'r') as f:
+        # parse number of jobs J and machines M
+        J, M = map(int, f.readline().split())
+
+        # Initialize two empty numpy arrays with dimensions J x M
+        processor_times = np.empty((J, M), dtype=int)
+        orders_of_machines = np.empty((J, M), dtype=int)
+    
+        # Read the next J lines containing processor times
+        for i in range(J):
+            processor_times[i] = list(map(int, f.readline().split()))
+    
+        # Read the next J lines containing orders of machines
+        for i in range(J):
+            orders_of_machines[i] = list(map(int, f.readline().split()))
+
+        return J, M, processor_times, orders_of_machines
+
+def jssp_taillard_to_fjsp(filename: str) -> str:
+    '''Transforms JSSP instance in Taillard's specification to FJSP instance
+       and stores it in a temporary file
+    
+      Args:
+        filename - name of the file with JSSP instance in Taillard's specification
+        
+      Returns:
+        string - filename of the equivalent FJSP instance 
+    '''
+    # parse JSSP Taillard instance
+    J, M, processor_times, orders_of_machines = parse_instance_taillard(filename)
+    
+    # convert JSSP to FJSP
+    with open("/tmp/fjsp_" + filename.split("/")[-1], 'w') as f:
+        # write number of jobs, number of machines, and jobs/machines (which is always 1 for JSSP)
+        f.write(str(J) + "   " + str(M) + "   1\n")
+        
+        # each line is a job
+        for i in range(J):
+            # each line starts with the number of operations in a job
+            number_of_operations = len(processor_times[i])
+            f.write(str(number_of_operations) + "  ")
+            
+            # print the operation as a tuple (number of available machines, current machine, processing time)
+            for j in range(number_of_operations):
+                f.write(" 1   " + str(orders_of_machines[i][j]) + "   " + str(processor_times[i][j]) + "  ")
+                
+            f.write('\n')
+            
+    return "/tmp/fjsp_" + filename.split("/")[-1]
 
 def validate(vali_set,batch_size, policy_job,policy_mch,num_operation,number_of_task,Data):
     policy_job = copy.deepcopy(policy_job)
@@ -80,7 +142,7 @@ def validate(vali_set,batch_size, policy_job,policy_mch,num_operation,number_of_
                 #rewards += reward
 
                 j += 1
-                print(j)
+                # print(j)
                 if env.done():
                     break
 
@@ -135,7 +197,7 @@ if __name__ == '__main__':
 
         #filename11 = './FJSSPinstances/0_BehnkeGeiger/Behnke6.fjs'
 
-        Data = getdata(data_file)
+        Data = getdata(datafile)
 
         n_j = Data['n']
         n_m = Data['m']
@@ -159,8 +221,8 @@ if __name__ == '__main__':
         job_path = os.path.join(filepath,job_path)
         mch_path = os.path.join(filepath, mch_path)
 
-        ppo.policy_job.load_state_dict(torch.load(job_path))
-        ppo.policy_mch.load_state_dict(torch.load(mch_path))
+        ppo.policy_job.load_state_dict(torch.load(job_path, map_location=torch.device('cpu')))
+        ppo.policy_mch.load_state_dict(torch.load(mch_path, map_location=torch.device('cpu')))
 
         num_val = 2
         batch_size = 2
@@ -222,17 +284,23 @@ if __name__ == '__main__':
     print('min', min)'''
 
     #---------------------------------------------------------------------------------------------
+    # print(f"{filepath[0]=}")
+    a = test(filepaths[0], jssp_taillard_to_fjsp("ta01.txt"))
+    print(f"{a=}")
+    # results = []
+    # for data_file in filename:
+    #     result = []
 
-    results = []
-    for data_file in filename:
-        result = []
-
-        for filepath in filepaths:
-            a = test(filepath,data_file)
-            result.append(a)
-        min = np.array(result).min()
-        print('min',min)
-        results.append(min)
-    print('mins',results)
+    #     for filepath in reversed(filepaths):
+    #         # try:
+    #             print(f"{filepath, data_file=}")
+    #             a = test(filepath,data_file)
+    #             result.append(a)
+    #         # except Exception as e:
+    #         #     print(f"{e=}")
+    #     min = np.array(result).min()
+    #     print('min',min)
+    #     results.append(min)
+    # print('mins',results)
 
 

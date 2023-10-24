@@ -196,13 +196,13 @@ class FJSP(gym.Env, EzPickle):
         #self.num_operation = np.full(shape=(self.number_of_jobs), fill_value=self.number_of_machines)
         self.dispatched_num_opera = np.zeros(shape=(self.batch_sie,self.number_of_jobs)).astype(int)
 
-        self.mchMat = -1 * np.ones((self.batch_sie,self.number_of_jobs,self.max_operation), dtype=np.int)
+        self.mchMat = -1 * np.ones((self.batch_sie,self.number_of_jobs,self.max_operation), dtype=int)
 
         self.dur = data.astype(np.single)#single单精度浮点数
         self.dur_cp = deepcopy(self.dur)
         # record action history
 
-        self.partial_sol_sequeence = -1 * np.ones((self.batch_sie,self.number_of_tasks),dtype=np.int)
+        self.partial_sol_sequeence = -1 * np.ones((self.batch_sie,self.number_of_tasks),dtype=int)
 
         self.flags = []
         self.posRewards = np.zeros(self.batch_sie)
