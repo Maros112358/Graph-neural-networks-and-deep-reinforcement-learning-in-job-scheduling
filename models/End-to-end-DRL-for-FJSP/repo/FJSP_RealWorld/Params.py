@@ -4,8 +4,8 @@ parser = argparse.ArgumentParser(description='Arguments for ppo_jssp')
 # args for device
 parser.add_argument('--device', type=str, default="cpu", help='Number of jobs of instances')
 # args for env
-parser.add_argument('--n_j', type=int, default=15, help='Number of jobs of instance')
-parser.add_argument('--n_m', type=int, default=15, help='Number of machines instance')
+parser.add_argument('--n_j', type=int, default=10, help='Number of jobs of instance')
+parser.add_argument('--n_m', type=int, default=10, help='Number of machines instance')
 parser.add_argument('--rewardscale', type=float, default=0., help='Reward scale for positive rewards')
 parser.add_argument('--init_quality_flag', type=bool, default=False, help='Flag of whether init state quality is 0, True for 0')
 parser.add_argument('--low', type=int, default=-99, help='LB of duration')
@@ -46,4 +46,4 @@ parser.add_argument('--vloss_coef', type=float, default=1, help='critic loss coe
 parser.add_argument('--ploss_coef', type=float, default=2, help='policy loss coefficient')
 parser.add_argument('--entloss_coef', type=float, default=0.01, help='entropy loss coefficient')
 
-configs = parser.parse_args()
+configs = parser.parse_args(args=[])

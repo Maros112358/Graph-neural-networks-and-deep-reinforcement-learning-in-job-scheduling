@@ -8,7 +8,7 @@
 
 ### [fjsp-drl](models/fjsp-drl/)
 
-- model runs for all available benchmarks -> [SHOWCASE](models/fjsp-drl/fjsp-drl/Showcase%20fjsp-drl.ipynb)
+- model runs for all available benchmarks -> [SHOWCASE](models/fjsp-drl/repo/Showcase%20fjsp-drl.ipynb)
 
 ### [L2D](models/L2D/)
 
@@ -16,21 +16,12 @@
 
 ### [IEEE-ICCE-RL-JSP](models/IEEE-ICCE-RL-JSP/)
 
-- I trained 3 models running on all available benchmarks -> [SHOWCASE](models/IEEE-ICCE-RL-JSP/ieee-icce-rl-jsp/ieee_icce_rl_jsp.ipynb)
-
-### [FJSPDRL](models/FJSPDRL/)
-
-- this is outdated repository for the article, the new one is [End-to-end-DRL-for-FJSP](models/End-to-end-DRL-for-FJSP/)
+- I trained 3 models running on all available benchmarks -> [SHOWCASE](models/IEEE-ICCE-RL-JSP/repo/ieee_icce_rl_jsp.ipynb)
 
 ### [End-to-end-DRL-for-FJSP](models/End-to-end-DRL-for-FJSP/)
 
-- one trained model works -> [validation_readWorld.py](models/End-to-end-DRL-for-FJSP/repo/FJSP_RealWorld/validation_realWorld.py)
+- model runs for all available benchmarks -> [SHOWCASE](models/End-to-end-DRL-for-FJSP/repo/FJSP_RealWorld/Showcase.ipynb)
 
-### [DRL-for-Job-Shop-Scheduling](https://github.com/hexiao5886/DRL-for-Job-Shop-Scheduling/tree/master)
-
-### [Masters Thesis - Devloping the scheduler for the standard JSSP using GNN based RL.](https://github.com/sachin301195/Thesis/tree/main)
-
-## [RL-Scheduling](https://github.com/hliangzhao/RL-Scheduling)
 
 ## Benchmarks
 
@@ -49,3 +40,17 @@
 ### [Taillard](benchmarks/ta_instances/)
 
 ### [Yamada and Nakano](benchmarks/yn_instances/)
+
+## Interesting sources 
+
+### [Masters Thesis - Devloping the scheduler for the standard JSSP using GNN based RL.](https://github.com/sachin301195/Thesis/tree/main)
+
+### [RL-Scheduling](https://github.com/hliangzhao/RL-Scheduling)
+
+- someone tried to implement the algorithm Decima, published in SIGCOMM '19 (https://web.mit.edu/decima/). 
+- repository almost 3 years without activity
+
+### [DRL-for-Job-Shop-Scheduling](https://github.com/hexiao5886/DRL-for-Job-Shop-Scheduling/tree/master)
+
+- repository doing similar research as this thesis, may be useful
+- last activity during May
