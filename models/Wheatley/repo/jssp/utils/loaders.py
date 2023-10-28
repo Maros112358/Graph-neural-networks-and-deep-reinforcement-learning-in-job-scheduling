@@ -41,7 +41,7 @@ def load_problem(
     # - support for unattributed machines
     # - support for columns < number of machines
 
-    print("generate_bounds=", generate_bounds)
+    # print("generate_bounds=", generate_bounds)
 
     if not deterministic:
         print("Loading problem with uncertainties, using customized format")

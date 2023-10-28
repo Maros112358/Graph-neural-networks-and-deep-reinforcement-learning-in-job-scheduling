@@ -4,7 +4,7 @@
 
 ### [Wheatley](models/Wheatley/)
 
-- trained my own 30x20 model to compare with L2D, but can't evalute the model right now, asked for help https://github.com/jolibrain/wheatley/issues/75
+- trained 15x15 Wheatley model, showcase for small benchmark instances -> [SHOWCASE](models/Wheatley/repo/Showcase.ipynb)
 
 ### [fjsp-drl](models/fjsp-drl/)
 
