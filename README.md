@@ -25,21 +25,43 @@
 
 ## Benchmarks
 
-### [Adams, Balas and Zawacks](benchmarks/abz_instances)
+### [JSSP](benchmarks/jssp/)
 
-### [Demirkol, Mehta, and Uzsoy](benchmarks/dmu_instances/)
+Description of JSSP instances is available at http://jobshop.jjvh.nl/explanation.php
 
-### [Fisher and Thompson](benchmarks/ft_instances/)
+- [Adams, Balas and Zawacks](benchmarks/jssp/abz_instances)
 
-### [Lawrence](benchmarks/la_instances/)
+- [Demirkol, Mehta, and Uzsoy](benchmarks/jssp/dmu_instances/)
 
-### [Applegate and Cook](benchmarks/orb_instances/)
+- [Fisher and Thompson](benchmarks/jssp/ft_instances/)
 
-### [Storer, Wu and Vaccari](benchmarks/swv_instances/)
+- [Lawrence](benchmarks/jssp/la_instances/)
 
-### [Taillard](benchmarks/ta_instances/)
+- [Applegate and Cook](benchmarks/jssp/orb_instances/)
 
-### [Yamada and Nakano](benchmarks/yn_instances/)
+- [Storer, Wu and Vaccari](benchmarks/jssp/swv_instances/)
+
+- [Taillard](benchmarks/jssp/ta_instances/)
+
+- [Yamada and Nakano](benchmarks/jssp/yn_instances/)
+
+### [FJSP](benchmarks/fjsp/)
+
+Description of FJSP instances is available at [DataSetExplanation.txt](benchmarks/fjsp/DataSetExplanation.txt)
+
+- [Behnke and Geiger](benchmarks/fjsp/0_BehnkeGeiger/)
+
+- [Instances for the general FJSSP by Brandimarte](benchmarks/fjsp/1_Brandimarte/)
+
+- [MPM-JSSP-instances by Hurink et al.](benchmarks/fjsp/2_Hurink/)
+
+- [Multiprocessor-JSSP/FMS-instances by Dauzère-Pérès and Paulli](benchmarks/fjsp/3_DPpaulli/)
+
+- [FJSSP-instances by Chambers and Barnes](benchmarks/fjsp/4_ChambersBarnes/)
+
+- [Instances for the general FJSSP with total flexibility by Kacem et al.](benchmarks/fjsp/5_Kacem/)
+
+- [FJSSP-instances for Mathematical Programming by Fattahi et al.](benchmarks/fjsp/6_Fattahi/)
 
 ## Interesting sources 
 
