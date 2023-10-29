@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "end-to-end-drl-for-fjsp"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+torch = "^2.1.0"
+gym = "^0.26.2"
+notebook = "^7.0.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
