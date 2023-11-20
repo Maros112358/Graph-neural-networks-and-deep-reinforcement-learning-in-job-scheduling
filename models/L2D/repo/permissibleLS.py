@@ -2,8 +2,8 @@ from Params import configs
 import numpy as np
 
 
-def permissibleLeftShift(a, durMat, mchMat, mchsStartTimes, opIDsOnMchs):
-    jobRdyTime_a, mchRdyTime_a = calJobAndMchRdyTimeOfa(a, mchMat, durMat, mchsStartTimes, opIDsOnMchs)
+def permissibleLeftShift(a, durMat, mchMat, mchsStartTimes, opIDsOnMchs, t: int = 0):
+    jobRdyTime_a, mchRdyTime_a = calJobAndMchRdyTimeOfa(a, mchMat, durMat, mchsStartTimes, opIDsOnMchs, t=t)
     dur_a = np.take(durMat, a)
     mch_a = np.take(mchMat, a) - 1
     startTimesForMchOfa = mchsStartTimes[mch_a]
@@ -13,32 +13,32 @@ def permissibleLeftShift(a, durMat, mchMat, mchsStartTimes, opIDsOnMchs):
     possiblePos = np.where(jobRdyTime_a < startTimesForMchOfa)[0]
     # print('possiblePos:', possiblePos)
     if len(possiblePos) == 0:
-        startTime_a = putInTheEnd(a, jobRdyTime_a, mchRdyTime_a, startTimesForMchOfa, opsIDsForMchOfa)
+        startTime_a = putInTheEnd(a, jobRdyTime_a, mchRdyTime_a, startTimesForMchOfa, opsIDsForMchOfa, t=t)
     else:
-        idxLegalPos, legalPos, endTimesForPossiblePos = calLegalPos(dur_a, jobRdyTime_a, durMat, possiblePos, startTimesForMchOfa, opsIDsForMchOfa)
+        idxLegalPos, legalPos, endTimesForPossiblePos = calLegalPos(dur_a, jobRdyTime_a, durMat, possiblePos, startTimesForMchOfa, opsIDsForMchOfa, t=t)
         # print('legalPos:', legalPos)
         if len(legalPos) == 0:
-            startTime_a = putInTheEnd(a, jobRdyTime_a, mchRdyTime_a, startTimesForMchOfa, opsIDsForMchOfa)
+            startTime_a = putInTheEnd(a, jobRdyTime_a, mchRdyTime_a, startTimesForMchOfa, opsIDsForMchOfa, t=t)
         else:
             flag = True
-            startTime_a = putInBetween(a, idxLegalPos, legalPos, endTimesForPossiblePos, startTimesForMchOfa, opsIDsForMchOfa)
+            startTime_a = putInBetween(a, idxLegalPos, legalPos, endTimesForPossiblePos, startTimesForMchOfa, opsIDsForMchOfa, t=t)
     return startTime_a, flag
 
 
-def putInTheEnd(a, jobRdyTime_a, mchRdyTime_a, startTimesForMchOfa, opsIDsForMchOfa):
+def putInTheEnd(a, jobRdyTime_a, mchRdyTime_a, startTimesForMchOfa, opsIDsForMchOfa, t: int = 0):
     # index = first position of -config.high in startTimesForMchOfa
     # print('Yes!OK!')
     index = np.where(startTimesForMchOfa == -configs.high)[0][0]
-    startTime_a = max(jobRdyTime_a, mchRdyTime_a)
+    startTime_a = max(jobRdyTime_a, mchRdyTime_a, t)
     startTimesForMchOfa[index] = startTime_a
     opsIDsForMchOfa[index] = a
     return startTime_a
 
 
-def calLegalPos(dur_a, jobRdyTime_a, durMat, possiblePos, startTimesForMchOfa, opsIDsForMchOfa):
+def calLegalPos(dur_a, jobRdyTime_a, durMat, possiblePos, startTimesForMchOfa, opsIDsForMchOfa, t:int = 0):
     startTimesOfPossiblePos = startTimesForMchOfa[possiblePos]
     durOfPossiblePos = np.take(durMat, opsIDsForMchOfa[possiblePos])
-    startTimeEarlst = max(jobRdyTime_a, startTimesForMchOfa[possiblePos[0]-1] + np.take(durMat, [opsIDsForMchOfa[possiblePos[0]-1]]))
+    startTimeEarlst = max(jobRdyTime_a, startTimesForMchOfa[possiblePos[0]-1] + np.take(durMat, [opsIDsForMchOfa[possiblePos[0]-1]]), t)
     endTimesForPossiblePos = np.append(startTimeEarlst, (startTimesOfPossiblePos + durOfPossiblePos))[:-1]# end time for last ops don't care
     possibleGaps = startTimesOfPossiblePos - endTimesForPossiblePos
     idxLegalPos = np.where(dur_a <= possibleGaps)[0]
@@ -46,18 +46,19 @@ def calLegalPos(dur_a, jobRdyTime_a, durMat, possiblePos, startTimesForMchOfa, o
     return idxLegalPos, legalPos, endTimesForPossiblePos
 
 
-def putInBetween(a, idxLegalPos, legalPos, endTimesForPossiblePos, startTimesForMchOfa, opsIDsForMchOfa):
+def putInBetween(a, idxLegalPos, legalPos, endTimesForPossiblePos, startTimesForMchOfa, opsIDsForMchOfa, t:int = 0):
     earlstIdx = idxLegalPos[0]
     # print('idxLegalPos:', idxLegalPos)
     earlstPos = legalPos[0]
     startTime_a = endTimesForPossiblePos[earlstIdx]
+    startTime_a = max(startTime_a,t)
     # print('endTimesForPossiblePos:', endTimesForPossiblePos)
     startTimesForMchOfa[:] = np.insert(startTimesForMchOfa, earlstPos, startTime_a)[:-1]
     opsIDsForMchOfa[:] = np.insert(opsIDsForMchOfa, earlstPos, a)[:-1]
     return startTime_a
 
 
-def calJobAndMchRdyTimeOfa(a, mchMat, durMat, mchsStartTimes, opIDsOnMchs):
+def calJobAndMchRdyTimeOfa(a, mchMat, durMat, mchsStartTimes, opIDsOnMchs, t:int = 0):
     mch_a = np.take(mchMat, a) - 1
     # cal jobRdyTime_a
     jobPredecessor = a - 1 if a % mchMat.shape[1] != 0 else None
@@ -66,7 +67,7 @@ def calJobAndMchRdyTimeOfa(a, mchMat, durMat, mchsStartTimes, opIDsOnMchs):
         mchJobPredecessor = np.take(mchMat, jobPredecessor) - 1
         jobRdyTime_a = (mchsStartTimes[mchJobPredecessor][np.where(opIDsOnMchs[mchJobPredecessor] == jobPredecessor)] + durJobPredecessor).item()
     else:
-        jobRdyTime_a = 0
+        jobRdyTime_a = t
     # cal mchRdyTime_a
     mchPredecessor = opIDsOnMchs[mch_a][np.where(opIDsOnMchs[mch_a] >= 0)][-1] if len(np.where(opIDsOnMchs[mch_a] >= 0)[0]) != 0 else None
     if mchPredecessor is not None:

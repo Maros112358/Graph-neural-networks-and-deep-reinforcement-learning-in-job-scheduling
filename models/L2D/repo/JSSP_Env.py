@@ -24,6 +24,10 @@ class SJSSP(gym.Env, EzPickle):
         self.last_col = np.arange(start=0, stop=self.number_of_tasks, step=1).reshape(self.number_of_jobs, -1)[:, -1]
         self.getEndTimeLB = calEndTimeLB
         self.getNghbs = getActionNbghs
+        self.current_time: int = 0
+
+    def set_current_time(self, current_time: int):
+        self.current_time = current_time
 
     def done(self):
         if len(self.partial_sol_sequeence) == self.number_of_tasks:
@@ -46,7 +50,7 @@ class SJSSP(gym.Env, EzPickle):
 
             # UPDATE STATE:
             # permissible left shift
-            startTime_a, flag = permissibleLeftShift(a=action, durMat=self.dur, mchMat=self.m, mchsStartTimes=self.mchsStartTimes, opIDsOnMchs=self.opIDsOnMchs)
+            startTime_a, flag = permissibleLeftShift(a=action, durMat=self.dur, mchMat=self.m, mchsStartTimes=self.mchsStartTimes, opIDsOnMchs=self.opIDsOnMchs, t=self.current_time)
             self.flags.append(flag)
             # update omega or mask
             if action not in self.last_col:
