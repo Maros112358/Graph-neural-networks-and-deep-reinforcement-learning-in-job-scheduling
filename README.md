@@ -4,23 +4,23 @@
 
 ### [Wheatley](models/Wheatley/)
 
-- trained 15x15 Wheatley model, showcase for small benchmark instances -> [SHOWCASE](models/Wheatley/repo/Showcase.ipynb)
+- trained 15x15 Wheatley model, showcase for small benchmark instances -> [SHOWCASE](models/Wheatley/repo/Showcase.ipynb), dynamic version not working properly
 
 ### [fjsp-drl](models/fjsp-drl/)
 
-- model runs for all available benchmarks -> [SHOWCASE](models/fjsp-drl/repo/Showcase%20fjsp-drl.ipynb)
+- model runs for all available benchmarks -> [SHOWCASE](models/fjsp-drl/repo/Showcase%20fjsp-drl.ipynb), no dynamic version
 
 ### [L2D](models/L2D/)
 
-- model runs for all available benchmarks -> [SHOWCASE](models/L2D/Showcase.ipynb)
+- model runs for all available benchmarks -> [SHOWCASE](models/L2D/Showcase.ipynb), dynamic version 
 
 ### [IEEE-ICCE-RL-JSP](models/IEEE-ICCE-RL-JSP/)
 
-- I trained 3 models running on all available benchmarks -> [SHOWCASE](models/IEEE-ICCE-RL-JSP/repo/ieee_icce_rl_jsp.ipynb)
+- I trained 3 models running on all available benchmarks -> [SHOWCASE](models/IEEE-ICCE-RL-JSP/repo/ieee_icce_rl_jsp.ipynb), working dynamic model
 
 ### [End-to-end-DRL-for-FJSP](models/End-to-end-DRL-for-FJSP/)
 
-- model runs for all available benchmarks -> [SHOWCASE](models/End-to-end-DRL-for-FJSP/repo/FJSP_RealWorld/Showcase.ipynb)
+- model runs for all available benchmarks -> [SHOWCASE](models/End-to-end-DRL-for-FJSP/repo/FJSP_RealWorld/Showcase.ipynb), no dynamic version
 
 
 ## Benchmarks
