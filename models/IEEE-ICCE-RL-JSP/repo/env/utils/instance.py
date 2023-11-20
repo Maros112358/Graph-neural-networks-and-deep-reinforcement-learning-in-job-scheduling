@@ -47,11 +47,13 @@ class JSP_Instance:
         self.logger = Logger()
         self.generate_case()
 
-    def load_instance(self, filename):
+    def load_instance(self, filename, arrival_times: list | None = None):
         self.jobs = []
         self.arrival_time = 0
         self.current_time = 0
         self.time_stamp = []
+        if arrival_times is not None:
+            self.time_stamp = arrival_times
 
         f = open(filename)
         line = f.readline()
@@ -65,6 +67,9 @@ class JSP_Instance:
         self.logger = Logger()
 
         for i in range(self.initial_job_num):
+            arrival_time = 0
+            if arrival_times is not None:
+                arrival_time = arrival_times[i]
             op_config = []
             line = f.readline().split()
             for j in range(self.machine_num):
@@ -74,7 +79,7 @@ class JSP_Instance:
                                   "machine_id": machine_id,
                                   "process_time": process_time})
             self.jobs.append(Job(job_id=i,
-                                 arrival_time=self.arrival_time,
+                                 arrival_time=arrival_time,
                                  job_type=i % self.num_job_type,
                                  op_config=op_config))
             self.graph.add_job(self.jobs[-1])

@@ -34,7 +34,7 @@ class JSP_Env(gym.Env):
         state = self.get_graph_data(self.device)
         # reward = -(self.get_makespan() - prev_makespan)
         reward = self.get_reward()
-        return state, reward, done, {}
+        return state, reward, done, {}, action_idx
     
     def reset(self):
         self.jsp_instance.reset()
@@ -67,7 +67,7 @@ class JSP_Env(gym.Env):
     def get_graph_data(self, device):
         return self.jsp_instance.get_graph_data(device)
         
-    def load_instance(self, filename):
-        self.jsp_instance.load_instance(filename)
+    def load_instance(self, filename, arrival_times: list|None=None):
+        self.jsp_instance.load_instance(filename, arrival_times)
         avai_ops = self.jsp_instance.current_avai_ops()
         return avai_ops
