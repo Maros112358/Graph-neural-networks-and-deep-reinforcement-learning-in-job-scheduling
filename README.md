@@ -4,23 +4,36 @@
 
 ### [Wheatley](models/Wheatley/)
 
-- trained 15x15 Wheatley model, showcase for small benchmark instances -> [SHOWCASE](models/Wheatley/repo/Showcase.ipynb), dynamic version not working properly
+- [SHOWCASE](models/Wheatley/repo/Showcase.ipynb)
+- trained 15x15 Wheatley model, showcase for small benchmark instances 
+- dynamic JSSP implemented by adding "virtual machines" at the start of the jobs
+
 
 ### [fjsp-drl](models/fjsp-drl/)
 
-- model runs for all available benchmarks -> [SHOWCASE](models/fjsp-drl/repo/Showcase%20fjsp-drl.ipynb), no dynamic version
+- [SHOWCASE](models/fjsp-drl/repo/Showcase%20fjsp-drl.ipynb)
+- model runs for all available benchmarks
+- no dynamic version
 
 ### [L2D](models/L2D/)
 
-- model runs for all available benchmarks -> [SHOWCASE](models/L2D/Showcase.ipynb), dynamic version 
+- [SHOWCASE](models/L2D/Showcase.ipynb)
+- model runs for all available benchmarks
+- dynamic version runs by implementing custom algorithm
+- [STATIC EXPERIMENT DATA](data/experiment_static_jssp_l2d.csv)
 
 ### [IEEE-ICCE-RL-JSP](models/IEEE-ICCE-RL-JSP/)
 
-- I trained 3 models running on all available benchmarks -> [SHOWCASE](models/IEEE-ICCE-RL-JSP/repo/ieee_icce_rl_jsp.ipynb), working dynamic model
+- [SHOWCASE](models/IEEE-ICCE-RL-JSP/repo/ieee_icce_rl_jsp.ipynb)
+- I trained 5 models running on all available benchmarks
+- working dynamic model implemented by using already available code, just needed to pass the starting times to the underlying mechanism already in the code by the author
+- [STATIC EXPERIMENT DATA](data/experiment_static_jssp_ieee_icce_rl_jsp.csv)
 
 ### [End-to-end-DRL-for-FJSP](models/End-to-end-DRL-for-FJSP/)
 
-- model runs for all available benchmarks -> [SHOWCASE](models/End-to-end-DRL-for-FJSP/repo/FJSP_RealWorld/Showcase.ipynb), no dynamic version
+- [SHOWCASE](models/End-to-end-DRL-for-FJSP/repo/FJSP_RealWorld/Showcase.ipynb)
+- model runs for all available benchmarks
+- no dynamic version
 
 
 ## Benchmarks
