@@ -13,6 +13,7 @@ import itertools
 import time
 import sys
 import uuid
+import pandas as pd
 
 import logging
 
@@ -254,27 +255,39 @@ def get_all_instances_in_taillard_specification():
 
 
 if __name__ == '__main__':
-    MODELS = [os.path.join("SavedNetwork", model) for model in os.listdir("SavedNetwork")]
+    # MODELS = [os.path.join("SavedNetwork", model) for model in os.listdir("SavedNetwork")]
+
     LOAD_FACTORS = [1, 2, 4]
     INSTANCES = sorted(get_all_instances_in_taillard_specification())
 
-    seed = int(sys.argv[1] if len(sys.argv) > 1 else 0)
-    DATA_FILE = f'experiment_dynamic_jssp_l2d_seed_{seed}.csv'
+    if not len(sys.argv) > 1:
+        raise ValueError('Model not given!')
+    
+    model = sys.argv[1]
+    DATA_FILE = f'experiment_dynamic_jssp_l2d_seed_{model.replace("/", "_")}.csv'
+    PREV_DATA_FILE = f'experiment_dynamic_jssp_l2d_seed_{model.replace("/", "_")}_prev.csv'
     with open(DATA_FILE, 'w') as f:
         f.write("seed,model,instance,load_factor,makespan,runtime\n")
 
+    df = pd.read_csv(PREV_DATA_FILE)
+    print(df)
     count = 0
-    total = len(MODELS) * len(INSTANCES) * len(LOAD_FACTORS)
-    for model in MODELS:
-        for load_factor in LOAD_FACTORS:
-            for instance in INSTANCES:
-                # run the experiment
-                start = time.time()
-                makespan, plan, start_times = solve_dynamic_jssp(instance, model, load_factor, seed)
-                runtime = time.time() - start
+    total = 2 * len(INSTANCES) * len(LOAD_FACTORS)
+    for load_factor in LOAD_FACTORS:
+        for instance in INSTANCES:
+            for seed in [8, 9]:
+                instance_name = instance.split('/')[-1]
+                filtered_df = df[(df['seed'] == seed) & (df['model'] == model) & (df['instance'] == instance_name) & (df['load_factor'] == load_factor)]
+                if not filtered_df.empty:
+                    makespan = filtered_df['makespan'].iloc[0]
+                    runtime = filtered_df['runtime'].iloc[0]
+                else:
+                    # run the experiment
+                    start = time.time()
+                    makespan, plan, start_times = solve_dynamic_jssp(instance, model, load_factor, seed)
+                    runtime = time.time() - start
 
                 # save the data
-                instance_name = instance.split('/')[-1]
                 with open(DATA_FILE, 'a') as f:
                     f.write(f"{seed},{model},{instance_name},{load_factor},{makespan},{runtime}\n")
 
