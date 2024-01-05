@@ -14,6 +14,8 @@
 - [SHOWCASE](models/fjsp-drl/repo/Showcase%20fjsp-drl.ipynb)
 - model runs for all available benchmarks
 - no dynamic version
+- [STATIC JSSP DATA](data/experiment_static_jssp_fjsp_drl.csv)
+- [STATIC FJSP DATA](data/experiment_static_fjsp_fjsp_drl.csv)
 
 ### [L2D](models/L2D/)
 
@@ -21,6 +23,7 @@
 - model runs for all available benchmarks
 - dynamic version runs by implementing custom algorithm
 - [STATIC JSSP DATA](data/experiment_static_jssp_l2d.csv)
+- [DYNAMIC JSSP DATA](data/experiment_dynamic_jssp_l2d.csv)
 
 ### [IEEE-ICCE-RL-JSP](models/IEEE-ICCE-RL-JSP/)
 
