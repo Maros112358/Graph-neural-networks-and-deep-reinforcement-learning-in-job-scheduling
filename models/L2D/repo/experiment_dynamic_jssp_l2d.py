@@ -255,8 +255,7 @@ def get_all_instances_in_taillard_specification():
 
 
 if __name__ == '__main__':
-    # MODELS = [os.path.join("SavedNetwork", model) for model in os.listdir("SavedNetwork")]
-
+    MODELS = [os.path.join("SavedNetwork", model) for model in os.listdir("SavedNetwork")]
     LOAD_FACTORS = [1, 2, 4]
     INSTANCES = sorted(get_all_instances_in_taillard_specification())
 
@@ -270,7 +269,6 @@ if __name__ == '__main__':
         f.write("seed,model,instance,load_factor,makespan,runtime\n")
 
     df = pd.read_csv(PREV_DATA_FILE)
-    print(df)
     count = 0
     total = 2 * len(INSTANCES) * len(LOAD_FACTORS)
     for load_factor in LOAD_FACTORS:
