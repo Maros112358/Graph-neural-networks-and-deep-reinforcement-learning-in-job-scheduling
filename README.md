@@ -31,6 +31,7 @@
 - I trained 5 models running on all available benchmarks
 - working dynamic model implemented by using already available code, just needed to pass the starting times to the underlying mechanism already in the code by the author
 - [STATIC JSSP DATA](data/experiment_static_jssp_ieee_icce_rl_jsp.csv)
+- [DYNAMIC JSSP DATA](data/experiment_dynamic_jssp_ieee_icce_rl_jsp.csv)
 
 ### [End-to-end-DRL-for-FJSP](models/End-to-end-DRL-for-FJSP/)
 
