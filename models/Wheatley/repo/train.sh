@@ -38,4 +38,3 @@ python3 -m jssp.train\
     --gconv_type gin\
     --reward_model_config L2D\
     --graph_pooling avg\
-    --clip_range 0.2
