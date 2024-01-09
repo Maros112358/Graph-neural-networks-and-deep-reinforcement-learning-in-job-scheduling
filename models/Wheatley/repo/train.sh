@@ -27,7 +27,7 @@ python3 -m jssp.train\
     --n_mlp_layers_features_extractor 2\
     --n_steps_episode 9800\
     --n_validation_env 100\
-    --n_workers 1\
+    --n_workers 4\
     --optimizer adamw\
     --ortools_strategy realistic\
     --seed 0\
@@ -37,4 +37,5 @@ python3 -m jssp.train\
     --vf_coef 1.0\
     --gconv_type gin\
     --reward_model_config L2D\
-    --graph_pooling avg\
+    --graph_pooling avg
+
