@@ -36,12 +36,12 @@ possible_args = {
     "vf_coef": [1.0],
     "clip_range": [0.25],
     "gamma": [1.0],
-    "gae_lambda": [0.99],
+    "gae_lambda": [1.0],
     "optimizer": ["adamw"],
     "fe_type": ["dgl"],
     "residual_gnn": [True],
     "graph_has_relu": [True],
-    "graph_pooling": ["learn"],
+    "graph_pooling": ["learn", "learninv"],
     "hidden_dim_features_extractor": [32],
     "n_layers_features_extractor": [3],
     "mlp_act": ["gelu"],
@@ -65,6 +65,7 @@ possible_args = {
     "device": ["cuda:0"],
     "n_workers": [2],
     "skip_initial_eval": [True, False],
+    "return_based_scaling": [True, False],
 }
 
 # Duplicate each entry to match the maximum number of possibilities to try.
@@ -435,6 +436,8 @@ def test_solve_api(instance_file: str, taillard_offset: bool):
         rwpe_k=0,
         rwpe_h=16,
         cache_rwpe=False,
+        two_hot=None,
+        symlog=False,
     )
 
     agent = Agent(env_specification, agent_specification=agent_specification)

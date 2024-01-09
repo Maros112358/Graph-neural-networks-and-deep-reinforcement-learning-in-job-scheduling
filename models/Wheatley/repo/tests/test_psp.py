@@ -1,4 +1,5 @@
 import os
+
 import random
 import sys
 from typing import Tuple
@@ -110,6 +111,11 @@ def instantiate_training_objects(
         rpo=args.rpo,
         rpo_smoothing_param=args.rpo_smoothing_param,
         gae_lambda=args.gae_lambda,
+        return_based_scaling=args.return_based_scaling,
+        store_rollouts_on_disk=(
+            args.store_rollouts_on_disk if args.vecenv_type == "graphgym" else None
+        ),
+        critic_loss=args.critic_loss,
     )
 
     if args.conflicts == "clique" and args.precompute_cliques:
@@ -132,8 +138,13 @@ def instantiate_training_objects(
         observe_real_duration_when_affect=observe_real_duration_when_affect,
         do_not_observe_updated_bounds=args.do_not_observe_updated_bounds,
         factored_rp=(args.fe_type == "tokengt" or args.factored_rp),
-        remove_old_resource_info=not args.use_old_resource_info,
-        remove_past_prec=not args.keep_past_prec,
+        remove_old_resource_info=not args.use_old_resource_info
+        and not args.observe_subgraph,
+        remove_past_prec=not args.keep_past_prec and not args.observe_subgraph,
+        observation_horizon_step=args.observation_horizon_step,
+        observation_horizon_time=args.observation_horizon_time,
+        fast_forward=not args.no_fast_forward,
+        observe_subgraph=args.observe_subgraph,
     )
 
     if args.batch_size == 1 and not args.dont_normalize_advantage:
@@ -181,6 +192,8 @@ def instantiate_training_objects(
         rwpe_k=args.rwpe_k,
         rwpe_h=args.rwpe_h,
         cache_rwpe=args.cache_rwpe,
+        two_hot=args.two_hot,
+        symlog=args.symlog,
     )
     agent = Agent(
         env_specification=env_specification, agent_specification=agent_specification
@@ -235,12 +248,12 @@ possible_args = {
     "vf_coef": [1.0],
     "clip_range": [0.25],
     "gamma": [1.0],
-    "gae_lambda": [0.99],
+    "gae_lambda": [1.0],
     "optimizer": ["adamw"],
     "fe_type": ["dgl"],
     "residual_gnn": [True],
     "graph_has_relu": [True],
-    "graph_pooling": ["learn"],
+    "graph_pooling": ["learn", "learninv"],
     "hidden_dim_features_extractor": [32],
     "n_layers_features_extractor": [3],
     "mlp_act": ["gelu"],
@@ -265,7 +278,16 @@ possible_args = {
     "n_workers": [1, 2],
     "skip_initial_eval": [True, False],
     "exp_name_appendix": ["test"],
-    "train_dir": ["./instances/psp/test/", "./instances/psp/test/"],
+    "train_dir": ["./instances/psp/test/"],
+    "vecenv_type": ["subproc", "graphgym"],
+    "return_based_scaling": [True, False],
+    "observe_subgraph": [True, False],
+    "no_fast_forward": [True, False],
+    "observation_horizon_step": [0, 5],
+    "observation_horizon_time": [0, 5],
+    "symlog": [True, False],
+    "store_rollouts_on_disk": [False, "/tmp/"],
+    "critic_loss": ["l2", "l1", "sl1"],
 }
 
 # Duplicate each entry to match the maximum number of possibilities to try.

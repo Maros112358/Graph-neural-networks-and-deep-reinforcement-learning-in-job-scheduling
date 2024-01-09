@@ -39,12 +39,13 @@ import visdom
 from PIL import Image
 
 from generic.random_agent import RandomAgent
-from generic.utils import decode_mask, get_obs, safe_mean
+from generic.utils import decode_mask, safe_mean
 from jssp.description import Description as JSSPDescription
 from jssp.env.env import Env as JSSPEnv
 from jssp.models.custom_agent import CustomAgent
 from jssp.utils.ortools import get_ortools_makespan as get_ortools_makespan_jssp
 from psp.env.env import Env as PSPEnv
+from psp.env.genv import GEnv
 from psp.utils.ortools import get_ortools_makespan_psp
 
 
@@ -56,8 +57,9 @@ class AgentValidator:
         device,
         training_specification,
         disable_visdom,
-        validation_envs = None,
+        validation_envs=None,
         verbose=2,
+        graphobs=False,
     ):
         super().__init__()
 
@@ -68,8 +70,13 @@ class AgentValidator:
         else:
             self.psp = True
 
+        self.graphobs = graphobs
+
         if self.psp:
-            self.env_cls = PSPEnv
+            if self.graphobs:
+                self.env_cls = GEnv
+            else:
+                self.env_cls = PSPEnv
         else:
             self.env_cls = JSSPEnv
         if training_specification.validate_on_total_data:
@@ -371,12 +378,6 @@ class AgentValidator:
                 writer.writerow(line)
         f.close()
 
-    def rebatch_obs(self, obs_list):
-        obs = {}
-        for key in obs_list[0]:
-            obs[key] = torch.cat([_obs[key] for _obs in obs_list])
-        return obs
-
     def _evaluate_agent(self, agent):
         mean_makespan = 0
         ortools_mean_makespan = {
@@ -396,12 +397,12 @@ class AgentValidator:
             ]
             all_masks = decode_mask([rdata[1]["mask"] for rdata in all_rdata])
             while envs:
-                all_obs = self.rebatch_obs(all_obs)
+                all_obs = agent.rebatch_obs(all_obs)
                 all_actions = []
                 for i in range(0, len(envs), self.batch_size):
                     bs = min(self.batch_size, len(envs) - i)
                     actions = agent.predict(
-                        get_obs(all_obs, list(range(i, i + bs))),
+                        agent.get_obs(all_obs, list(range(i, i + bs))),
                         action_masks=all_masks[i : i + bs],
                         deterministic=True,
                     )
@@ -553,7 +554,7 @@ class AgentValidator:
         Y_list = [self.makespans, self.random_makespans]
         opts = {
             "title": "Validation makespan",
-            "legend": ["PPO", "Random"],
+            "legend": ["Wheatley", "Random"],
             "linecolor": [[31, 119, 180], [255, 127, 14]],
         }
         Y2_list = [
@@ -563,7 +564,7 @@ class AgentValidator:
             / np.array(self.ortools_makespans[self.default_ortools_strategy]),
         ]
         opts2 = {
-            "legend": ["PPO / OR-tools", "Random / OR-tools"],
+            "legend": ["Wheatley / OR-tools", "Random / OR-tools"],
             "linecolor": [[31, 119, 180], [255, 127, 14]],
         }
 
@@ -612,13 +613,13 @@ class AgentValidator:
 
         # ratio to OR-tools
         opts = {
-            "title": "PPO / OR-Tools",
+            "title": "Wheatley / OR-Tools",
             "legend": [],
         }
         Y_ratios = []
         for ortools_strategy in self.ortools_strategies:
-            opts["legend"].append(f"PPO/OR-Tools {ortools_strategy}")
-            opts["legend"].append(f"Min PPO/OR-Tools {ortools_strategy}")
+            opts["legend"].append(f"Wheatley/OR-Tools {ortools_strategy}")
+            opts["legend"].append(f"Min Wheatley/OR-Tools {ortools_strategy}")
             ratio_to_ortools = np.array(self.makespans) / np.array(
                 self.ortools_makespans[ortools_strategy]
             )
@@ -654,7 +655,7 @@ class AgentValidator:
             X=X, Y=np.array(self.time_to_ortools), win="time_to_ortools", opts=opts
         )
 
-        # Plot OR-Tools solutions vs PPO solutions.
+        # Plot OR-Tools solutions vs Wheatley solutions.
         # Visdom is a little bit limited so we build the plot ourself using matplotlib
         # and save the image on disk. We can directly plot this image with visdom.
         # This is a bit hacky but it works.
@@ -672,10 +673,10 @@ class AgentValidator:
             [0, max(self.last_ppo_makespans + self.last_ortools_makespans)],
             color="red",
         )
-        ax.set_xlabel("PPO makespan")
+        ax.set_xlabel("Wheatley makespan")
         ax.set_ylabel("OR-Tools makespan")
         ax.set_title(
-            f"OR-Tools {self.averagistic_ortools_strategy} vs PPO - {(ppo_makespans / ortools_makespans).mean():.2f}"
+            f"OR-Tools {self.averagistic_ortools_strategy} vs Wheatley - {(ppo_makespans / ortools_makespans).mean():.2f}"
         )
         fig.savefig(self.path + "ortools-ppo-cactus.png")
 
@@ -690,7 +691,7 @@ class AgentValidator:
         self.vis.image(
             image,
             win="ortools-ppo-cactus",
-            opts={"caption": "OR-Tools vs PPO"},
+            opts={"caption": "OR-Tools vs Wheatley"},
         )
 
         if self.first_callback:
@@ -706,7 +707,7 @@ class AgentValidator:
         self.vis.image(
             image,
             win="best-ortools-ppo-cactus",
-            opts={"caption": "Best OR-Tools vs PPO"},
+            opts={"caption": "Best OR-Tools vs Wheatley"},
         )
 
         self.entropy_losses.append(

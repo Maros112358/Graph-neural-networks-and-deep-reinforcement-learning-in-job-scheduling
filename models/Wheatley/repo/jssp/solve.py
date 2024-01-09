@@ -30,12 +30,14 @@ def solve_instance(
 
     done = False
     obs, info = env.reset(soft=True)
+    i = 0
     while not done:
         action_masks = decode_mask(info["mask"])
         obs = agent.obs_as_tensor_add_batch_dim(obs)
         action = agent.predict(obs, deterministic=True, action_masks=action_masks)
         obs, reward, done, _, info = env.step(action.long().item())
         solution = env.get_solution()
+        i += 1
 
     return solution
 
@@ -57,6 +59,8 @@ if __name__ == "__main__":
         taillard_offset=args.first_machine_id_is_one,
         deterministic=args.duration_type == "deterministic",
     )
+
+    agent.to(args.device)
 
     print(f"Solving a {n_j}x{n_m} JSSP instance.")
 

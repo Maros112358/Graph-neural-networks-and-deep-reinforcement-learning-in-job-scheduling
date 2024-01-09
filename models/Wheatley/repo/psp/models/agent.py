@@ -23,6 +23,7 @@
 
 
 import torch
+import dgl
 
 from generic.agent import Agent
 from .gnn_dgl import GnnDGL
@@ -32,6 +33,8 @@ from torch.distributions.categorical import Categorical
 from functools import partial
 import numpy as np
 from .agent_observation import AgentObservation
+from .agent_graph_observation import AgentGraphObservation
+import copy
 
 
 class Agent(Agent):
@@ -42,6 +45,7 @@ class Agent(Agent):
         value_net=None,
         action_net=None,
         agent_specification=None,
+        graphobs=False,
     ):
         """
         There are 2 ways to init an Agent:
@@ -52,6 +56,18 @@ class Agent(Agent):
             env_specification, gnn, value_net, action_net, agent_specification
         )
 
+        self.graphobs = graphobs
+        if self.graphobs:
+            self.obs_as_tensor_add_batch_dim = self._obs_as_tensor_add_batch_dim_graph
+            self.obs_as_tensor = self._obs_as_tensor_graph
+            self.rebatch_obs = self._rebatch_obs_graph
+            self.get_obs = self._get_obs_graph
+        else:
+            self.obs_as_tensor_add_batch_dim = self._obs_as_tensor_add_batch_dim
+            self.obs_as_tensor = self._obs_as_tensor
+            self.rebatch_obs = self._rebatch_obs
+            self.get_obs = self._get_obs
+
         # If a model is provided, we simply load the existing model.
         if gnn is not None and value_net is not None and action_net is not None:
             self.gnn = gnn
@@ -60,6 +76,11 @@ class Agent(Agent):
             return
 
         if self.agent_specification.fe_type == "dgl":
+            if agent_specification.cache_rwpe:
+                self.rwpe_cache = {}
+            else:
+                self.rwpe_cache = None
+
             self.gnn = GnnDGL(
                 input_dim_features_extractor=env_specification.n_features,
                 graph_pooling=agent_specification.graph_pooling,
@@ -77,13 +98,15 @@ class Agent(Agent):
                 layer_pooling=agent_specification.layer_pooling,
                 factored_rp=env_specification.factored_rp,
                 add_rp_edges=env_specification.add_rp_edges,
-                add_self_loops=env_specification.remove_past_prec,
+                add_self_loops=env_specification.remove_past_prec
+                or env_specification.observe_subgraph,
                 vnode=agent_specification.vnode,
                 update_edge_features=agent_specification.update_edge_features,
                 update_edge_features_pe=agent_specification.update_edge_features_pe,
                 rwpe_k=agent_specification.rwpe_k,
                 rwpe_h=agent_specification.rwpe_h,
-                cache_rwpe=agent_specification.cache_rwpe,
+                rwpe_cache=self.rwpe_cache,
+                graphobs=graphobs,
             )
         elif self.agent_specification.fe_type == "tokengt":
             self.gnn = GnnTokenGT(
@@ -123,6 +146,10 @@ class Agent(Agent):
         agent_specification = save_data["agent_specification"]
         env_specification = save_data["env_specification"]
         if agent_specification.fe_type == "dgl":
+            if agent_specification.cache_rwpe:
+                self.rwpe_cache = {}
+            else:
+                self.rwpe_cache = None
             gnn = GnnDGL(
                 input_dim_features_extractor=env_specification.n_features,
                 gconv_type=agent_specification.gconv_type,
@@ -147,7 +174,8 @@ class Agent(Agent):
                 update_edge_features_pe=agent_specification.update_edge_features_pe,
                 rwpe_k=agent_specification.rwpe_k,
                 rwpe_h=agent_specification.rwpe_h,
-                cache_rwpe=agent_specification.cache_rwpe,
+                rwpe_cache=self.rwpe_cache,
+                graphobs=graphobs,
             )
         elif agent_specification.fe_type == "tokengt":
             gnn = GnnTokenGT(
@@ -175,11 +203,15 @@ class Agent(Agent):
                 performer_feature_redraw_interval=agent_specification.performer_feature_redraw_interval,
                 performer_redraw_interval=agent_specification.performer_redraw_interval,
             )
+        if self.agent_specification.two_hot is not None:
+            value_dim = len(self.B)
+        else:
+            value_dim = 1
         value_net = MLP(
             len(agent_specification.net_arch["vf"]),
             gnn.features_dim // 2,
             agent_specification.net_arch["vf"][0],
-            1,
+            value_dim,
             False,
             agent_specification.activation_fn,
         )
@@ -208,11 +240,16 @@ class Agent(Agent):
         else:
             device = "cpu"
 
+        if self.agent_specification.two_hot is not None:
+            value_dim = len(self.B)
+        else:
+            value_dim = 1
+
         self.value_net = MLP(
             len(self.agent_specification.net_arch["vf"]),
             self.gnn.features_dim // 2,
             self.agent_specification.net_arch["vf"][0],
-            1,
+            value_dim,
             False,
             self.agent_specification.activation_fn,
         )
@@ -244,11 +281,57 @@ class Agent(Agent):
         self.value_net.to(device)
         self.action_net.to(device)
 
-    def obs_as_tensor_add_batch_dim(self, obs):
+    def _obs_as_tensor_add_batch_dim(self, obs):
         return AgentObservation.np_to_torch(obs)
 
-    def obs_as_tensor(self, obs):
+    def _obs_as_tensor(self, obs):
         return AgentObservation.np_to_torch(obs)
 
-    def rebatch_obs(self, obs):
+    def _rebatch_obs(self, obs):
         return AgentObservation.rebatch_obs(obs)
+
+    def _obs_as_tensor_add_batch_dim_graph(self, obs):
+        if self.env_specification.observe_subgraph:
+            cobs = obs
+        else:
+            cobs = copy.deepcopy(obs)
+        return AgentGraphObservation.rewire_internal(
+            cobs,
+            conflicts=self.agent_specification.conflicts,
+            bidir=True,
+            compute_laplacian_pe=False,
+            laplacian_pe_cache=None,
+            rwpe_k=self.agent_specification.rwpe_k,
+            rwpe_cache=self.rwpe_cache,
+        )
+
+    def _obs_as_tensor_graph(self, obs):
+        return [
+            AgentGraphObservation.rewire_internal(
+                o,
+                conflicts=self.agent_specification.conflicts,
+                bidir=True,
+                compute_laplacian_pe=False,
+                laplacian_pe_cache=None,
+                rwpe_k=self.agent_specification.rwpe_k,
+                rwpe_cache=self.rwpe_cache,
+            )
+            for o in obs
+        ]
+
+    def _rebatch_obs_graph(self, obs):
+        # we need to flatten a list of list into a single list
+        if isinstance(obs[0], str):
+            return obs
+        return sum(obs, [])
+
+    def _get_obs_graph(self, b_obs, mb_ind):
+        if isinstance(b_obs[0], str):
+            return [dgl.load_graphs(b_obs[i])[0][0] for i in mb_ind]
+        return list(b_obs[i] for i in mb_ind)
+
+    def _get_obs(self, b_obs, mb_ind):
+        minibatched_obs = {}
+        for key in b_obs:
+            minibatched_obs[key] = b_obs[key][mb_ind]
+        return minibatched_obs

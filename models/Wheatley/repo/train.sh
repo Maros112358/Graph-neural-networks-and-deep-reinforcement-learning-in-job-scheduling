@@ -1,1 +1,40 @@
-python -m jssp.train --device cpu --n_j 100 --n_m 20 --total_timesteps 1000000 --n_validation_env 10 --n_steps_episode 1600  --batch_size 1600 --seed 1   --exp_name_appendix EXAMPLE2 
+python3 -m jssp.train\
+    --batch_size 245\
+    --clip_range 0.20\
+    --custom_heuristic_names SPT MWKR MOPNR FDD/MWKR\
+    --device cpu\
+    --duration_type deterministic\
+    --ent_coef 0.05\
+    --exp_name_appendix QUICKSTART_RUN\
+    --fe_type dgl\
+    --fixed_validation\
+    --gae_lambda 0.99\
+    --gamma 1.00\
+    --graph_has_relu\
+    --graph_pooling max\
+    --hidden_dim_actor 5\
+    --hidden_dim_critic 5\
+    --hidden_dim_features_extractor 5\
+    --layer_pooling last\
+    --lr 1e-4\
+    --max_n_j 100\
+    --max_n_m 30\
+    --mlp_act gelu\
+    --n_epochs 3\
+    --n_j 10\
+    --n_layers_features_extractor 2\
+    --n_m 10\
+    --n_mlp_layers_actor 1\
+    --n_mlp_layers_critic 1\
+    --n_mlp_layers_features_extractor 1\
+    --n_steps_episode 9800\
+    --n_validation_env 100\
+    --n_workers 1\
+    --optimizer adamw\
+    --ortools_strategy realistic\
+    --residual_gnn\
+    --seed 0\
+    --target_kl 0.04\
+    --total_timesteps 10_000_000\
+    --validation_freq 3\
+    --vf_coef 2.0

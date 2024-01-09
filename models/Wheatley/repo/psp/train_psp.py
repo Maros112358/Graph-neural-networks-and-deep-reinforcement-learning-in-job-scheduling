@@ -22,6 +22,7 @@
 #
 
 import os
+
 import random
 
 import numpy as np
@@ -35,15 +36,17 @@ from generic.agent_validator import AgentValidator
 from generic.training_specification import TrainingSpecification
 from psp.description import Description
 from psp.env.env import Env
+from psp.env.genv import GEnv
 from psp.env.env_specification import EnvSpecification
 from psp.models.agent import Agent
 from psp.utils.loaders import PSPLoader
 
 
-def main(args, exp_name, path):
+def main(args, exp_name, path) -> float:
     exp_name = args.exp_name_appendix
     path = get_path(args.path, exp_name)
     torch.distributions.Distribution.set_default_validate_args(False)
+    random.seed(args.seed)
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
 
@@ -116,6 +119,11 @@ def main(args, exp_name, path):
         rpo=args.rpo,
         rpo_smoothing_param=args.rpo_smoothing_param,
         gae_lambda=args.gae_lambda,
+        return_based_scaling=args.return_based_scaling,
+        store_rollouts_on_disk=(
+            args.store_rollouts_on_disk if args.vecenv_type == "graphgym" else None
+        ),
+        critic_loss=args.critic_loss,
     )
     training_specification.print_self()
 
@@ -129,6 +137,7 @@ def main(args, exp_name, path):
         observe_real_duration_when_affect = True
     else:
         observe_real_duration_when_affect = False
+
     env_specification = EnvSpecification(
         problems=problem_description,
         normalize_input=not args.dont_normalize_input,
@@ -141,8 +150,13 @@ def main(args, exp_name, path):
         observe_real_duration_when_affect=observe_real_duration_when_affect,
         do_not_observe_updated_bounds=args.do_not_observe_updated_bounds,
         factored_rp=(args.fe_type == "tokengt" or args.factored_rp),
-        remove_old_resource_info=not args.use_old_resource_info,
-        remove_past_prec=not args.keep_past_prec,
+        remove_old_resource_info=not args.use_old_resource_info
+        and not args.observe_subgraph,
+        remove_past_prec=not args.keep_past_prec and not args.observe_subgraph,
+        observation_horizon_step=args.observation_horizon_step,
+        observation_horizon_time=args.observation_horizon_time,
+        fast_forward=not args.no_fast_forward,
+        observe_subgraph=args.observe_subgraph,
     )
     env_specification.print_self()
     if args.batch_size == 1 and not args.dont_normalize_advantage:
@@ -150,6 +164,11 @@ def main(args, exp_name, path):
             "batch size 1 and normalize advantage are not compatible\neither set --batch_size to > 1  or append --dont_normalize_advantage"
         )
         exit()
+
+    if args.two_hot is not None:
+        hidden_dim_critic = max(int(args.two_hot[2]), args.hidden_dim_critic)
+    else:
+        hidden_dim_critic = args.hidden_dim_critic
     agent_specification = AgentSpecification(
         n_features=env_specification.n_features,
         gconv_type=args.gconv_type,
@@ -170,7 +189,7 @@ def main(args, exp_name, path):
         n_mlp_layers_actor=args.n_mlp_layers_actor,
         hidden_dim_actor=args.hidden_dim_actor,
         n_mlp_layers_critic=args.n_mlp_layers_critic,
-        hidden_dim_critic=args.hidden_dim_critic,
+        hidden_dim_critic=hidden_dim_critic,
         fe_type=args.fe_type,
         transformer_flavor=args.transformer_flavor,
         dropout=args.dropout,
@@ -190,6 +209,8 @@ def main(args, exp_name, path):
         rwpe_k=args.rwpe_k,
         rwpe_h=args.rwpe_h,
         cache_rwpe=args.cache_rwpe,
+        two_hot=args.two_hot,
+        symlog=args.symlog,
     )
     agent_specification.print_self()
 
@@ -211,7 +232,9 @@ def main(args, exp_name, path):
         agent.agent_specification = agent_specification
     else:
         agent = Agent(
-            env_specification=env_specification, agent_specification=agent_specification
+            env_specification=env_specification,
+            agent_specification=agent_specification,
+            graphobs=args.vecenv_type == "graphgym",
         )
 
     if args.pretrain:
@@ -243,13 +266,18 @@ def main(args, exp_name, path):
         args.device,
         training_specification,
         args.disable_visdom,
+        graphobs=args.vecenv_type == "graphgym",
     )
+    if args.vecenv_type == "graphgym":
+        env_cls = GEnv
+    else:
+        env_cls = Env
     ppo = PPO(
         training_specification,
-        Env,
+        env_cls,
         validator,
     )
-    ppo.train(
+    return ppo.train(
         agent,
         problem_description,
         env_specification,

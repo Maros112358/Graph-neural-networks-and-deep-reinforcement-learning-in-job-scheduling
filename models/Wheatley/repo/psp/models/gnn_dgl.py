@@ -29,8 +29,9 @@ from dgl.nn import EGATConv
 
 from dgl import LaplacianPE
 from .agent_observation import AgentObservation
+from .agent_graph_observation import AgentGraphObservation
 from .edge_embedder import PspEdgeEmbedder
-from .rewiring import rewire
+from .rewiring import rewire, homogeneous_edges
 
 
 class GnnDGL(torch.nn.Module):
@@ -58,7 +59,8 @@ class GnnDGL(torch.nn.Module):
         update_edge_features_pe=False,
         rwpe_k=16,
         rwpe_h=16,
-        cache_rwpe=False,
+        rwpe_cache=None,
+        graphobs=False,
     ):
         super().__init__()
         self.conflicts = conflicts
@@ -82,6 +84,8 @@ class GnnDGL(torch.nn.Module):
         else:
             self.features_dim = hidden_dim_features_extractor + self.rwpe_h
 
+        self.graphobs = graphobs
+
         self.factored_rp = factored_rp
         self.add_rp_edges = add_rp_edges
         self.features_dim *= 2
@@ -96,10 +100,7 @@ class GnnDGL(torch.nn.Module):
         self.features_extractors = torch.nn.ModuleList()
         self.vnode = vnode
 
-        if cache_rwpe:
-            self.rwpe_cache = {}
-        else:
-            self.rwpe_cache = None
+        self.rwpe_cache = rwpe_cache
 
         if self.rwpe_k != 0:
             self.rwpe_embedder = torch.nn.Linear(self.rwpe_k * 4, self.rwpe_h)
@@ -224,26 +225,44 @@ class GnnDGL(torch.nn.Module):
             egat.reset_parameters()
 
     def forward(self, obs):
-        observation = AgentObservation(
-            obs,
-            conflicts=self.conflicts,
-            add_self_loops=self.add_self_loops,
-            factored_rp=self.factored_rp,
-            add_rp_edges=self.add_rp_edges,
-            max_n_resources=self.max_n_resources,
-            rwpe_k=self.rwpe_k,
-            rwpe_cache=self.rwpe_cache,
-        )
-        batch_size = observation.get_batch_size()
-        n_nodes = observation.get_n_nodes()
+        if self.graphobs:
+            g = AgentGraphObservation(
+                obs,
+                conflicts=self.conflicts,
+                factored_rp=self.factored_rp,
+                add_rp_edges=self.add_rp_edges,
+                max_n_resources=self.max_n_resources,
+                rwpe_k=self.rwpe_k,
+                rwpe_cache=self.rwpe_cache,
+                rewire_internal=False,
+            ).graphs
+            batch_size = g.batch_size
+            num_nodes = g.num_nodes()
+            if batch_size == 1:
+                n_nodes = g.batch_num_nodes()[0].item()
+            else:
+                n_nodes = g.batch_num_nodes()
+        else:
+            observation = AgentObservation(
+                obs,
+                conflicts=self.conflicts,
+                add_self_loops=False,
+                factored_rp=self.factored_rp,
+                add_rp_edges=self.add_rp_edges,
+                max_n_resources=self.max_n_resources,
+                rwpe_k=self.rwpe_k,
+                rwpe_cache=self.rwpe_cache,
+            )
+            batch_size = observation.get_batch_size()
 
-        g = observation.to_graph()
+            g = observation.to_graph()
 
-        num_nodes = g.num_nodes()
+            n_nodes = observation.get_n_nodes()
+            num_nodes = g.num_nodes()
 
         g, poolnodes, resource_nodes, vnodes = rewire(
             g,
-            self.graph_pooling == "learn",
+            self.graph_pooling,
             self.conflicts == "node",
             self.vnode,
             batch_size,
@@ -255,10 +274,37 @@ class GnnDGL(torch.nn.Module):
             10,
             8,
             9,
+            self.graphobs,
         )
+
+        if self.add_self_loops:
+            if self.graphobs:
+                g = dgl.add_self_loop(
+                    g,
+                    etype="self",
+                )
+            else:
+                g = dgl.add_self_loop(
+                    g,
+                    edge_feat_names=["type"],
+                    fill_data=AgentObservation.edgeType["self"],
+                )
+
+        if self.graphobs:
+            g, felist = homogeneous_edges(
+                g,
+                AgentGraphObservation.edgeTypes,
+                self.factored_rp,
+                self.max_n_resources,
+            )
+            g = dgl.to_homogeneous(g, ndata=["feat"], edata=felist, store_type=False)
 
         g = g.to(next(self.parameters()).device)
         features = g.ndata["feat"]
+
+        edge_features = self.edge_embedder(g)
+        if self.rwpe_k != 0:
+            edge_features_pe = self.edge_embedder_pe(g)
 
         if self.rwpe_k != 0:
             g.ndata["pe"] = self.rwpe_embedder(
@@ -284,7 +330,7 @@ class GnnDGL(torch.nn.Module):
             )
         if self.conflicts == "node":
             features[resource_nodes] = self.resource_node_embedder(
-                torch.LongTensor(list(range(num_resources)) * batch_size).to(
+                torch.LongTensor(list(range(self.max_n_resources)) * batch_size).to(
                     features.device
                 )
             )
@@ -312,10 +358,6 @@ class GnnDGL(torch.nn.Module):
                 features_list.append(torch.cat([features, pe], dim=-1))
             else:
                 features_list.append(features)
-
-        edge_features = self.edge_embedder(g)
-        if self.rwpe_k != 0:
-            edge_features_pe = self.edge_embedder_pe(g)
 
         if self.layer_pooling == "last":
             previous_feat = features
@@ -383,28 +425,69 @@ class GnnDGL(torch.nn.Module):
             features = torch.cat(
                 features_list, axis=1
             )  # The final embedding is concatenation of all layers embeddings
+
         node_features = features[:num_nodes, :]
-        node_features = node_features.reshape(batch_size, n_nodes, -1)
 
-        if self.graph_pooling == "max":
-            max_elts, max_ind = torch.max(node_features, dim=1)
-            graph_embedding = max_elts
-        elif self.graph_pooling == "avg":
-            graph_pooling = torch.ones(n_nodes, device=self.device) / n_nodes
-            graph_embedding = torch.matmul(graph_pooling, node_features)
-        elif self.graph_pooling == "learn":
-            graph_embedding = features[num_nodes : num_nodes + batch_size, :]
+        if self.graphobs and batch_size != 1:
+            if self.graph_pooling == "max":
+                graph_embedding = []
+                startelt = 0
+                for i in range(batch_size):
+                    nn = n_nodes[i]
+                    graph_embedding.append(
+                        torch.max(node_features[startelt : startelt + nn], dim=0)[0]
+                    )
+                    startelt += nn
+            elif self.graph_pooling == "avg":
+                graph_embedding = []
+                strtelt = 0
+                for i in range(batch_size):
+                    nn = n_nodes[i]
+                    gp = torch.ones(nn, device=self.device) / nn
+                    graph_embedding.append(
+                        torch.matmul(gp, node_features[startelt : startelt + nn])
+                    )
+                    startelt += nn
+            elif self.graph_pooling in ["learn", "learninv"]:
+                graph_embedding = features[num_nodes : num_nodes + batch_size, :]
+
+            nnf = []
+            startelt = 0
+            for i in range(batch_size):
+                nn = n_nodes[i]
+                nnf.append(
+                    torch.nn.functional.pad(
+                        node_features[startelt : startelt + nn],
+                        (0, 0, 0, self.max_n_nodes - nn),
+                        mode="constant",
+                        value=0.0,
+                    )
+                )
+                startelt += nn
+            node_features = torch.stack(nnf)
+
         else:
-            raise Exception(
-                f"Graph pooling {self.graph_pooling} not recognized. Only accepted pooling are max and avg"
-            )
+            node_features = node_features.reshape(batch_size, n_nodes, -1)
 
-        node_features = torch.nn.functional.pad(
-            node_features,
-            (0, 0, 0, self.max_n_nodes - node_features.shape[1]),
-            mode="constant",
-            value=0.0,
-        )
+            if self.graph_pooling == "max":
+                max_elts, _ = torch.max(node_features, dim=1)
+                graph_embedding = max_elts
+            elif self.graph_pooling == "avg":
+                graph_pooling = torch.ones(n_nodes, device=self.device) / n_nodes
+                graph_embedding = torch.matmul(graph_pooling, node_features)
+            elif self.graph_pooling in ["learn", "learninv"]:
+                graph_embedding = features[poolnodes, :]
+            else:
+                raise Exception(
+                    f"Graph pooling {self.graph_pooling} not recognized. Only accepted pooling are max and avg"
+                )
+
+            node_features = torch.nn.functional.pad(
+                node_features,
+                (0, 0, 0, self.max_n_nodes - node_features.shape[1]),
+                mode="constant",
+                value=0.0,
+            )
 
         graph_embedding = graph_embedding.reshape(batch_size, 1, -1)
         # repeat the graph embedding to match the nodes embedding size

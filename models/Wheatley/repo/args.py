@@ -81,13 +81,19 @@ def argument_parser() -> argparse.ArgumentParser:
         help="Which device to use (cpu, cuda:0, cuda:1...)",
     )
     parser.add_argument(
+        "--store_rollouts_on_disk",
+        default=None,
+        type=str,
+        help="location for rollout on disk store rollouts on disk (graphgym only ATM)",
+    )
+    parser.add_argument(
         "--exp_name_appendix", type=str, help="Appendix for the name of the experience"
     )
     parser.add_argument(
         "--vecenv_type",
         type=str,
         default="subproc",
-        choices=["subproc", "dummy"],
+        choices=["subproc", "dummy", "graphgym"],
         help="Use SubprocEnv or DummyVecEnv in SB3",
     )
 
@@ -133,7 +139,16 @@ def argument_parser() -> argparse.ArgumentParser:
         help="RPO-style smoothing param",
     )
     parser.add_argument(
-        "--gae_lambda", type=float, default=0.95, help="GAE lambda param"
+        "--gae_lambda",
+        type=float,
+        default=1.0,
+        help="GAE lambda parameter, GAE off by default",
+    )
+    parser.add_argument(
+        "--return_based_scaling",
+        default=False,
+        action="store_true",
+        help="use return based scaling 2105.05347",
     )
 
     parser.add_argument(
@@ -229,7 +244,7 @@ def argument_parser() -> argparse.ArgumentParser:
     )
 
     # =================================================AGENT SPECIFICATION======================================================
-    parser.add_argument("--gamma", type=float, default=1, help="Discount factor")
+    parser.add_argument("--gamma", type=float, default=1.0, help="Discount factor")
     parser.add_argument(
         "--clip_range", type=float, default=0.25, help="Clipping parameter"
     )
@@ -246,6 +261,14 @@ def argument_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--vf_coef", type=float, default=0.5, help="Value function coefficient"
+    )
+
+    parser.add_argument(
+        "--critic_loss",
+        type=str,
+        choices=["l2", "l1", "sl1"],
+        default="l2",
+        help="critic loss",
     )
     parser.add_argument(
         "--dont_normalize_advantage",
@@ -264,7 +287,7 @@ def argument_parser() -> argparse.ArgumentParser:
         "--graph_pooling",
         type=str,
         default="learn",
-        choices=["max", "avg", "learn"],
+        choices=["max", "avg", "learn", "learninv"],
         help="which pooling to use (avg , max or learn)",
     )
     parser.add_argument(
@@ -423,6 +446,32 @@ def argument_parser() -> argparse.ArgumentParser:
         help="keep past precedencies",
     )
     parser.add_argument(
+        "--observation_horizon_step",
+        default=0,
+        type=int,
+        help="observation horizon (steps)",
+    )
+    parser.add_argument(
+        "--observation_horizon_time",
+        default=0,
+        type=float,
+        help="observation horizon (time)",
+    )
+    parser.add_argument(
+        "--no_fast_forward",
+        default=False,
+        action="store_true",
+        help="do not make env auto forward trivial actions",
+    )
+
+    parser.add_argument(
+        "--observe_subgraph",
+        default=False,
+        action="store_true",
+        help="extract subgraph (graphgym only ATM)",
+    )
+
+    parser.add_argument(
         "--vnode", default=False, action="store_true", help="add vnode to MP-graph"
     )
 
@@ -495,6 +544,20 @@ def argument_parser() -> argparse.ArgumentParser:
         default=False,
         action="store_true",
         help="enable rwpe cache",
+    )
+
+    parser.add_argument(
+        "--two_hot",
+        default=None,
+        type=float,
+        nargs=3,
+        help="min,max, nbins parameters for value two hot encoding",
+    )
+    parser.add_argument(
+        "--symlog",
+        action="store_true",
+        default=False,
+        help="predict value internally as log of expected sum of reward",
     )
 
     # =================================================ENVIRONMENT SPECIFICATION================================================

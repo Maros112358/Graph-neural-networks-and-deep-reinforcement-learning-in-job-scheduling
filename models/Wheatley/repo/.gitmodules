@@ -1,3 +1,0 @@
-[submodule "muzero_general"]
-	path = muzero_general
-	url = git@gitlab.com:jolibrain/muzero-general.git

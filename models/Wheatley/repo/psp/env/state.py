@@ -31,7 +31,10 @@ class State:
         self.problem = problem
         self.problem_description = problem_description
         self.n_features = env_specification.n_features
-        self.n_nodes = self.problem["n_modes"]
+        if isinstance(self.problem, dict):
+            self.n_nodes = self.problem["n_modes"]
+        else:
+            self.n_nodes = self.problem.n_modes
         self.features = np.zeros((self.n_nodes, self.n_features), dtype=float)
         self.deterministic = deterministic
         self.observe_conflicts_as_cliques = observe_conflicts_as_cliques
@@ -46,6 +49,9 @@ class State:
 
         self.add_rp_edges = env_specification.add_rp_edges
         self.factored_rp = env_specification.factored_rp
+
+        self.step_horizon = env_specification.observation_horizon_step
+        self.time_horizon = env_specification.observation_horizon_time
 
         self.edge_index = {}
 
@@ -64,24 +70,44 @@ class State:
         # 7,8,9 : tct (min max mode)
         # 10.. 9+max_n_resources : level of resource i used by this mode (normalized)
 
-        job_info = problem["job_info"]
         self.job_modes = []
-        m = 0
-        for n, j in enumerate(job_info):
-            self.job_modes.append(list(range(m, m + j[0])))
-            for mi in range(m, m + j[0]):
-                self.features[mi, 2] = n
-            m += j[0]
+        if isinstance(problem, dict):
+            job_info = problem["job_info"]
+            m = 0
+            for n, j in enumerate(job_info):
+                self.job_modes.append(list(range(m, m + j[0])))
+                for mi in range(m, m + j[0]):
+                    self.features[mi, 2] = n
+                m += j[0]
+        else:
+            m = 0
+            for n, j in enumerate(problem.n_modes_per_job):
+                self.job_modes.append(list(range(m, m + j)))
+                for mi in range(m, m + j):
+                    self.features[mi, 2] = n
+                m += j
 
         self.problem_edges = []
-        for n, j in enumerate(job_info):
-            for succ_job in j[1]:
-                for orig_mode in self.job_modes[n]:
-                    for dest_mode in self.job_modes[succ_job - 1]:
-                        self.problem_edges.append((orig_mode, dest_mode))
+        if isinstance(problem, dict):
+            for n, j in enumerate(job_info):
+                for succ_job in j[1]:
+                    for orig_mode in self.job_modes[n]:
+                        for dest_mode in self.job_modes[succ_job - 1]:
+                            self.problem_edges.append((orig_mode, dest_mode))
+        else:
+            for n, j in enumerate(problem.successors):
+                for succ_job in j:
+                    for orig_mode in self.job_modes[n]:
+                        for dest_mode in self.job_modes[succ_job - 1]:
+                            self.problem_edges.append((orig_mode, dest_mode))
+
         self.problem_graph = nx.DiGraph()
-        self.problem_graph.add_nodes_from(range(0, problem["n_modes"]))
+        if isinstance(problem, dict):
+            self.problem_graph.add_nodes_from(range(0, problem["n_modes"]))
+        else:
+            self.problem_graph.add_nodes_from(range(0, problem.n_modes))
         self.problem_graph.add_edges_from(self.problem_edges)
+
         # nx.draw_networkx(self.graph)
         # plt.show()
         self.numpy_problem_graph = np.transpose(np.array(self.problem_edges))
@@ -134,11 +160,19 @@ class State:
 
     def reset_durations(self, redraw_real=True):
         # at init, draw real durations from distrib if not deterministic
-        for i in range(3):
-            flat_dur = [
-                item for sublist in self.problem["durations"][i] for item in sublist
-            ]
-            self.features[:, 4 + i] = np.array(flat_dur)
+        if isinstance(self.problem, dict):
+            for i in range(3):
+                flat_dur = [
+                    item for sublist in self.problem["durations"][i] for item in sublist
+                ]
+                self.features[:, 4 + i] = np.array(flat_dur)
+        else:
+            for i in range(3):
+                flat_dur = [
+                    item for sublist in self.problem.durations[i] for item in sublist
+                ]
+                self.features[:, 4 + i] = np.array(flat_dur)
+
         if redraw_real:
             self.real_durations = self.draw_real_durations(self.features[:, 4:7])
         self.max_duration = max(flat_dur)
@@ -183,43 +217,83 @@ class State:
                     self.nodes_in_frontier.add(fe[1])
 
     def reset_resources(self):
-        self.n_resources = self.problem["n_resources"]
-        flat_res = np.array(
-            [item for sublist in self.problem["resources"] for item in sublist],
-            dtype=float,
-        )
-        # normalize resource usage
-        for i in range(self.problem["n_resources"]):
-            flat_res[:, i] /= self.problem["resource_availability"][i]
-        self.resource_levels = np.array(self.problem["resource_availability"])
-        self.features[:, 10 : 10 + self.n_resources] = flat_res
+        if isinstance(self.problem, dict):
+            self.n_resources = self.problem["n_resources"]
+            flat_res = np.array(
+                [item for sublist in self.problem["resources"] for item in sublist],
+                dtype=float,
+            )
+            # normalize resource usage
+            for i in range(self.problem["n_resources"]):
+                flat_res[:, i] /= self.problem["resource_availability"][i]
+            self.resource_levels = np.array(self.problem["resource_availability"])
+            self.features[:, 10 : 10 + self.n_resources] = flat_res
 
-        self.resources = []
-        for r in range(self.problem["n_renewable_resources"]):
-            self.resources.append([])
-            for i in range(4):
-                self.resources[r].append(
-                    self.resourceModel(
-                        max_level=1.0,
-                        unit_val=1.0 / self.resource_levels[r],
-                        renewable=True,
+            self.resources = []
+            for r in range(self.problem["n_renewable_resources"]):
+                self.resources.append([])
+                for i in range(4):
+                    self.resources[r].append(
+                        self.resourceModel(
+                            max_level=1.0,
+                            unit_val=1.0 / self.resource_levels[r],
+                            renewable=True,
+                        )
                     )
-                )
 
-        for r in range(
-            self.problem["n_renewable_resources"],
-            self.problem["n_renewable_resources"]
-            + self.problem["n_nonrenewable_resources"],
-        ):
-            self.resources.append([])
-            for i in range(4):
-                self.resources[r].append(
-                    self.resourceModel(
-                        max_level=1.0,
-                        unit_val=1.0 / self.resource_levels[r],
-                        renewable=False,
+            for r in range(
+                self.problem["n_renewable_resources"],
+                self.problem["n_renewable_resources"]
+                + self.problem["n_nonrenewable_resources"],
+            ):
+                self.resources.append([])
+                for i in range(4):
+                    self.resources[r].append(
+                        self.resourceModel(
+                            max_level=1.0,
+                            unit_val=1.0 / self.resource_levels[r],
+                            renewable=False,
+                        )
                     )
-                )
+        else:
+            self.n_resources = self.problem.n_resources
+            flat_res = np.array(
+                [item for sublist in self.problem.resource_cons for item in sublist],
+                dtype=float,
+            )
+            # normalize resource usage
+            for i in range(self.problem.n_resources):
+                flat_res[:, i] /= self.problem.resource_availabilities[i]
+            self.resource_levels = np.array(self.problem.resource_availabilities)
+            self.features[:, 10 : 10 + self.n_resources] = flat_res
+
+            self.resources = []
+            for r in range(self.problem.n_renewable_resources):
+                self.resources.append([])
+                for i in range(4):
+                    self.resources[r].append(
+                        self.resourceModel(
+                            max_level=1.0,
+                            unit_val=1.0 / self.resource_levels[r],
+                            renewable=True,
+                        )
+                    )
+
+            for r in range(
+                self.problem.n_renewable_resources,
+                self.problem.n_renewable_resources
+                + self.problem.n_nonrenewable_resources,
+            ):
+                self.resources.append([])
+                for i in range(4):
+                    self.resources[r].append(
+                        self.resourceModel(
+                            max_level=1.0,
+                            unit_val=1.0 / self.resource_levels[r],
+                            renewable=False,
+                        )
+                    )
+
         assert len(self.resources) == self.n_resources
         self.reset_frontier()
 
@@ -236,6 +310,12 @@ class State:
         no_child_pos = np.where(out_deg[:, 1] == 0)[0]
         no_child = out_deg[no_child_pos][:, 0]
         self.features[no_child, 3] = 1  # sink
+
+    def get_weight(self, source, dest, edge_attr):
+        if source >= self.features.shape[0]:
+            # case of virtual added source
+            return 0
+        return self.features[source, 4]
 
     def reset_selectable(self):
         self.features[:, 1] = 0
@@ -281,6 +361,9 @@ class State:
     def resources_usage(self, node_id):
         return self.features[node_id, 10:]
 
+    def all_resources_usage(self):
+        return self.features[:, 10:]
+
     def resource_usage(self, node_id, r):
         return self.features[node_id, 10 + r]
 
@@ -322,6 +405,16 @@ class State:
 
     def all_not_affected(self):
         return self.features[:, 0] == 0
+
+    def trivial_actions(self):
+        return np.where(
+            np.logical_and(
+                self.selectables() == 1, np.all(self.all_resources_usage() == 0, axis=1)
+            )
+        )[0]
+
+    def unmasked_actions(self):
+        return np.where(self.selectables() == 1)[0]
 
     ############################### EXTERNAL API ############################
 
@@ -369,7 +462,7 @@ class State:
                 rpe = None
                 rpa = None
             return (
-                self.normalize_features(),
+                self.process_features(),
                 self.numpy_problem_graph,
                 rce,
                 rca,
@@ -383,13 +476,13 @@ class State:
             )
 
             return (
-                self.normalize_features(),
+                self.process_features(),
                 self.remove_past_edges(fresh_nodes),
                 rce,
                 rca,
             )
         return (
-            self.normalize_features(),
+            self.process_features(),
             self.numpy_problem_graph,
             rce,
             rca,
@@ -410,9 +503,20 @@ class State:
                         self.nodes_in_frontier.add(fe[1])
 
     def mask_wrt_non_renewable_resources(self):
+        if isinstance(self.problem, dict):
+            if self.problem["n_nonrenewable_resources"] == 0:
+                return
+        else:
+            if self.problem.n_nonrenewable_resources == 0:
+                return
         selectables = np.where(self.features[:, 1] == 1)[0]
+        # TODO rewrite
         for n in selectables:
-            for r, level in enumerate(self.resources_usage(n)):
+            for r, level in enumerate(
+                self.resources_usage(n)[self.problem["n_renewable_resources"], :]
+            ):
+                if level == 0:
+                    continue
                 if not self.resources[r][0].still_available(level):
                     self.set_unselectable(n)
                     break
@@ -444,18 +548,25 @@ class State:
         return torchimg
 
     def render_solution(self, schedule, scaling=1.0):
-        n_jobs = self.problem["n_jobs"]
         starts = [int(i * scaling) for i in schedule[0]]
         modes = schedule[1]
-        nres = self.problem["n_resources"]
-        maxres = self.problem["resource_availability"]
+        if isinstance(self.problem, dict):
+            n_jobs = self.problem["n_jobs"]
+            nres = self.problem["n_resources"]
+            maxres = self.problem["resource_availability"]
+            rusage = [self.problem["resources"][j][modes[j]] for j in range(n_jobs)]
+        else:
+            n_jobs = self.problem.n_jobs
+            nres = self.problem.n_resources
+            maxres = self.problem.resource_availabilities
+            rusage = [self.problem.resource_cons[j][modes[j]] for j in range(n_jobs)]
+
         ends = [
             # starts[j] + self.problem["durations"][0][j][modes[j]] for j in range(n_jobs)
             starts[j] + int(self.duration_real(self.job_modes[j][modes[j]]))
             for j in range(n_jobs)
         ]
 
-        rusage = [self.problem["resources"][j][modes[j]] for j in range(n_jobs)]
         levels = []
         for r in range(nres):
             levels.append([0] * int((max(ends) + 1)))
@@ -563,12 +674,45 @@ class State:
                 # make selectable, at last
                 self.set_selectable(successor)
 
-    def normalize_features(self):
-        if self.normalize:
+    def process_features(self):
+        if self.normalize or self.step_horizon != 0 or self.time_horizon != 0:
             feat = np.copy(self.features)
+        else:
+            feat = self.features
+        if self.normalize:
             feat[:, 4:10] /= self.max_duration
-            return feat
-        return self.features
+        if self.step_horizon != 0 or self.time_horizon != 0:
+            # recompute reachable nodes in step_horizon steps in not_affected ones
+            sources = np.where(self.features[:, 1] == 1)[0]
+            v_source = self.problem_graph.number_of_nodes()
+            self.problem_graph.add_node(v_source)
+            for i in sources:
+                self.problem_graph.add_edge(v_source, i)
+            # not_affected = (np.where(self.features[:, 0] == 0)[0]).tolist()
+            to_remove = []
+            if self.step_horizon != 0:
+                step_depth = nx.shortest_path_length(
+                    self.problem_graph, source=v_source
+                )
+                for i in step_depth.keys():
+                    if i == v_source:
+                        continue
+                    if step_depth[i] > self.step_horizon:
+                        to_remove.append(i)
+            if self.time_horizon != 0:
+                time_depth = nx.shortest_path_length(
+                    self.problem_graph, source=v_source, weight=self.get_weight
+                )
+                for i in time_depth.keys():
+                    if i == v_source:
+                        continue
+                    if time_depth[i] > self.time_horizon:
+                        to_remove.append(i)
+
+            feat[to_remove, 10:] = 0
+            self.problem_graph.remove_node(v_source)
+
+        return feat
 
     def get_last_finishing_dates(self, jobs):
         if len(jobs) == 0:

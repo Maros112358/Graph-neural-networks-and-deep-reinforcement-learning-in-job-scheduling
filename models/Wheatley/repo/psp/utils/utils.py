@@ -26,7 +26,6 @@
 import os
 import sys
 from collections import defaultdict
-from copy import deepcopy
 from typing import List, Optional, Tuple, Union
 
 import numpy as np
@@ -66,8 +65,17 @@ def compute_resources_graph_torch(r_info):
     notdiag = torch.logical_not(
         torch.diag(torch.BoolTensor([True] * n_modes)).unsqueeze_(-1)
     )
+    # m1 = r_info.unsqueeze(0) != 0
+    # m2 = r_info.unsqueeze(1) != 0
+
+    # c1 = torch.logical_and(m1, m2)
+    # c2 = torch.logical_and(c1, notdiag)
     c2 = torch.logical_and(
-        torch.logical_and(r_info.unsqueeze(0) != 0, r_info.unsqueeze(1) != 0), notdiag
+        torch.logical_and(
+            r_info.unsqueeze(0).expand(r_info.shape[0], -1, -1) != 0,
+            r_info.unsqueeze(1).expand(-1, r_info.shape[0], -1) != 0,
+        ),
+        notdiag,
     )
     conflicts = torch.where(c2)
     # conflicts[0] is source of edge

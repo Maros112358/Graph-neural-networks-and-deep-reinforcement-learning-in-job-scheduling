@@ -135,6 +135,9 @@ def main(args, exp_name, path) -> float:
         rpo=args.rpo,
         rpo_smoothing_param=args.rpo_smoothing_param,
         gae_lambda=args.gae_lambda,
+        return_based_scaling=args.return_based_scaling,
+        store_rollouts_on_disk=None,
+        critic_loss=args.critic_loss,
     )
     training_specification.print_self()
 
@@ -207,6 +210,8 @@ def main(args, exp_name, path) -> float:
         rwpe_k=args.rwpe_k,
         rwpe_h=args.rwpe_h,
         cache_rwpe=args.cache_rwpe,
+        two_hot=args.two_hot,
+        symlog=args.symlog,
     )
     agent_specification.print_self()
     # If we want to use a pretrained Agent, we only have to load it (if it exists)
