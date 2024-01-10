@@ -16,7 +16,7 @@ python3 -m jssp.train\
     --hidden_dim_features_extractor 64\
     --layer_pooling last\
     --max_n_j 100\
-    --max_n_m 30\
+    --max_n_m 20\
     --mlp_act gelu\
     --n_epochs 1\
     --n_j 30\
@@ -37,5 +37,6 @@ python3 -m jssp.train\
     --vf_coef 1.0\
     --gconv_type gin\
     --reward_model_config L2D\
-    --graph_pooling avg
+    --graph_pooling avg\
+    --disable_visdom
 
