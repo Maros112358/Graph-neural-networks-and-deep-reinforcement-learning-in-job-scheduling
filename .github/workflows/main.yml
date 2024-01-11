@@ -25,7 +25,7 @@ jobs:
         with:
           name: Thesis
           path: |
-            *.pdf
+            thesis/*.pdf
 
   verify:
     name: Verify PDF/A
@@ -37,4 +37,6 @@ jobs:
       - name: Get PDFs
         uses: actions/download-artifact@v3
       - name: Run VeraPDF
-        run: verify Thesis/*.pdf | tee /dev/stderr | grep -qE 'nonCompliant="0"'
+        run: |
+          ls
+          verify Thesis/*.pdf | tee /dev/stderr | grep -qE 'nonCompliant="0"'
