@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build the thesis
-        run: latexmk thesis && latexmk abstract-cz && latexmk abstract-en
+        run: latexmk thesis/thesis && latexmk thesis/abstract-cz && latexmk thesis/abstract-en
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
