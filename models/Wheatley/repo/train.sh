@@ -1,5 +1,4 @@
-python3 -m jssp.train\
-    --batch_size 245\
+nohup python3 -m jssp.train\
     --clip_range 0.20\
     --custom_heuristic_names SPT MWKR MOPNR FDD/MWKR\
     --device cpu\
@@ -18,25 +17,23 @@ python3 -m jssp.train\
     --max_n_j 100\
     --max_n_m 20\
     --mlp_act gelu\
-    --n_epochs 1\
-    --n_j 30\
+    --n_j 5\
     --n_layers_features_extractor 2\
-    --n_m 20\
+    --n_m 5\
     --n_mlp_layers_actor 2\
     --n_mlp_layers_critic 2\
     --n_mlp_layers_features_extractor 2\
-    --n_steps_episode 9800\
     --n_validation_env 100\
-    --n_workers 4\
+    --n_workers 1\
+    --n_steps_episode 1000\
     --optimizer adamw\
     --ortools_strategy realistic\
     --seed 0\
     --target_kl 0.04\
-    --total_timesteps 10_000\
+    --total_timesteps 1_000_000\
     --validation_freq 3\
     --vf_coef 1.0\
     --gconv_type gin\
     --reward_model_config L2D\
     --graph_pooling avg\
-    --disable_visdom
-
+    --disable_visdom > training_log.txt 2>&1 &
