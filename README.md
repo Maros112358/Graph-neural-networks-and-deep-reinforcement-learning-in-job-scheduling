@@ -41,6 +41,8 @@
 - [STATIC JSSP DATA](data/experiment_static_jssp_end_to_end_drl_for_fjsp.csv)
 - [STATIC FJSP DATA](data/experiment_static_fjsp_end_to_end_drl_for_fjsp.csv)
 
+### [Deep-reinforcement-learning-for-dynamic-scheduling-of-a-flexible-job-shop](https://github.com/RK0731/Deep-reinforcement-learning-for-dynamic-scheduling-of-a-flexible-job-shop)
+
 
 ## Benchmarks
 
