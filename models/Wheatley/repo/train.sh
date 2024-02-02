@@ -17,7 +17,7 @@ nohup python3 -m jssp.train\
     --max_n_j 100\
     --max_n_m 20\
     --mlp_act gelu\
-    --n_j 30\
+    --n_j 20\
     --n_layers_features_extractor 2\
     --n_m 20\
     --n_mlp_layers_actor 2\
