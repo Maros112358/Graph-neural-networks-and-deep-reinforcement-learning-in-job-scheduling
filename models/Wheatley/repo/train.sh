@@ -1,6 +1,5 @@
 nohup python3 -m jssp.train\
-    --batch_size 245\
-    --clip_range 0.20\
+    -clip_range 0.20\
     --custom_heuristic_names SPT MWKR MOPNR FDD/MWKR\
     --device cpu\
     --duration_type deterministic\
@@ -23,7 +22,6 @@ nohup python3 -m jssp.train\
     --n_m 20\
     --n_mlp_layers_actor 2\
     --n_mlp_layers_critic 2\
-    --n_steps_episode 9800\
     --n_mlp_layers_features_extractor 2\
     --n_validation_env 100\
     --n_workers 1\
