@@ -1,5 +1,5 @@
 nohup python3 -m jssp.train\
-    -clip_range 0.20\
+    --clip_range 0.20\
     --custom_heuristic_names SPT MWKR MOPNR FDD/MWKR\
     --device cpu\
     --duration_type deterministic\
