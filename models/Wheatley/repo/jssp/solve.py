@@ -15,13 +15,14 @@ def solve_instance(
     affectations: np.ndarray,
     durations: np.ndarray,
     deterministic: bool,
+    seed: int = 0
 ) -> Solution:
     problem_description = Description(
         transition_model_config="simple",
         reward_model_config="Sparse",
         deterministic=deterministic,
         fixed=True,
-        seed=0,
+        seed=seed,
         affectations=affectations,
         durations=durations,
     )

@@ -1,0 +1,3 @@
+seed,model,instance,load_factor,makespan,runtime
+0,saved_models/20j20m_Ddeterministic_Tsimple_RL2D_GNNdgl_CONVgin_POOLavg_L2_HD64_H4_Cclique_QUICKSTART_RUN/agent.pkl,abz5.txt,1,1701.0,0.5303089618682861
+0,saved_models/20j20m_Ddeterministic_Tsimple_RL2D_GNNdgl_CONVgin_POOLavg_L2_HD64_H4_Cclique_QUICKSTART_RUN/agent.pkl,abz6.txt,1,1349.0,0.46089816093444824

@@ -15,7 +15,7 @@ nohup python3 -m jssp.train\
     --hidden_dim_features_extractor 64\
     --layer_pooling last\
     --max_n_j 100\
-    --max_n_m 20\
+    --max_n_m 100\
     --mlp_act gelu\
     --n_j 20\
     --n_layers_features_extractor 2\
