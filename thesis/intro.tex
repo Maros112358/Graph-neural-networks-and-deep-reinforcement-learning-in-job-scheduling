@@ -1,9 +1,14 @@
 
 \chapwithtoc{Introduction}
 
-Job scheduling considers the optimal allocation of the number of jobs with predefined constraints (e.g., job operations are processed in a 
-specific order) to a set of shared resources to minimize total makespan, tardiness, cost, or other objectives. Different constraints and conditions lead to
-different variants of job scheduling. 
+Job scheduling considers the optimal allocation of the number of jobs consisting of multiple operations with predefined constraints (e.g., operations are processed in a 
+specific order) to a set of shared resources to minimize total makespan, tardiness, cost, or other objectives \cite{YamadaNakanoJSSP}. Each resource can process only one operation at a time and is non-preemptive, i.e., it runs without interruption.
+\par
+Different constraints and conditions lead to different variants of job scheduling. 
+Job shop scheduling problem (JSSP) assumes all jobs to be known apriori, that each operation can be allocated only to one given machine \cite{YamadaNakanoJSSP}, and there is no lower bound to the start time of the operation. In flexible job-shop scheduling (FJSP), each operation can be allocated to any of the machines from a given subset of machines \cite{DAUZEREPERES2024409}. Dynamic job-shop scheduling (DJSP), one of the more common variants at the time, tackles the stochastic aspects of modern manufacturing, e.g., the arrival of new jobs during the execution of the schedule or uncertain processing time \cite{MOHAN201934}.
+\par
+Due to the NP-hardness of these problems \cite{Garey1976TheCO}, numerous approaches and heuristics have been proposed over time to yield approximate solutions \cite{Jansen2000ApproximationAF}. Priority dispatching rule (PDR) \cite{Haupt1989ASO} is a computationally fast and intuitive heuristic method widely used in scheduling systems compared to other optimization methods, which usually requires domain knowledge for different types of JSSP. Many different PDRs have been proposed and extensively studied in the literature \cite{doi:10.1080/00207543.2011.611539}. 
+
 
 
 
