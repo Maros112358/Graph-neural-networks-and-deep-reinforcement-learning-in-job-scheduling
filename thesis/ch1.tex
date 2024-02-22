@@ -25,8 +25,10 @@ The Gantt-Chart is a convenient tool for visualizing schedules \cite{WILSON20034
 
 \section{JSSP as a disjunctive graph}
 
-JSSP can be represented by a disjunctive graph \cite{YamadaNakanoJSSP, BLAZEWICZ2000317}. $ G = ( V, C \cup D )$, where $V$ denotes a set of vertices corresponding to different operations $O_{ij}$ together with \textit{source} node and \textit{sink} node representing start and end of the schedule, respectively. The source node can be interpreted as a dummy operation preceding all other operations, and the sink node as a dummy operation succeeding all other operations. Both dummy operations have a processing time equal to zero. $C$ is a set of conjunctive arcs representing precedence constraints between consecutive operations of the same job, and between the jobs and dummy operations. $D$ is a set of disjunctive edges connecting operations requiring the same machine for their execution.
+JSSP can be represented by a disjunctive graph \cite{YamadaNakanoJSSP, BLAZEWICZ2000317} $G = ( V, C \cup D )$, where $V$ denotes a set of vertices corresponding to different operations $O_{ij}$ together with \textit{source} node and \textit{sink} node representing start and end of the schedule, respectively. The source node can be interpreted as a dummy operation preceding all other operations, and the sink node as a dummy operation succeeding all other operations. Both dummy operations have a processing time equal to zero. Nodes $V$ are weighted by the processing time of their corresponding operation. $C$ is a set of conjunctive arcs representing precedence constraints between consecutive operations of the same job, and between the jobs and dummy operations. $D$ is a set of disjunctive edges connecting operations requiring the same machine for their execution.
 \begin{center}
-    \includegraphics[width=0.8\linewidth]{images/jssp_disjunctive_graph.pdf}\\
-    Figure 1.2: Disjunctive graph representation of, retrieved from \cite{YamadaNakanoJSSP}
+    \includegraphics[width=0.7\linewidth]{images/jssp_disjunctive_graph.pdf}\\
+    Figure 1.2: Disjunctive graph representation of 3x3 instance in table 1.1, retrieved from \cite{YamadaNakanoJSSP}
 \end{center}
+
+Finding a solution to the job-shop scheduling problem can be viewed as defining the ordering between operations requiring the same machine. In the disjunctive graph, this is done by turning all disjunctive arcs into conjunctive arcs \cite{YamadaNakanoJSSP, BLAZEWICZ2000317}. The makespan $C_\text{max}$ is then given by the longest weighted path from source to sink.
