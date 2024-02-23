@@ -23,7 +23,7 @@ The Gantt-Chart is a convenient tool for visualizing schedules \cite{WILSON20034
     Figure 1.1: Gantt-Chart of a solution for a 3x3 problem in table 1.1, reproduced from \cite{YamadaNakanoJSSP}
 \end{center}
 
-\section{JSSP as a disjunctive graph}
+\subsection{JSSP as a disjunctive graph}
 
 JSSP can be represented by a disjunctive graph \cite{YamadaNakanoJSSP, BLAZEWICZ2000317} $G = ( V, C \cup D )$, where $V$ denotes a set of vertices corresponding to different operations $O_{ij}$ together with \textit{source} node and \textit{sink} node representing start and end of the schedule, respectively. The source node can be interpreted as a dummy operation preceding all other operations, and the sink node as a dummy operation succeeding all other operations. Both dummy operations have a processing time equal to zero. Nodes $V$ are weighted by the processing time of their corresponding operation. $C$ is a set of conjunctive arcs representing precedence constraints between consecutive operations of the same job, and between the jobs and dummy operations. $D$ is a set of disjunctive edges connecting operations requiring the same machine for their execution.
 \begin{center}
@@ -32,3 +32,11 @@ JSSP can be represented by a disjunctive graph \cite{YamadaNakanoJSSP, BLAZEWICZ
 \end{center}
 
 Finding a solution to the job-shop scheduling problem can be viewed as defining the ordering between operations requiring the same machine. In the disjunctive graph, this is done by turning all disjunctive arcs into conjunctive arcs \cite{YamadaNakanoJSSP, BLAZEWICZ2000317} in such a way that the resulting graph is a direct acyclic graph (DAG) \cite{doi:10.1287/opre.17.6.941}. The makespan $C_\text{max}$ is then given by the longest weighted path from source to sink.
+
+\subsection{JSSP as a Machine-Operation Graph}
+
+Alternative graph representation proposed in \cite{10226873} represents JSSP as a graph $G = (V, E)$, where $V$ is a set of nodes and $E$ is a set of edges. 
+\par
+Each node can be either a machine node corresponding to machine $M_j \in \mathcal{M}$ or an operation node corresponding to operation $O_{ij} \in \mathcal{O}$. Features of machine nodes include the status of the corresponding machine and the remaining time of the operation being processed. Features of operation nodes include the status of the operation, the processing time, the remaining time of the operation, and the number of remaining operations in the current job.
+\par
+Each edge can be either operation-to-operation ($O-O$) edge, machine-to-machine ($M-M$) edge, or operation-to-machine ($O-M$) edge. $O-O$ edges fully connect all operations in the same job, and all machines are fully connected via $M-M$ edges. $O-M$ edge connects operations with machines on which they can be processed.
