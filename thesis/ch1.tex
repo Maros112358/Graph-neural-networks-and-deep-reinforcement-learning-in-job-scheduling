@@ -23,11 +23,11 @@ The Gantt-Chart is a convenient tool for visualizing schedules \cite{WILSON20034
     Figure 1.1: Gantt-Chart of a solution for a 3x3 problem in table 1.1, reproduced from \cite{YamadaNakanoJSSP}
 \end{center}
 
-\subsection{JSSP as a disjunctive graph}
+\subsection{JSSP as a disjunctive graph} \label{JSSP as a disjunctive graph}
 
-JSSP can be represented by a disjunctive graph \cite{YamadaNakanoJSSP, BLAZEWICZ2000317} $G = ( V, C \cup D )$, where $V$ denotes a set of vertices corresponding to different operations $O_{ij}$ together with \textit{source} node and \textit{sink} node representing start and end of the schedule, respectively. The source node can be interpreted as a dummy operation preceding all other operations, and the sink node as a dummy operation succeeding all other operations. Both dummy operations have a processing time equal to zero. Nodes $V$ are weighted by the processing time of their corresponding operation. $C$ is a set of conjunctive arcs representing precedence constraints between consecutive operations of the same job, and between the jobs and dummy operations. $D$ is a set of disjunctive edges connecting operations requiring the same machine for their execution.
+JSSP can be represented by a disjunctive graph \cite{YamadaNakanoJSSP, BLAZEWICZ2000317} $G = ( V, A \cup E )$, where $V$ denotes a set of vertices corresponding to different operations $O_{ij}$ together with \textit{source} node and \textit{sink} node representing start and end of the schedule, respectively. The source node can be interpreted as a dummy operation preceding all other operations, and the sink node as a dummy operation succeeding all other operations. Both dummy operations have a processing time equal to zero. Nodes $V$ are weighted by the processing time of their corresponding operation. $A$ is a set of conjunctive arcs representing precedence constraints between operations, and between the jobs and dummy operations. $E = \bigcup_{k} E_k$ is a set of disjunctive edges, where $E_k$ is a clique connecting operations that require the same machine $M_k$ for their execution.
 \begin{center}
-    \includegraphics[width=0.7\linewidth]{images/jssp_disjunctive_graph.pdf}\\
+    \includegraphics[width=0.75\linewidth]{images/jssp_disjunctive_graph.pdf}\\
     Figure 1.2: Disjunctive graph representation of 3x3 instance in table 1.1, retrieved from \cite{YamadaNakanoJSSP}
 \end{center}
 
@@ -40,3 +40,15 @@ Alternative graph representation proposed in \cite{10226873} represents JSSP as 
 Each node can be either a machine node corresponding to machine $M_j \in \mathcal{M}$ or an operation node corresponding to operation $O_{ij} \in \mathcal{O}$. Features of machine nodes include the status of the corresponding machine and the remaining time of the operation being processed. Features of operation nodes include the status of the operation, the processing time, the remaining time of the operation, and the number of remaining operations in the current job.
 \par
 Each edge can be either operation-to-operation ($O-O$) edge, machine-to-machine ($M-M$) edge, or operation-to-machine ($O-M$) edge. $O-O$ edges fully connect all operations in the same job, and all machines are fully connected via $M-M$ edges. $O-M$ edge connects operations with machines on which they can be processed.
+
+\section{Flexible Job-shop Scheduling Problem}
+
+FJSP is an extended version of JSSP with the only difference being that each operation $O_{ij} \in \mathcal{O}$ can be processed on any machine $M_k$ from the given subset of machines $\mathcal{M}_{ij} \subseteq \mathcal{M}$ with processing time $p_{ijk}$ \cite{9826438}. Solving FJSP then consists of selecting the appropriate machine for each operation (machine selection) and determining its start time (operation sequencing) \cite{https://doi.org/10.1049/iet-cim.2018.0009}. 
+
+\subsection{Disjunctive graph for FJSP}
+
+Similarly, as in \ref{JSSP as a disjunctive graph}, the disjunctive graph representation for the FJSP can be written as $G = (O, A, E)$ \cite{Brandimarte_1993, 9826438, LEI2022117796}, where $V$ is a set of nodes representing operations and two dummy operations representing start and end, $A$ is a set of conjunctive arcs representing precedence constraints between operations, and $E = \bigcup_{k} E_k$ is a set of disjunctive edges. The only difference with respect to JSSP is that each operation can be part of multiple cliques. An example of disjunctive graph representation for FJSP is shown in figure 1.3.
+\begin{center}
+    \includegraphics[width=0.75\linewidth]{images/fjsp_disjunctive_graph.pdf}\\
+    Figure 1.3: Disjunctive graph representation of FJSP, reproduced from \cite{LEI2022117796}
+\end{center}
