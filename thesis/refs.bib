@@ -212,18 +212,6 @@ abstract = {The disjunctive graph is one of the most popular models used for des
   doi={10.1109/TII.2023.3272661}
 }
 
-@ARTICLE{9826438,
-  author={Song, Wen and Chen, Xinyang and Li, Qiqiang and Cao, Zhiguang},
-  journal={IEEE Transactions on Industrial Informatics}, 
-  title={Flexible Job-Shop Scheduling via Graph Neural Network and Deep Reinforcement Learning}, 
-  year={2023},
-  volume={19},
-  number={2},
-  pages={1600-1610},
-  keywords={Job shop scheduling;Manufacturing;Scheduling;Processor scheduling;Optimal scheduling;Cloud computing;Informatics;Deep reinforcement learning (DRL);flexible job-shop scheduling;graph neural network (GNN)},
-  doi={10.1109/TII.2022.3189725}
-}
-
 @INPROCEEDINGS{10226873,
   author={Ho, Kuo-Hao and Wu, Ji-Han and Chiang, Fan and Wu, Yuan-Yu and Chen, Sheng-I and Kuo, Ted and Wang, Feng-Jian and Wu, I-Chen},
   booktitle={2023 International Conference on Consumer Electronics - Taiwan (ICCE-Taiwan)}, 
@@ -322,3 +310,16 @@ year = {2019}
   abstract = {This paper presents an end-to-end deep reinforcement framework to automatically learn a policy for solving a flexible Job-shop scheduling problem (FJSP) using a graph neural network. In the FJSP environment, the reinforcement agent needs to schedule an operation belonging to a job on an eligible machine among a set of compatible machines at each timestep. This means that an agent needs to control multiple actions simultaneously. Such a problem with multi-actions is formulated as a multiple Markov decision process (MMDP). For solving the MMDPs, we propose a multi-pointer graph networks (MPGN) architecture and a training algorithm called multi-Proximal Policy Optimization (multi-PPO) to learn two sub-policies, including a job operation action policy and a machine action policy to assign a job operation to a machine. The MPGN architecture consists of two encoder-decoder components, which define the job operation action policy and the machine action policy for predicting probability distributions over different operations and machines, respectively. We introduce a disjunctive graph representation of FJSP and use a graph neural network to embed the local state encountered during scheduling. The computational experiment results show that the agent can learn a high-quality dispatching policy and outperforms handcrafted heuristic dispatching rules in solution quality and meta-heuristic algorithm in running time. Moreover, the results achieved on random and benchmark instances demonstrate that the learned policies have a good generalization performance on real-world instances and significantly larger scale instances with up to 2000 operations.}
 }
 
+@article{KUNDAKCI201631,
+  title = {Hybrid genetic algorithms for minimizing makespan in dynamic job shop scheduling problem},
+  journal = {Computers \& Industrial Engineering},
+  volume = {96},
+  pages = {31-51},
+  year = {2016},
+  issn = {0360-8352},
+  doi = {https://doi.org/10.1016/j.cie.2016.03.011},
+  url = {https://www.sciencedirect.com/science/article/pii/S0360835216300742},
+  author = {Nilsen Kundakcı and Osman Kulak},
+  keywords = {Hybrid genetic algorithm, Tabu search, Dynamic job shop scheduling},
+  abstract = {Job shop scheduling has been the focus of a substantial amount of research over the last decade and most of these approaches are formulated and designed to address the static job shop scheduling problem. Dynamic events such as random job arrivals, machine breakdowns and changes in processing time, which are inevitable occurrences in production environment, are ignored in static job shop scheduling problem. As dynamic job shop scheduling problem is known NP-hard combinatorial optimization, this paper introduces efficient hybrid Genetic Algorithm (GA) methodologies for minimizing makespan in this kind of problem. Various benchmark problems including the number of jobs, the number of machines, and different dynamic events are generated and detailed numerical experiments are carried out to evaluate the performance of proposed methodologies. The numerical results indicate that the proposed methods produce superior solutions for well-known benchmark problems compared to those reported in the literature.}
+}
