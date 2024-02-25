@@ -1,11 +1,11 @@
 \chapter{Job scheduling}
 \label{chap:refs}
 
-Job scheduling allocates jobs to machines. There are many different variants of job scheduling, each with different constraints and assumptions. This thesis deals with three particular variants: JSSP, FJSP, and DJSP. This chapter defines each variant and discusses relevant graph representations and Markov Decision Process (MDP) formulations.
+There are many different variants of job scheduling, each with different constraints and assumptions. This thesis deals with three particular variants: JSSP, FJSP, and DJSP. This chapter defines each variant, introduces their graph representations, and formulates PDRs as Markov Decision Process (MDP).
 
 \section{Job-Shop Scheduling Problem}
 
-The simplest variant of job scheduling called JSSP consists of a set of jobs $\mathcal{J}$ and a set of machines $\mathcal{M}$ \cite{YamadaNakanoJSSP}. Each job has an associated ordered sequence of non-overlapping operations $O_{ij}$ to be processed. Operation $\mathcal{O}_{ij}$ represents uninterrupted processing of job $J_i \in \mathcal{J}$ on machine $M_j \in \mathcal{M}$ with processing time $p_{ij}$. Each machine can process only one operation at a time. A schedule is a set of start times $S_{ij}$ for each operation $O_{ij}$ that satisfies these constraints. Completion times $C_{ij} = S_{ij} + p_{ij}$ denote the end of each operation. The JSSP solution is a schedule minimizing total makespan $C_\text{max} = \text{max}_{i,j} \{C_{ij}\}$ \cite{zhang2020learning}. An example of a JSSP instance with three jobs and three machines (3x3) is shown in table 1.1 \cite{YamadaNakanoJSSP}.
+The simplest variant of job scheduling called JSSP consists of a set of jobs $\mathcal{J}$ and a set of machines $\mathcal{M}$ \cite{YamadaNakanoJSSP}. Each job has an associated ordered sequence of non-overlapping operations $O_{ij} \in \mathcal{O}$ to be processed. Operation ${O}_{ij}$ represents uninterrupted processing of job $J_i \in \mathcal{J}$ on machine $M_j \in \mathcal{M}$ with processing time $p_{ij}$. Each machine can process only one operation at a time. A schedule is a set of start times $S_{ij}$ for each operation $O_{ij}$ that satisfies these constraints. Completion times $C_{ij} = S_{ij} + p_{ij}$ denote the end of each operation. The JSSP solution is a schedule minimizing total makespan $C_\text{max} = \text{max}_{i,j} \{C_{ij}\}$ \cite{zhang2020learning}. An example of a JSSP instance with three jobs and three machines (3x3) is shown in table 1.1 \cite{YamadaNakanoJSSP}.
 \begin{table}[htbp]
     Table 1.1: 3x3 example JSSP instance \cite{YamadaNakanoJSSP}\\
     \vspace{1mm}
@@ -25,7 +25,7 @@ The Gantt-Chart is a convenient tool for visualizing schedules \cite{WILSON20034
 
 \subsection{JSSP as a disjunctive graph} \label{JSSP as a disjunctive graph}
 
-JSSP can be represented by a disjunctive graph \cite{YamadaNakanoJSSP, BLAZEWICZ2000317} $G = ( O, A \cup E )$, where $O$ denotes a set of vertices corresponding to different operations $O_{ij}$ together with \textit{source} node and \textit{sink} node representing start and end of the schedule, respectively. The source node can be interpreted as a dummy operation preceding all other operations, and the sink node as a dummy operation succeeding all other operations. Both dummy operations have a processing time equal to zero. Nodes $O$ are weighted by the processing time of their corresponding operation. $A$ is a set of conjunctive arcs representing precedence constraints between operations, and between the jobs and dummy operations. $E = \bigcup_{k} E_k$ is a set of disjunctive edges, where $E_k$ is a clique connecting operations that require the same machine $M_k$ for their execution.
+JSSP can be represented by a disjunctive graph $G = ( O, A, E )$, where $O$ denotes a set of vertices corresponding to different operations $O_{ij}$ together with \textit{source} node and \textit{sink} node representing start and end of the schedule, respectively \cite{YamadaNakanoJSSP, BLAZEWICZ2000317}. The source node can be interpreted as a dummy operation preceding all other operations, and the sink node as a dummy operation succeeding all other operations. Both dummy operations have a processing time equal to zero. Nodes $O$ are weighted by the processing time of their corresponding operation. $A$ is a set of conjunctive arcs representing precedence constraints between operations, and between the jobs and dummy operations. $E = \bigcup_{k} E_k$ is a set of disjunctive edges, where $E_k$ is a clique connecting operations that require the same machine $M_k$ for their execution.
 \begin{center}
     \includegraphics[width=0.75\linewidth]{images/jssp_disjunctive_graph.pdf}\\
     Figure 1.2: Disjunctive graph representation of 3x3 instance in table 1.1, retrieved from \cite{YamadaNakanoJSSP}
@@ -35,7 +35,7 @@ Finding a solution to the job-shop scheduling problem can be viewed as defining 
 
 \subsection{JSSP as a heterogenous graph} \label{JSSP as a heterogenous graph}
 
-In \cite{10226873}, authors represent JSSP as a heterogenous graph $H = (O, M, E)$, where $O$ is a set of operation nodes, $M$ is a set of machines nodes, and $E$ is a set of edges.
+JSSP can also be represented as a heterogenous graph $H = (O, M, E)$, where $O$ is a set of operation nodes, $M$ is a set of machines nodes, and $E$ is a set of edges \cite{10226873}.
 \par
 Features of operation nodes include the status of the operation, the processing time, the remaining time of the operation, and the number of remaining operations in the current job. Features of machine nodes include the status of the corresponding machine and the remaining time of the operation being processed.
 \par
@@ -55,7 +55,7 @@ Similarly, as in \ref{JSSP as a disjunctive graph}, the disjunctive graph repres
 
 \subsection{FJSP as a heterogenous graph}
 
-In \cite{9826438}, authors represent FJSP as a heterogenous graph defined as $H = (O, M, A, \Sigma)$. Set of operation nodes $O$ and set of conjunctive arcs $A$ is the same as in the disjunctive graph. A set of machine nodes $M$ is added representing machines, and a set of disjunctive edges $E$ is replaced by a set of $O-M$ edges $\Sigma$ connecting operation nodes and machine nodes. An example of a heterogeneous graph for FJSP is shown in Figure 1.4 \cite{9826438}.
+FJSP can also be represented as a heterogenous graph defined as $H = (O, M, A, \Sigma)$ \cite{9826438}. Set of operation nodes $O$ and set of conjunctive arcs $A$ is the same as in the disjunctive graph. A set of machine nodes $M$ is added representing machines, and a set of disjunctive edges $E$ is replaced by a set of $O-M$ edges $\Sigma$ connecting operation nodes and machine nodes. An example of a heterogeneous graph for FJSP is shown in Figure 1.4 \cite{9826438}.
 \begin{center}
     \includegraphics[width=0.75\linewidth]{images/fjsp_heterogenous_graph.pdf}\\
     Figure 1.4: Heterogeneous graph of FJSP, reproduced from \cite{LEI2022117796}
@@ -63,7 +63,7 @@ In \cite{9826438}, authors represent FJSP as a heterogenous graph defined as $H 
 
 \section{Dynamic job-shop scheduling problem}
 
-Dynamic job-shop scheduling problem (DJSP) is a dynamic version of JSSP where $n$ jobs are known at the beginning of the schedule, i.e., the start time of the first operation is $S_{ij} \geq 0$, and $n'$ jobs arrive after the start of the schedule, i.e., the corresponding start time is $S_{ij} \geq t_a$, where $t_a > 0$ is time of arrival \cite{KUNDAKCI201631, Haupt_1989a}.
+Dynamic job-shop scheduling problem (DJSP) is a dynamic version of JSSP where $n$ jobs are known at the beginning of the schedule, i.e., their start time of the first operation is $S_{ij} \geq 0$, and $n'$ jobs arrive after the start of the schedule, i.e., their corresponding start time is $S_{ij} \geq t_a$, where $t_a > 0$ is time of arrival \cite{KUNDAKCI201631, Haupt_1989a}.
 
 \section{Priority Dispatching Rules}
 Priority dispatching rules (PDRs) are a greedy heuristic method for solving JSSP in $\left|\mathcal{O}\right|$ steps \cite{zhang2020learning}. Each step identifies a set of eligible operations by selecting unscheduled operations whose precedent operation has already been scheduled. Then, for each eligible operation, PDR computes a priority index and selects the one with the highest priority to be dispatched \cite{zhang2020learning}. The start time must also be determined for the selected operation, but it is sensible to start it as soon as possible \cite{discovering_dispatching_rules}. In FJSP, PDR also selects the machine by computing the priority index for each eligible machine after selecting an operation.
@@ -75,7 +75,7 @@ Traditional PDRs compute the priority index based on the set of features for eac
     \item \textit{Shortest process-time} (SPT) - select operation with shortest processing time $p_{ij}$
     \item \textit{Most work remaining} (MWKR) - select operation of a job with the largest sum of processing times $p_{ij}$ of remaining operations
 \end{itemize}
-As mentioned in \ref{JSSP as a disjunctive graph}, solving job scheduling can be viewed as turning each disjunctive edge into the conjunctive arc. Decisions made by PDRs can then be viewed as actions changing the disjunctive graph. This process can then be formulated as a Markov Decision Process (MDP) \cite{zhang2020learning, jssp_rl_env}, allowing PDRs to be learned automatically via (deep) reinforcement learning techniques.
+As mentioned in \ref{JSSP as a disjunctive graph}, solving job scheduling can be viewed as turning each disjunctive edge into the conjunctive arc. Decisions made by PDRs can then be viewed as actions changing the disjunctive graph. This process can then be formulated as a Markov Decision Process (MDP) \cite{zhang2020learning, jssp_rl_env}, allowing PDRs to be learned automatically via deep reinforcement learning techniques.
 
 \subsection{MDP for JSSP}
 
@@ -83,9 +83,9 @@ MDP is a stochastic decision-making process defined as a tuple $(\mathcal{S}, \m
 \par
 \textit{State} $S_t \in \mathcal{S}$ at timestep $t$ is a graph, either a disjunctive graph presented in \ref{JSSP as a disjunctive graph} \cite{zhang2020learning} or heterogeneous graph in \ref{JSSP as a heterogenous graph} \cite{10226873}. For the disjunctive graph, the initial state is the JSSP representation described in \ref{JSSP as a disjunctive graph}, and the final state is the disjunctive graph with all disjunctive edges $E$ turned into conjunctive arcs $A$ \cite{zhang2020learning}. For a heterogeneous graph, partial schedule $S_{ij}(t)$ is maintained, where $S_{ij}(t)$ is real dispatch time $S_{ij}$ if operation $O_{ij}$ has been already dispatched \cite{9826438}. Otherwise, $S_{ij}(t)$ is a recursive estimate calculated by precedence constraints.
 \par
-\textit{Action} $a_t \in \mathcal{A}$ is an eligible operation at time step $t$. Since there is at most one eligible operation from each job, action space is $\left|\mathcal{J}\right|$ \cite{zhang2020learning}.
+\textit{Action} $a_t \in \mathcal{A}$ is an eligible operation at time step $t$. Since there is at most one eligible operation from each job, size of action space is $\left|\mathcal{J}\right|$ \cite{zhang2020learning}.
 \par
-A state transition from state $S_t$ to $S_{t+1}$ after executing $a_t$ in the disjunctive graph is done by updating the direction of the corresponding disjunctive edge \cite{zhang2020learning}. Schedule $S_{ij}(t)$ and node features are updated in a heterogeneous graph. An example of a transition in the disjunctive graph is shown in Figure 1.5 below \cite{zhang2020learning}.
+A state transition from state $S_t$ to $S_{t+1}$ after executing $a_t$ in the disjunctive graph is done by updating the direction of the corresponding disjunctive edge \cite{zhang2020learning}. In a heterogeneous graph, schedule $S_{ij}(t)$ and node features are updated.
 
 \textit{Reward} for each action is the difference between the makespan $C_\text{max}(s_t)$ at timestep $t$ and $C_\text{max}(s_{t+1})$ at timestep $t+1$. Summing over all rewards given $\gamma = 1$ gives us \textit{cumulative reward} $C_\text{max}(s_0) - C_\text{max}(s_{\left|\mathcal{O}\right|})$, where $C_\text{max}(s_{\left|\mathcal{O}\right|})$ corresponds to the makespan of final schedule. Since the $C_\text{max}(s_0)$ is a constant specific to the problem instance, maximizing cumulative reward minimizes final schedule makespan $C_\text{max}$ \cite{zhang2020learning, 10226873, 9826438}. 
 
