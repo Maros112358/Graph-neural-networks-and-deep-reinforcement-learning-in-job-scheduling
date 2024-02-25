@@ -33,7 +33,7 @@ JSSP can be represented by a disjunctive graph \cite{YamadaNakanoJSSP, BLAZEWICZ
 
 Finding a solution to the job-shop scheduling problem can be viewed as defining the ordering between operations requiring the same machine. In the disjunctive graph, this is done by turning all disjunctive edges into conjunctive arcs \cite{YamadaNakanoJSSP, BLAZEWICZ2000317} in such a way that the resulting graph is a direct acyclic graph (DAG) \cite{doi:10.1287/opre.17.6.941}. The makespan $C_\text{max}$ is then given by the longest weighted path from source to sink.
 
-\subsection{JSSP as a heterogenous graph}
+\subsection{JSSP as a heterogenous graph} \label{JSSP as a heterogenous graph}
 
 In \cite{10226873}, authors represent JSSP as a heterogenous graph $H = (O, M, E)$, where $O$ is a set of operation nodes, $M$ is a set of machines nodes, and $E$ is a set of edges.
 \par
@@ -75,8 +75,21 @@ Traditional PDRs compute the priority index based on the set of features for eac
     \item \textit{Shortest process-time} (SPT) - select operation with shortest processing time $p_{ij}$
     \item \textit{Most work remaining} (MWKR) - select operation of a job with the largest sum of processing times $p_{ij}$ of remaining operations
 \end{itemize}
+As mentioned in \ref{JSSP as a disjunctive graph}, solving job scheduling can be viewed as turning each disjunctive edge into the conjunctive arc. Decisions made by PDRs can then be viewed as actions changing the disjunctive graph. This process can then be formulated as a Markov Decision Process (MDP) \cite{zhang2020learning, jssp_rl_env}, allowing PDRs to be learned automatically via (deep) reinforcement learning techniques.
 
-\subsection{Priority dispatching rules as Markov Decision Process}
+\subsection{MDP for JSSP}
 
-As mentioned in \ref{JSSP as a disjunctive graph}, solving job scheduling can be viewed as turning each disjunctive edge into the conjunctive arc. Decisions made by PDRs can then be viewed as actions changing the disjunctive graph. This process can then be formulated as a Markov Decision Process \cite{zhang2020learning}, and PDRs can be learned automatically via reinforcement learning techniques. 
+MDP is a stochastic decision-making process defined as a tuple $(\mathcal{S}, \mathcal{A}, \mathcal{R}, \mathcal{P}, \gamma)$, where $\mathcal{S}$ is a finite set of possible states, $\mathcal{A}$ is the set of possible actions, $\mathcal{R}$ is the reward function,  $\mathcal{P}$ is the transition probability, and $\gamma$ is the discount factor \cite{10226873, jssp_rl_env}. 
+\par
+\textit{State} $S_t \in \mathcal{S}$ at timestep $t$ is a graph, either a disjunctive graph presented in \ref{JSSP as a disjunctive graph} \cite{zhang2020learning} or heterogeneous graph in \ref{JSSP as a heterogenous graph} \cite{10226873}. For the disjunctive graph, the initial state is the JSSP representation described in \ref{JSSP as a disjunctive graph}, and the final state is the disjunctive graph with all disjunctive edges $E$ turned into conjunctive arcs $A$ \cite{zhang2020learning}. For a heterogeneous graph, partial schedule $S_{ij}(t)$ is maintained, where $S_{ij}(t)$ is real dispatch time $S_{ij}$ if operation $O_{ij}$ has been already dispatched \cite{9826438}. Otherwise, $S_{ij}$ is a recursive estimate calculated by precedence constraints.
+\par
+\textit{Action} $a_t \in \mathcal{A}$ is an eligible operation at time step $t$. Since there is at most one eligible operation from each job, action space is $\left|\mathcal{J}\right|$ \cite{zhang2020learning}.
+\par
+A state transition from state $S_t$ to $S_{t+1}$ after executing $a_t$ in the disjunctive graph is done by updating the direction of the corresponding disjunctive edge \cite{zhang2020learning}. Schedule $S_{ij}(t)$ is updated in a heterogeneous graph.
+\par
+\textit{Reward} for each action is the difference between the lower bound of the schedule makespan $C_{LB}(s_t)$ and $C_{LB}(s_{t+1})$  Summing over all rewards gives us \textit{cumulative reward} $C_{LB}(s_0) - C_\text{max}$. Since the $C_{LB}(s_0)$ is a constant, maximizing cumulative reward minimizes total makespan $C_\text{max}$ \cite{zhang2020learning, 10226873}. 
 
+
+
+
+% \subsection{Priority dispatching rules as Markov Decision Process}
