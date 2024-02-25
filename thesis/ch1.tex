@@ -31,7 +31,7 @@ JSSP can be represented by a disjunctive graph \cite{YamadaNakanoJSSP, BLAZEWICZ
     Figure 1.2: Disjunctive graph representation of 3x3 instance in table 1.1, retrieved from \cite{YamadaNakanoJSSP}
 \end{center}
 
-Finding a solution to the job-shop scheduling problem can be viewed as defining the ordering between operations requiring the same machine. In the disjunctive graph, this is done by turning all disjunctive arcs into conjunctive arcs \cite{YamadaNakanoJSSP, BLAZEWICZ2000317} in such a way that the resulting graph is a direct acyclic graph (DAG) \cite{doi:10.1287/opre.17.6.941}. The makespan $C_\text{max}$ is then given by the longest weighted path from source to sink.
+Finding a solution to the job-shop scheduling problem can be viewed as defining the ordering between operations requiring the same machine. In the disjunctive graph, this is done by turning all disjunctive edges into conjunctive arcs \cite{YamadaNakanoJSSP, BLAZEWICZ2000317} in such a way that the resulting graph is a direct acyclic graph (DAG) \cite{doi:10.1287/opre.17.6.941}. The makespan $C_\text{max}$ is then given by the longest weighted path from source to sink.
 
 \subsection{JSSP as a heterogenous graph}
 
@@ -63,7 +63,20 @@ In \cite{9826438}, authors represent FJSP as a heterogenous graph defined as $H 
 
 \section{Dynamic job-shop scheduling problem}
 
-Dynamic job-shop scheduling problem (DJSP) is a dynamic version of JSSP where $n$ jobs are known at the beginning of the schedule, i.e., the start time of the first operation is $S_{ij} \geq 0$, and $n'$ jobs arrive after the start of the schedule, i.e., the corresponding start time is $S_{ij} \geq t_a$, where $t_a > 0$ is time of arrival \cite{KUNDAKCI201631}.
+Dynamic job-shop scheduling problem (DJSP) is a dynamic version of JSSP where $n$ jobs are known at the beginning of the schedule, i.e., the start time of the first operation is $S_{ij} \geq 0$, and $n'$ jobs arrive after the start of the schedule, i.e., the corresponding start time is $S_{ij} \geq t_a$, where $t_a > 0$ is time of arrival \cite{KUNDAKCI201631, Haupt_1989a}.
 
 \section{Priority Dispatching Rules}
+Priority dispatching rules (PDRs) are a greedy heuristic method for solving JSSP in $\left|\mathcal{O}\right|$ steps \cite{zhang2020learning}. Each step identifies a set of eligible operations by selecting unscheduled operations whose precedent operation has already been scheduled. Then, for each eligible operation, PDR computes a priority index and selects the one with the highest priority to be dispatched \cite{zhang2020learning}. The start time must also be determined for the selected operation, but it is sensible to start it as soon as possible \cite{discovering_dispatching_rules}. In FJSP, PDR also selects the machine by computing the priority index for each eligible machine after selecting an operation.
+\par
+Traditional PDRs compute the priority index based on the set of features for each operation \cite{Haupt_1989a}. In the literature, many PDRs have been studied over time \cite{7232991, discovering_dispatching_rules, doi:10.1080/00207543.2011.611539, Haupt_1989a}. In this thesis, only a few of them will be mentioned, notably \cite{Haupt_1989a, 10226873}:
+\begin{itemize}
+    \item \textit{First in first out} (FIFO) - select earliest available operation 
+    \item \textit{Most operation remaining} (MOR) - select operation of a job with most remaining operations
+    \item \textit{Shortest process-time} (SPT) - select operation with shortest processing time $p_{ij}$
+    \item \textit{Most work remaining} (MWKR) - select operation of a job with the largest sum of processing times $p_{ij}$ of remaining operations
+\end{itemize}
+
+\subsection{Priority dispatching rules as Markov Decision Process}
+
+As mentioned in \ref{JSSP as a disjunctive graph}, solving job scheduling can be viewed as turning each disjunctive edge into the conjunctive arc. Decisions made by PDRs can then be viewed as actions changing the disjunctive graph. This process can then be formulated as a Markov Decision Process \cite{zhang2020learning}, and PDRs can be learned automatically via reinforcement learning techniques. 
 
