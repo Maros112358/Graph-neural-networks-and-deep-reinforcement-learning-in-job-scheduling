@@ -6,3 +6,35 @@ Deep learning and neural networks have achieved unprecedented success since thei
     \includegraphics[width=0.6\linewidth]{images/image_vs_graph.pdf}\\
     Figure 2.1: 2-D Convolution versus graph convolution \cite{9046288}
 \end{center}
+\newpage
+Similarly, for text processing and RNNs, text can be thought of as a graph, where each node is a word in a sentence, and every two consecutive words are connected via an oriented arc, as illustrated in Figure 2.2 below \cite{sanchez-lengeling2021a}.
+\begin{center}
+    \includegraphics[width=0.7\linewidth]{images/graph_are_all_around_us.pdf}\\
+    Figure 2.2: Text as a graph, reproduced from \cite{sanchez-lengeling2021a}
+\end{center}
+
+\section{Graph Neural Networks}
+
+In the simplest case, when data is represented as a non-oriented graph $G = (O, E)$, each node $o \in O$ and each edge $(o, w) \in E$ has a seat of features $x_o$ and $y_{ow}$ respectively. For example, the processing time of each operation node in the JSSP disjunctive graph. 
+\par
+Simple GNN takes this graph as an input and processes its features in two phases. The first phase called \textit{message passing phase} \cite{pmlr-v70-gilmer17a}, runs for $T$ time steps and uses a message function $M_t$ and node update function $U_t$. In each time step $t$, for each node $o$, a message $m_o^{t + 1}$ is calculated, and the embedding of the node $h_o^{t}$ is updated according to \cite{pmlr-v70-gilmer17a}
+\begin{equation}\label{equation:2.1}
+	m_o^{t + 1} = \sum_{w \in N(o)} M_t (h_o^t, h_w^t, y_{ow}) \, ,
+\end{equation}
+\begin{equation}\label{equation:2.2}
+	h_o^{t+1} = U_t (h_o^t, m_o^{t+1})
+\end{equation}
+where $N(o)$ in the sum defines the neighbourhood of the node $o$ in graph $G$. The initial embedding of the node is $h_o^0 = x_o$.
+\par
+In the \textit{readout phase}, a readout function $R$ computes a feature vector $z_o$ from obtained node embeddings \cite{pmlr-v70-gilmer17a}
+\begin{equation}\label{equation:2.3}
+	z_o = R(h_o^T) \hspace{2em} \forall o \in O \, .
+\end{equation}
+Message function $M_t$, node update function $U_t$, and readout function $R$ can all be learned differentiable functions\\
+Different forms of equations \ref{equation:2.1}, \ref{equation:2.2}, and \ref{equation:2.3} lead to different types of GNNs performing different tasks, for example \cite{10.1145/3495161, sanchez-lengeling2021a}:
+\begin{itemize}
+	\item Graph Convolutional Neural Networks (GCNNs)
+	\item Graph Recurrent Neural Networks (GRNNs)
+	\item Graph Attention Networks (GATs)
+\end{itemize} 
+This thesis will focus primarily on relevant GNN architectures used in available job scheduling models described in the next chapter, specifically Graph Isomorphism Network (GIN) and GAT.
