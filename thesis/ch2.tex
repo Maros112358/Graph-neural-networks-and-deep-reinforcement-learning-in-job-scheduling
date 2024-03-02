@@ -19,18 +19,18 @@ In the simplest case, when data is represented as a non-oriented graph $G = (O, 
 \par
 Simple GNN takes this graph as an input and processes its features in two phases. The first phase called \textit{message passing phase} \cite{pmlr-v70-gilmer17a}, runs for $T$ time steps and uses a message function $M_t$ and node update function $U_t$. In each time step $t$, for each node $o$, a message $m_o^{t + 1}$ is calculated, and the embedding of the node $h_o^{t}$ is updated according to \cite{pmlr-v70-gilmer17a}
 \begin{equation}\label{equation:2.1}
-	m_o^{t + 1} = \sum_{w \in N(o)} M_t (h_o^t, h_w^t, y_{ow}) \, ,
+	m_o^{(t + 1)} = \sum_{w \in \mathcal{N}(o)} M_{(t)} (h_o^{(t)}, h_w^{(t)}, y_{ow}) \, ,
 \end{equation}
 \begin{equation}\label{equation:2.2}
-	h_o^{t+1} = U_t (h_o^t, m_o^{t+1})
+	h_o^{(t+1)} = U_{(t)} (h_o^{(t)}, m_o^{(t+1)})
 \end{equation}
-where $N(o)$ in the sum defines the neighbourhood of the node $o$ in graph $G$. The initial embedding of the node is $h_o^0 = x_o$.
+where $\mathcal{N}(o)$ in the sum defines the neighbourhood of the node $o$ in graph $G$. The initial embedding of the node is $h_o^{(0)} = x_o$. Each timestep is often called a \textit{layer} of GNN.
 \par
 In the \textit{readout phase}, a readout function $R$ computes a feature vector $z_o$ from obtained node embeddings \cite{pmlr-v70-gilmer17a}
 \begin{equation}\label{equation:2.3}
-	z_o = R(h_o^T) \hspace{2em} \forall o \in O \, .
+	z_o = R(h_o^{(T)}) \hspace{2em} \forall o \in O \, .
 \end{equation}
-Message function $M_t$, node update function $U_t$, and readout function $R$ can all be learned differentiable functions\\
+Message function $M_{(t)}$, node update function $U_{(t)}$, and readout function $R$ can all be learned differentiable functions\\
 Different forms of equations \ref{equation:2.1}, \ref{equation:2.2}, and \ref{equation:2.3} lead to different types of GNNs performing different tasks, for example \cite{10.1145/3495161, sanchez-lengeling2021a}:
 \begin{itemize}
 	\item Graph Convolutional Neural Networks (GCNNs)
@@ -38,3 +38,18 @@ Different forms of equations \ref{equation:2.1}, \ref{equation:2.2}, and \ref{eq
 	\item Graph Attention Networks (GATs)
 \end{itemize} 
 This thesis will focus primarily on relevant GNN architectures used in available job scheduling models described in the next chapter, specifically Graph Isomorphism Network (GIN) and GAT.
+
+\subsection{Graph Isomorphism Network}
+Graph Isomorphism Network (GIN) is a GNN variant achieving maximum discriminative power \cite{DBLP:journals/corr/abs-1810-00826}. Given undirected graph $G = (O, E)$, in the message passing phase, the update function $U_{(t)}$ is represented by a multi-layer perceptron $\text{MLP}^{(t)}$ and \ref{equation:2.2} has the following form \cite{DBLP:journals/corr/abs-1810-00826}
+\begin{equation} \label{equation:2.4}
+	h_o^{(t+1)} = \text{MLP}^{(t)} \left ( \left ( 1 + \epsilon^{(t)} \right ) h_o^{(t-1)} + \sum_{w\in \mathcal{N}(o)} h_w^{(t - 1)} \right ) \, ,
+\end{equation}
+where $\epsilon^{(t)}$ can be learned or a fixed scalar \cite{DBLP:journals/corr/abs-1810-00826}. In the readout phase, the readout function $R$ depends on the model's given task, e.g., node classification, link prediction, and graph classification \cite{DBLP:journals/corr/abs-1810-00826}. The next chapter will specify specific forms of readout function for the given models.
+\par
+A straightforward strategy to extend GIN to directed graphs $G = (O, A)$ is to define the neighborhood of node $o \in O$ as $\mathcal{N}(o) = \{ w | \ (w, o) \in A\}$, i.e., all incoming neighbors of $o$ \cite{zhang2020learning}.\\
+\\
+For GIN on heterogeneous graphs, the equation \ref{equation:2.4} is applied separately for each type of neighbor node and then combined \cite{pytorch_hetero_conv, 10226873}. Let $a$ denote a type of node $o$, $b_i$ denote a type of node $w_i$, and $r_i$ be an edge type connecting nodes of types $a$ and $b_i$. Then, let neighborhood $\mathcal{N}_{r_i}(o)$ be a set of nodes connected to $o$ by an edge of type $r_i$. Then, for each edge type $r_i$, updated embedding $h_{o, r_i}^{(t+1)}$ of node $o$ is calculated by equation \ref{equation:2.4} separately (with separate multi-layer perceptrons) as follows \cite{pytorch_hetero_conv}
+\begin{equation} \label{equation:2.5}
+	h_{o, r_i}^{(t+1)} = \text{MLP}^{(t)}_{r_i} \left ( \left ( 1 + \epsilon_{r_i}^{(t)} \right ) h_{o}^{(t-1)} + \sum_{w\in \mathcal{N}_{r_i}(o)} h_{w}^{(t - 1)} \right ) \, ,
+\end{equation}
+where $\text{MLP}^{(t)}_{r_i}$ is a multilayer perceptron for given edge type \cite{pytorch_hetero_conv}. New embeddings for the node $o$ for each edge type $r_i$ are then combined via some aggregation function \cite{pytorch_hetero_conv}.
