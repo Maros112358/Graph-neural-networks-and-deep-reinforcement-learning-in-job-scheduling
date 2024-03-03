@@ -52,4 +52,30 @@ For GIN on heterogeneous graphs, the equation \ref{equation:2.4} is applied sepa
 \begin{equation} \label{equation:2.5}
 	h_{o, r_i}^{(t+1)} = \text{MLP}^{(t)}_{r_i} \left ( \left ( 1 + \epsilon_{r_i}^{(t)} \right ) h_{o}^{(t-1)} + \sum_{w\in \mathcal{N}_{r_i}(o)} h_{w}^{(t - 1)} \right ) \, ,
 \end{equation}
-where $\text{MLP}^{(t)}_{r_i}$ is a multilayer perceptron for given edge type \cite{pytorch_hetero_conv}. New embeddings for the node $o$ for each edge type $r_i$ are then combined via some aggregation function \cite{pytorch_hetero_conv}.
+where $\text{MLP}^{(t)}_{r_i}$ is a multilayer perceptron for given edge type \cite{pytorch_hetero_conv}. New embeddings for the node for each edge type $h_{o, r_i}^{(t+1)}$ are then combined via some aggregation function \cite{pytorch_hetero_conv}, for example, a sum.
+
+\subsection{Graph Attention Network}
+Graph Attention Network (GAT) is a graph neural network architecture leveraging an attention mechanism \cite{veličković2018graph}. In each timestep (layer), nodes assign different importance weights to different nodes in their neighborhood by attending over their features. In job scheduling, higher importance weights may be assigned to operations expected to start sooner \cite{9826438}.  
+\newpage
+\par
+In the first step, \textit{attention coefficients} $e_{ij}$ are computed as follows \cite{veličković2018graph, 9826438}
+\begin{equation} \label{equation:2.6}
+	e_{ow} = a\left ( \boldsymbol{W} h_o^{(t)}, \boldsymbol{W} h_w^{(t)}  \right ) \, ,
+\end{equation}  
+where $a$ is a shared attention mechanism, and $\boldsymbol{W}$ is a shared learnable linear transformation. Attention mechanism $a$ is usually a single-layer feedforward neural network parametrized by a vector $\vec{a}$ with LeakyReLU activation \cite{veličković2018graph, 9826438, DBLP:journals/corr/abs-2105-14491}
+\begin{equation} \label{equation:2.7}
+	e_{ow} = \text{LeakyReLU}\left ( \vec{a}^T \left [ \boldsymbol{W}h_o^{(t)} || \boldsymbol{W}h_w^{(t)} \right ] \right ) \, ,
+\end{equation}
+where $\bullet||\bullet$ represents concatenation.
+\par
+Then, the attention coefficients are normalized using the Softmax function only across the neighborhood and the node itself \cite{veličković2018graph, 9826438}
+\begin{equation}
+	\alpha_{ow} = \frac{\exp(e_{ow})}{\sum_{q \in \mathcal(N)(o)} \exp(e_{oq})} \hspace{2em} \forall w \in \mathcal{N}(o) \cup {o} \, .
+\end{equation}
+As the last step, GAT computes a new node embedding as follows \cite{veličković2018graph, 9826438}
+\begin{equation} \label{equation:2.9}
+	h_o^{(t+1)} = \sigma \left ( \sum_{w \in \mathcal{N}(o) \cup {o}} \alpha_{ow} \boldsymbol{W} h_w^{(t)} \right ) \, ,
+\end{equation}
+where $\sigma$ is some non-linear function.\\
+\\
+One straightforward strategy to extend GAT on heterogeneous graphs is constructing separate learnable linear transformation $\boldsymbol{W}_{b_i}$ for each node type $b_i$ in equations \ref{equation:2.6}, \ref{equation:2.7}, \ref{equation:2.9}, projecting each node type to a shared latent space with the same dimension.
