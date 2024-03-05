@@ -80,7 +80,7 @@ where $\sigma$ is some non-linear function.
 \par
 It is also possible to use \textit{multi-head attention} to stabilize the learning process. Multiple independent attention mechanisms execute the transformation in equation \ref{equation:2.9}, and their results are aggregated by concatenation or averaging \cite{veličković2018graph}. This process is illustrated in Figure 3.1 below \cite{veličković2018graph}.
 \begin{center}
-    \includegraphics[width=0.7\linewidth]{images/graph_attention_network.pdf}\\
+    \includegraphics[width=0.7\linewidth]{images/graph_attention_network_pdfa.pdf}\\
     Figure 3.1: Illustration of multi-head attention with three heads on the neighborhood of node 1. Different arrow colors denote independent attention mechanisms, producing new node embedding by concatenation or averaging. Reproduced from \cite{veličković2018graph}.
 \end{center}
 One straightforward strategy to extend GAT on heterogeneous graphs is constructing separate learnable linear transformation $\boldsymbol{W}_{b_i}$ for each node type $b_i$ in equations \ref{equation:2.6}, \ref{equation:2.7}, \ref{equation:2.9}, projecting each node type to a shared latent space with the same dimension.
