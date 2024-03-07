@@ -39,7 +39,7 @@ Different forms of equations \ref{equation:2.1}, \ref{equation:2.2}, and \ref{eq
 \end{itemize} 
 This thesis will focus primarily on relevant GNN architectures used in available job scheduling models described in the next chapter, specifically Graph Isomorphism Network (GIN) and GAT.
 
-\subsection{Graph Isomorphism Network}
+\subsection{Graph Isomorphism Network} \label{graph Isomorphism network}
 Graph Isomorphism Network (GIN) is a GNN variant achieving maximum discriminative power \cite{DBLP:journals/corr/abs-1810-00826}. Given undirected graph $G = (O, E)$, in the message passing phase, the update function $U_{(t)}$ is represented by a multi-layer perceptron $\text{MLP}^{(t)}$ and \ref{equation:2.2} has the following form \cite{DBLP:journals/corr/abs-1810-00826}
 \begin{equation} \label{equation:2.4}
 	h_o^{(t+1)} = \text{MLP}^{(t)} \left ( \left ( 1 + \epsilon^{(t)} \right ) h_o^{(t-1)} + \sum_{w\in \mathcal{N}(o)} h_w^{(t - 1)} \right ) \, ,

@@ -37,8 +37,6 @@ Finding a solution to the job-shop scheduling problem can be viewed as defining 
 
 JSSP can also be represented as a heterogenous graph $H = (O, M, E)$, where $O$ is a set of operation nodes, $M$ is a set of machines nodes, and $E$ is a set of edges \cite{10226873}.
 \par
-Features of operation nodes include the status of the operation, the processing time, the remaining time of the operation, and the number of remaining operations in the current job. Features of machine nodes include the status of the corresponding machine and the remaining time of the operation being processed.
-\par
 Each edge can be either operation-to-operation ($O-O$) edge, machine-to-machine ($M-M$) edge, or operation-to-machine ($O-M$) edge. $O-O$ edges fully connect all operations in the same job, and all machines are fully connected via $M-M$ edges. $O-M$ edge connects operations with machines on which they can be processed.
 
 \section{Flexible Job-shop Scheduling Problem}
@@ -53,7 +51,7 @@ Similarly, as in \ref{JSSP as a disjunctive graph}, the disjunctive graph repres
     Figure 1.3: Disjunctive graph representation of FJSP, reproduced from \cite{LEI2022117796}
 \end{center}
 
-\subsection{FJSP as a heterogenous graph}
+\subsection{FJSP as a heterogenous graph} \label{FJSP as a heterogenous graph}
 
 FJSP can also be represented as a heterogenous graph defined as $H = (O, M, A, \Sigma)$ \cite{9826438}. Set of operation nodes $O$ and set of conjunctive arcs $A$ is the same as in the disjunctive graph. A set of machine nodes $M$ is added representing machines, and a set of disjunctive edges $E$ is replaced by a set of $O-M$ edges $\Sigma$ connecting operation nodes and machine nodes. An example of a heterogeneous graph for FJSP is shown in Figure 1.4 \cite{9826438}.
 \begin{center}
@@ -65,7 +63,7 @@ FJSP can also be represented as a heterogenous graph defined as $H = (O, M, A, \
 
 Dynamic job-shop scheduling problem (DJSP) is a dynamic version of JSSP where $n$ jobs are known at the beginning of the schedule, i.e., their start time of the first operation is $S_{ij} \geq 0$, and $n'$ jobs arrive after the start of the schedule, i.e., their corresponding start time is $S_{ij} \geq t_a$, where $t_a > 0$ is time of arrival \cite{KUNDAKCI201631, Haupt_1989a}.
 
-\section{Priority Dispatching Rules}
+\section{Priority Dispatching Rules} \label{priority dispatching rules}
 Priority dispatching rules (PDRs) are a greedy heuristic method for solving JSSP in $\left|\mathcal{O}\right|$ steps \cite{zhang2020learning}. Each step identifies a set of eligible operations by selecting unscheduled operations whose precedent operation has already been scheduled. Then, for each eligible operation, PDR computes a priority index and selects the one with the highest priority to be dispatched \cite{zhang2020learning}. The start time must also be determined for the selected operation, but it is sensible to start it as soon as possible \cite{discovering_dispatching_rules}. In FJSP, PDR also selects the machine by computing the priority index for each eligible machine after selecting an operation.
 \par
 Traditional PDRs compute the priority index based on the set of features for each operation \cite{Haupt_1989a}. In the literature, many PDRs have been studied over time \cite{doi:10.1080/00207543.2011.611539, Haupt_1989a, discovering_dispatching_rules, 7232991}. In this thesis, only a few of them will be mentioned, notably \cite{0226873, Haupt_1989a}:
@@ -81,14 +79,18 @@ As mentioned in \ref{JSSP as a disjunctive graph}, solving job scheduling can be
 
 MDP is a stochastic decision-making process defined as a tuple $(\mathcal{S}, \mathcal{A}, \mathcal{R}, \mathcal{P}, \gamma)$, where $\mathcal{S}$ is a finite set of possible states, $\mathcal{A}$ is the set of possible actions, $\mathcal{R}$ is the reward function,  $\mathcal{P}$ is the transition probability, and $\gamma$ is the discount factor \cite{10226873, jssp_rl_env}. 
 \par
-\textit{State} $S_t \in \mathcal{S}$ at timestep $t$ is a graph, either a disjunctive graph presented in \ref{JSSP as a disjunctive graph} \cite{zhang2020learning} or heterogeneous graph in \ref{JSSP as a heterogenous graph} \cite{10226873}. For the disjunctive graph, the initial state is the JSSP representation described in \ref{JSSP as a disjunctive graph}, and the final state is the disjunctive graph with all disjunctive edges $E$ turned into conjunctive arcs $A$ \cite{zhang2020learning}. For a heterogeneous graph, partial schedule $S_{ij}(t)$ is maintained, where $S_{ij}(t)$ is real dispatch time $S_{ij}$ if operation $O_{ij}$ has been already dispatched \cite{9826438}. Otherwise, $S_{ij}(t)$ is a recursive estimate calculated by precedence constraints.
+\textit{State} $s_t \in \mathcal{S}$ at timestep $t$ is a graph, either a disjunctive graph presented in \ref{JSSP as a disjunctive graph} \cite{zhang2020learning} or heterogeneous graph in \ref{JSSP as a heterogenous graph} \cite{10226873}. For the disjunctive graph, the initial state is the JSSP representation described in \ref{JSSP as a disjunctive graph}, and the final state is the disjunctive graph with all disjunctive edges $E$ turned into conjunctive arcs $A$ \cite{zhang2020learning}. For a heterogeneous graph, partial schedule $S_{ij}(t)$ is maintained, where $S_{ij}(t)$ is real dispatch time $S_{ij}$ if operation $O_{ij}$ has been already dispatched \cite{9826438}. Otherwise, $S_{ij}(t)$ is a recursive estimate calculated by precedence constraints.
 \par
 \textit{Action} $a_t \in \mathcal{A}$ is an eligible operation at time step $t$. Since there is at most one eligible operation from each job, the size of action space is $\left|\mathcal{J}\right|$ \cite{zhang2020learning}.
 \par
-A state transition from state $S_t$ to $S_{t+1}$ after executing $a_t$ in the disjunctive graph is done by updating the direction of the corresponding disjunctive edge \cite{zhang2020learning}. In a heterogeneous graph, the schedule $S_{ij}(t)$ and node features are updated.
+A state transition from state $s_t$ to $s_{t+1}$ after executing $a_t$ in the disjunctive graph is done by updating the direction of the corresponding disjunctive edge \cite{zhang2020learning}. In a heterogeneous graph, the schedule $S_{ij}(t)$ and node features are updated.
 
 \textit{Reward} for each action is the difference between the makespan $C_\text{max}(s_t)$ at timestep $t$ and $C_\text{max}(s_{t+1})$ at timestep $t+1$. Summing over all rewards given $\gamma = 1$ gives us \textit{cumulative reward} $C_\text{max}(s_0) - C_\text{max}(s_{\left|\mathcal{O}\right|})$, where $C_\text{max}(s_{\left|\mathcal{O}\right|})$ corresponds to the makespan of final schedule. Since the $C_\text{max}(s_0)$ is a constant specific to the problem instance, maximizing cumulative reward minimizes final schedule makespan $C_\text{max}$ \cite{zhang2020learning, 9826438, 10226873}. 
 
-\subsection{MDP for FJSP}
-Since solving FJSP consists of selecting both the eligible operation and choosing a compatible machine, the difference w.r.t. JSSP is that the action $a_t \in \mathcal{A}$ is a $O-M$ tuple (operation-machine) representing the choice of the operation to be dispatched, and the machine on which the operation will be processed \cite{9826438, LEI2022117796}. \\
+\textit{Policy} $\pi(a_t|s_t)$ defines a probability distribution over available actions $a_t \in \mathcal{A}$ given state $s_t \in \mathcal{S}$. Traditional PDRs mentioned in \ref{priority dispatching rules} as a policy output one-hot distribution with the action with the highest priority having probability 1 \cite{zhang2020learning}. $\pi_\theta(a_t|s_t)$ denotes that the policy is parameterized, enabling learning.
+
+\subsection{MDP for FJSP} 
+Since solving FJSP consists of selecting both the eligible operation and choosing a compatible machine, the difference w.r.t. JSSP is that the action $a_t \in \mathcal{A}$ is a $O-M$ tuple (operation-machine) representing the choice of the operation to be dispatched, and the machine on which the operation will be processed \cite{9826438, LEI2022117796}. The policy then outputs probability for each $O-M$ pair, i.e. $\pi(a_o, a_m | s_t)$, where $a_o$ denotes operation selection, and $a_m$ machine selection \cite{LEI2022117796}.\\
 Also, in the heterogeneous graph in the case of FJSP, when operation $O_{ij}$ is dispatched, only an $O-M$ edge corresponding to $O-M$ action tuple is kept, and other $O-M$ edges containing dispatched operation are removed.  
+
+
