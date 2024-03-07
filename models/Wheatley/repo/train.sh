@@ -15,7 +15,7 @@ nohup python3 -m jssp.train\
     --hidden_dim_features_extractor 64\
     --layer_pooling last\
     --max_n_j 100\
-    --max_n_m 100\
+    --max_n_m 70\
     --mlp_act gelu\
     --n_j 20\
     --n_layers_features_extractor 2\
@@ -36,4 +36,5 @@ nohup python3 -m jssp.train\
     --gconv_type gin\
     --reward_model_config L2D\
     --graph_pooling avg\
+    --resume \
     --disable_visdom > training_log.txt 2>&1 &
