@@ -43,7 +43,7 @@ Each edge can be either operation-to-operation ($O-O$) edge, machine-to-machine 
 
 FJSP is an extended version of JSSP with the only difference being that each operation $O_{ij} \in \mathcal{O}$ can be processed on any machine $M_k$ from the given subset of machines $\mathcal{M}_{ij} \subseteq \mathcal{M}$ with processing time $p_{ijk}$ \cite{9826438}. Solving FJSP then consists of selecting the appropriate machine for each operation (machine selection) and determining its start time (operation sequencing) \cite{https://doi.org/10.1049/iet-cim.2018.0009}. 
 
-\subsection{FJSP as a disjunctive graph}
+\subsection{FJSP as a disjunctive graph} \label{FJSP as a disjunctive graph}
 
 Similarly, as in \ref{JSSP as a disjunctive graph}, the disjunctive graph representation for the FJSP can be written as $G = (O, A, E)$ \cite{Brandimarte_1993, 9826438, LEI2022117796}, where $O$ is a set of nodes representing operations and two dummy operations representing start and end, $A$ is a set of conjunctive arcs representing precedence constraints between operations, and $E = \bigcup_{k} E_k$ is a set of disjunctive edges. The only difference with respect to JSSP is that each operation can be part of multiple cliques. An example of disjunctive graph representation for FJSP is shown in Figure 1.3.
 \begin{center}

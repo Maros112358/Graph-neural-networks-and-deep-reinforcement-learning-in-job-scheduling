@@ -1,17 +1,20 @@
 \chapter{Published models}
 
-This chapter will present five publicly available job scheduling models based on deep reinforcement learning on graph neural networks. Three models are designed for JSSP, and two are for FJSP. For models designed for JSSP, our extension to JSSP is also presented. 
+This chapter will present five publicly available job scheduling models based on deep reinforcement learning on graph neural networks. Three models are designed for JSSP, and two are for FJSP. For models designed for JSSP, our extension to JSSP is also presented. Each presented model is named after the GitHub repository in which it was found. 
 
 \section{JSSP Models}
 
 \subsection{L2D}
-\textbf{L2D} is a model published in \cite{zhang2020learning}. To represent the JSSP, it employs a modified disjunctive graph described in \ref{JSSP as a disjunctive graph}, where the authors start with the original disjunctive graph containing only conjunctive arcs, and for each disjunctive edge, they add a conjunctive arc representing new precedence constraint. This design is because replacing each disjunctive edge with a pair of opposite conjunctive arcs results in a too-dense, fully oriented graph \cite{zhang2020learning}.
+\textbf{L2D} is a model published in \cite{zhang2020learning}. To represent the JSSP, it employs a modified disjunctive graph described in \ref{JSSP as a disjunctive graph}, where the authors start with the original disjunctive graph containing only conjunctive arcs, and for each disjunctive edge, they add a conjunctive arc representing new precedence constraint. This process is shown in the Figure 3.1 below \cite{zhang2020learning}. This design is because replacing each disjunctive edge with a pair of opposite conjunctive arcs results in a too-dense, fully oriented graph \cite{zhang2020learning}.
 \par
 To parametrize the policy $\pi_\theta(a_t|s_t)$, GIN for oriented graphs described in \ref{graph Isomorphism network} is used to obtain graph node embeddings $h_o^{(T)}$ in the message passing phase. Initial node features were a 2-elementer vector $h_o^{(0)} = (I(o), C_{LB}(o))$, where $I(o)$ is equal to 1 only if $o \in O$ is scheduled, otherwise 0, and $C_{LB}(o)$ is the lower bound of the estimated time of completion. 
 \par
 To select the action $a_t$ at $s_t$ in the readout phase, obtained graph embeddings are pooled using average pooling, i.e., $h_G = \frac{1}{|O|} \sum_{o \in O} h_o^{(T)}$, concatenated with the embedding of the eligible operation $o$ corresponding to action $a_t$, and passed through a multi-layer perceptron to obtain a score for the corresponding action $scr(a_t) = \text{MLP}_{\pi_\theta}\left ( \left [h_o^{(T)} || h_G \right ] \right )$. The softmax function is then applied to obtain a distribution over available actions $P(a_t)$ from the scores \cite{zhang2020learning}.\\
-\\
-To train the policy, authors used Proximal Policy Optimization (PPO) \cite{DBLP:journals/corr/SchulmanWDRK17}. 
+To train the policy, authors used Proximal Policy Optimization (PPO) \cite{DBLP:journals/corr/SchulmanWDRK17}.\\
+\begin{center}
+    \includegraphics[width=0.75\linewidth]{images/jssp_adding_arcs.pdf}\\
+    Figure 3.1: \textit{"Adding arc strategy"}: Disjunctive graph with original precedence constraints (black arrows), and three precedence constraints (red and blue arrows) between already scheduled operations (orange circles). Retrieved from \cite{zhang2020learning}.
+\end{center}
 
 \subsubsection{Extending L2D to DJSP}
 
@@ -23,8 +26,29 @@ To train the policy, authors used Proximal Policy Optimization (PPO) \cite{DBLP:
 \par
 To parametrize the policy, authors used GIN on heterogeneous graphs discussed in \ref{graph Isomorphism network} in the message passing phase. Features of operation nodes include the status of the operation, the processing time, the remaining time of the operation, and the number of remaining operations in the current job. Features of machine nodes include the status of the corresponding machine and the remaining time of the operation being processed \cite{10226873}.
 \par
-In the readout phase, obtained embeddings are pooled using sum pooling and fed into a value network based on DDQN, which outputs a score value for each PDR. The agent then selects a PDR with a maximum score \cite{10226873}.
+In the readout phase, obtained embeddings are pooled using sum pooling and fed into a value network based on DDQN, originally described by \cite{DBLP:journals/corr/HasseltGS15}, which outputs a score value for each PDR. The agent selects a PDR with a maximum score to determine which operation to dispatch \cite{10226873}.
 
 \subsubsection{Extending IEEE-ICCE-RL-JSP to DJSP}
 
 \xxx{here I will add the extension of IEEE-ICCE-RL-JSP to the dynamic version of JSSP}
+
+\section{FJSP Models}
+
+\subsection{End-to-end-DRL-for-FJSP} 
+
+\textbf{End-to-end-DRL-for-FJSP} was published in \cite{LEI2022117796}. Authors represented FJSP as a disjunctive graph discussed in \ref{FJSP as a disjunctive graph}. To reduce the computational complexity, authors used the \textit{"adding arc scheme"} similar to authors of \textbf{L2D}. This process for FJSP is shown in Figure 3.2 below.
+\begin{center}
+    \includegraphics[width=\linewidth]{images/fjsp_adding_arcs.pdf}\\
+    Figure 3.2: \textit{"Adding arc strategy"} for FJSP: Disjunctive graph with original precedence constraints (black arrows) between unscheduled operations (black circles), and three precedence constraints (red and blue arrows) between already scheduled operations (colorful circles). Action $a_7$ dispatches operation $O_{33}$ on machine $M2$ by adding a red arc corresponding to machine $M2$ and changing the color of operation $O_{33}$ to red. Retrieved from \cite{LEI2022117796}.
+\end{center}
+In the message passing phase, authors use GIN discussed in \ref{graph Isomorphism network}. Extracted operation node embeddings $h_o^{(T)}$ are pooled using average pooling $h_G = \frac{1}{|O|} \sum_{o \in O} h_o^{(T)}$ as in \textbf{L2D}. Input features of each operation node are the same as in \textbf{L2D}, i.e., $h_o^{(0)} = (I(o), C_{LB}(o))$, where $I(o)$ is equal to 1 only if $o \in O$ is scheduled, otherwise 0, and $C_{LB}(o)$ is the lower bound of the estimated time of completion.
+\par
+Resulting operation node embeddings do not include machine information. Authors adopt a fully connected layer to encode the machine's state to counteract this. Machine embeddings $h_m$ are then pooled to obtain a machine pooling vector $u_m$. 
+\par
+To select the action in the readout phase, two decoders based on multi-layer perceptron with the same structure. Each decoder computes a probability distribution over the operation and machine space, respectively. In the first step, each decoder computes an operation score $c_o$ and machine score $c_m$ \cite{LEI2022117796}
+\begin{equation}
+    c_o = \text{MLP}_{\pi_{\theta}(o)} \left ( h_o^{(T)} || h_G || u_m u_m \right ) \hspace{2em} \forall o \in O \, ,
+\end{equation}
+\begin{equation}
+    c_m = \text{MLP}_{\pi_{\theta}(m)} \left ( h_m^{(T)} || h_G || u_m u_m \right ) \hspace{2em} \forall m \in \mathcal{M} \, .
+\end{equation}
