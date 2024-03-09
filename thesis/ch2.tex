@@ -115,7 +115,7 @@ where expectation averages over a finite batch of trajectories. The cumulative r
 \end{equation}
 Authors of \textbf{Proximal Policy Optimization} (PPO) algorithm \cite{DBLP:journals/corr/SchulmanWDRK17} propose the following loss function
 \begin{equation}
-	L_{PPO} (\theta) = \mathbb{E}_t \left [ \min \left( r_t(\theta) \hat{A_t} , \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon) \hat{A_t} \right) \right ] \,
+	L(\theta) = \mathbb{E}_t \left [ \min \left( r_t(\theta) \hat{A_t} , \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon) \hat{A_t} \right) \right ] \,
 \end{equation}
 where $r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_\text{old}}(a_t|s_t)}$ is the probability ratio with $r(\theta_\text{old}) = 1$, and $\epsilon$ is a hyperparameter, which authors set to $\epsilon = 0.2$ \cite{DBLP:journals/corr/SchulmanWDRK17}. $\hat{A_t}$ is an advantage estimate \cite{DBLP:journals/corr/SchulmanWDRK17}
 \begin{equation}
