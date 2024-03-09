@@ -75,13 +75,13 @@ Traditional PDRs compute the priority index based on the set of features for eac
 \end{itemize}
 As mentioned in \ref{JSSP as a disjunctive graph}, solving job scheduling can be viewed as turning each disjunctive edge into the conjunctive arc. Decisions made by PDRs can then be viewed as actions changing the disjunctive graph. This process can then be formulated as a Markov Decision Process (MDP) \cite{zhang2020learning, jssp_rl_env}, allowing PDRs to be learned automatically via deep reinforcement learning techniques.
 
-\subsection{MDP for JSSP}
+\subsection{MDP for JSSP} \label{MDP for JSSP}
 
-MDP is a stochastic decision-making process defined as a tuple $(\mathcal{S}, \mathcal{A}, \mathcal{R}, \mathcal{P}, \gamma)$, where $\mathcal{S}$ is a finite set of possible states, $\mathcal{A}$ is the set of possible actions, $\mathcal{R}$ is the reward function,  $\mathcal{P}$ is the transition probability, and $\gamma$ is the discount factor \cite{10226873, jssp_rl_env}. 
+MDP is a stochastic decision-making process defined as a tuple $(\mathcal{S}, \mathcal{A}, \mathcal{R}, \mathcal{P}, \gamma)$, where $\mathcal{S}$ is a finite set of possible states, $\mathcal{A}$ is the set of possible actions, $\mathcal{R}(s, a)$ is the reward function for action $a$ in states $s$,  $\mathcal{P} (s' | s, a)$ is the probability of transition from state $s$ to state $s'$ after taking action $a$, and $\gamma$ is the discount factor \cite{10226873, jssp_rl_env}. 
 \par
 \textit{State} $s_t \in \mathcal{S}$ at timestep $t$ is a graph, either a disjunctive graph presented in \ref{JSSP as a disjunctive graph} \cite{zhang2020learning} or heterogeneous graph in \ref{JSSP as a heterogenous graph} \cite{10226873}. For the disjunctive graph, the initial state is the JSSP representation described in \ref{JSSP as a disjunctive graph}, and the final state is the disjunctive graph with all disjunctive edges $E$ turned into conjunctive arcs $A$ \cite{zhang2020learning}. For a heterogeneous graph, partial schedule $S_{ij}(t)$ is maintained, where $S_{ij}(t)$ is real dispatch time $S_{ij}$ if operation $O_{ij}$ has been already dispatched \cite{9826438}. Otherwise, $S_{ij}(t)$ is a recursive estimate calculated by precedence constraints.
 \par
-\textit{Action} $a_t \in \mathcal{A}$ is an eligible operation at time step $t$. Since there is at most one eligible operation from each job, the size of action space is $\left|\mathcal{J}\right|$ \cite{zhang2020learning}.
+\textit{Action} $a_t \in \mathcal{A}$ is an eligible operation at time step $t$. Since there is at most one eligible operation from each job, the size of the action space is $\left|\mathcal{J}\right|$ \cite{zhang2020learning}.
 \par
 A state transition from state $s_t$ to $s_{t+1}$ after executing $a_t$ in the disjunctive graph is done by updating the direction of the corresponding disjunctive edge \cite{zhang2020learning}. In a heterogeneous graph, the schedule $S_{ij}(t)$ and node features are updated.
 

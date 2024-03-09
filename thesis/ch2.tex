@@ -1,4 +1,4 @@
-\chapter{Reinforcement learning with graph neural networks}
+\chapter{Graph neural networks and deep reinforcement learning}
 \label{chap:math}
 
 Deep learning and neural networks have achieved unprecedented success since their introduction and currently being state-of-the-art in numerous fields, such as object detection \cite{DBLP:journals/corr/RedmonDGF15, 10.1109/IVS.2019.8813777, 8627998}, machine translation \cite{DBLP:journals/corr/LuongPM15, 8003957, DBLP:journals/corr/abs-2002-07526}, and many others \cite{DONG2021100379, 10.1145/3505243, PICCIALLI2021111}. Many deep learning techniques involve learning from Euclidian data (e.g., images, text, and videos). At the same time, there is an increasing number of fields where data is represented as graphs. For example, the interaction of users on social media \cite{10.1145/3308558.3313488}, atoms and their bonds in protein molecules \cite{strokach2020fast}, and traffic forecasting \cite{JIANG2022117921}. Learning from graph data has created significant challenges. Graphs can be irregular, with varying numbers of nodes, and each node can have a different number of neighbors. As a result, some important operations (e.g., convolution) can not be applied the same way as in the case of images. With growing interest in deep learning from graph data, new methods motivated by Convolutional Neural Networks (CNNs) and Recurrent Neural networks (RNNs) have been developed. For example, an image can be thought of as a graph, where each node is a pixel, and edges connect nodes partaking in convolution, as illustrated in Figure 2.1 below \cite{9046288}.\\
@@ -84,3 +84,57 @@ It is also possible to use \textit{multi-head attention} to stabilize the learni
     Figure 3.1: Illustration of multi-head attention with three heads on the neighborhood of node 1. Different arrow colors denote independent attention mechanisms, producing new node embedding by concatenation or averaging. Reproduced from \cite{veličković2018graph}.
 \end{center}
 One straightforward strategy to extend GAT on heterogeneous graphs is constructing separate learnable linear transformation $\boldsymbol{W}_{b_i}$ for each node type $b_i$ in equations \ref{equation:2.6}, \ref{equation:2.7}, \ref{equation:2.9}, projecting each node type to a shared latent space with the same dimension.
+
+\section{Deep reinforcement learning}
+
+Given MDP tuple $(\mathcal{S}, \mathcal{A}, \mathcal{R}, \mathcal{P}, \gamma)$ as described in \ref{MDP for JSSP}, at each time step $t$, the agent receives a state $s_t \in \mathcal{S}$, selects an action $a_t \in \mathcal{A}$ following a policy $\pi(a_t|s_t)$, receives a reward $r_t$ and a new state $s_{t+1}$, and the cycle repeats \cite{DBLP:journals/corr/Li17b}. A sequence of states, actions, and rewards is called a trajectory. The discounted cumulative reward of the trajectory is the sum $G_t = \sum_{k=0}^\infty \gamma^k r_{t+k}$. The goal of an agent is to maximize the expected discounted cumulative reward over all possible sequences of future states \cite{DBLP:journals/corr/Li17b}. Long term value of a state $s$ defined as $v(s) = \mathbb{E}\left [ G_t | s_t = s \right ]$ is the expected cumulative reward from the state $s$ following policy $\pi$. An optimal state value $v_*(s) = \max_\pi v_\pi(s)$ is the maximum achievable value for the state $s$. For the optimal state value, the Bellman equation holds \cite{DBLP:journals/corr/Li17b}
+\begin{equation}
+	v_*(s) = \max_a \sum_{s'} \mathcal{P} (s' | s,a)\left [ \mathcal{R}(s, a) + \gamma v_*(s') \right ] \, .
+\end{equation}
+The action-value function $q_\pi(s,a) = \mathbb{E} \left [ G_t | s_t=s, a_t=a\right ]$ is the expected cumulative reward after taking an action $a$ in state $s$. The optimal action-value function $q_* (s,a) = \max_\pi q_\pi(s, a)$ is the maximum state-action value possible for given state $s$ and action $a$. Policy maximizing $q_\pi(s,a)$ and $v_\pi(s)$ is called optimal policy and is denoted as $\pi_*$ \cite{DBLP:journals/corr/Li17b}.
+\par
+Traditional algorithms for finding optimal policies include value iteration \cite{barto1989learning}, policy iteration \cite{Howard1960DynamicPA}, temporal difference learning \cite{tesauro1995temporal}, Q-learning \cite{watkins1992q}, and SARSA \cite{sarsa}.
+\par
+Deep reinforcement learning (DRL) methods use deep neural networks to approximate reinforcement learning components, such as value function $\hat{v}(s; \theta)$, $\hat{q}(s, a; \theta)$, policy $\pi(a|s;\theta)$, and also possibly state transition function and reward function. Symbol $\theta$ denotes the parameters of the neural network \cite{DBLP:journals/corr/Li17b}. 
+
+\subsection{Proximal policy optimization}
+
+The policy $\pi_\theta$ can be improved by performing gradient ascent w.r.t. some loss function $L(\theta)$ \cite{openai_policy_optimization}
+\begin{equation} \label{equation:2.12}
+	\theta_{k+1} = \theta_k + \alpha \nabla_\theta L(\theta)|_{\theta_k} \,
+\end{equation}
+where $\alpha$ is called a learning rate, and $\nabla_\theta L(\theta)$ is called the \textbf{policy gradient}. 
+\par
+The goal of an agent following parameterized policy $\pi_\theta$ is to maximize expected return $\mathbb{E} \left [ G_t \right ]$. Plugging in $L(\theta) = \mathbb{E} \left [ G_t \right ]$ yields \cite{openai_policy_optimization,DBLP:journals/corr/SchulmanWDRK17}
+\begin{equation}
+	\nabla_\theta L(\theta) = \mathbb{E}_t \left [ \sum_i \nabla_\theta \log \theta(a_i|s_i) G_t \right ] \, ,
+\end{equation}
+where expectation averages over a finite batch of trajectories. The cumulative reward function $G_t$ is often replaced by the advantage function $A_t$, which describes how better the action is w.r.t. other actions of the current policy, i.e., $A_t(s_t,a_t) = q_\pi(s_t, a_t) - v_\pi(s_t)$ \cite{openai_policy_optimization}. Gradient \ref{equation:2.12} is obtained by automatic differentiation software from the loss function \cite{DBLP:journals/corr/SchulmanWDRK17}
+\begin{equation}
+	L(\theta) = \mathbb{E}_t \left [ \sum_i \log \theta(a_i|s_i) A_t \right ] \, .
+\end{equation}
+Authors of \textbf{Proximal Policy Optimization} (PPO) algorithm \cite{DBLP:journals/corr/SchulmanWDRK17} propose the following loss function
+\begin{equation}
+	L_{PPO} (\theta) = \mathbb{E}_t \left [ \min \left( r_t(\theta) \hat{A_t} , \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon) \hat{A_t} \right) \right ] \,
+\end{equation}
+where $r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_\text{old}}(a_t|s_t)}$ is the probability ratio with $r(\theta_\text{old}) = 1$, and $\epsilon$ is a hyperparameter, which authors set to $\epsilon = 0.2$ \cite{DBLP:journals/corr/SchulmanWDRK17}. $\hat{A_t}$ is an advantage estimate \cite{DBLP:journals/corr/SchulmanWDRK17}
+\begin{equation}
+	\hat{A_t} = \delta_t + (\gamma \lambda) \delta_{t+1} + \cdots + (\gamma\lambda)^{T - t + 1} \delta_{T - 1} \, ,
+\end{equation}
+where $\delta_t = r_t + \gamma v(s_{t+1}) - v(s_t)$, $\lambda$ is a hyperparameter, and $t \in \left [ 0, T \right ]$ in a trajectory segment with length $T$.
+\par
+The full PPO algorithm is shown below \cite{DBLP:journals/corr/SchulmanWDRK17}. In each iteration, $N$ actors collect $T$ timesteps of data. Then, the surrogate loss of these $NT$ timesteps of data is calculated and parameters are optimized.
+
+\begin{algorithm}
+	\caption{PPO, Actor-Critic Style}\label{algorithm:ppo}
+	\begin{algorithmic}
+	\For{iteration$=1,2,...$ }
+		\For{actors$=1,2,...,N$}
+			\State Run Policy $\pi_{\theta_\text{old}}$ in environment for $T$ timesteps
+			\State Compute advantage estimates $\hat{A_1}$, ..., $\hat{A_T}$
+		\EndFor
+		\State Optimize $L$ wrt $\theta$, with $K$ epochs and minibatch size $M \leq NT$
+		\State $\theta_{\text{old}} \gets \theta$
+	\EndFor
+\end{algorithmic}
+\end{algorithm}
