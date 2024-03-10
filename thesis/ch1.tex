@@ -1,7 +1,7 @@
 \chapter{Job scheduling}
 \label{chap:refs}
 
-There are many different variants of job scheduling, each with different constraints and assumptions. This thesis deals with three particular variants: JSSP, FJSP, and DJSP. This chapter defines each variant, introduces their graph representations, and formulates PDRs as Markov Decision Process (MDP).
+There are many different variants of job scheduling, each with different constraints and assumptions. This thesis deals with three particular variants: job-shop scheduling problem, flexible job-shop scheduling problem, and dynamic job-shop scheduling problem. This chapter defines each variant, introduces their graph representations, and formulates priority dispatching rules as a Markov Decision Process.
 
 \section{Job-Shop Scheduling Problem}
 
@@ -41,7 +41,7 @@ Each edge can be either operation-to-operation ($O-O$) edge, machine-to-machine 
 
 \section{Flexible Job-shop Scheduling Problem}
 
-FJSP is an extended version of JSSP with the only difference being that each operation $O_{ij} \in \mathcal{O}$ can be processed on any machine $M_k$ from the given subset of machines $\mathcal{M}_{ij} \subseteq \mathcal{M}$ with processing time $p_{ijk}$ \cite{9826438}. Solving FJSP then consists of selecting the appropriate machine for each operation (machine selection) and determining its start time (operation sequencing) \cite{https://doi.org/10.1049/iet-cim.2018.0009}. 
+Flexible Job-shop Scheduling Problem (FJSP) is an extended version of JSSP with the only difference being that each operation $O_{ij} \in \mathcal{O}$ can be processed on any machine $M_k$ from the given subset of machines $\mathcal{M}_{ij} \subseteq \mathcal{M}$ with processing time $p_{ijk}$ \cite{9826438}. Solving FJSP then consists of selecting the appropriate machine for each operation (machine selection) and determining its start time (operation sequencing) \cite{https://doi.org/10.1049/iet-cim.2018.0009}. 
 
 \subsection{FJSP as a disjunctive graph} \label{FJSP as a disjunctive graph}
 
@@ -66,7 +66,7 @@ Dynamic job-shop scheduling problem (DJSP) is a dynamic version of JSSP where $n
 \section{Priority Dispatching Rules} \label{priority dispatching rules}
 Priority dispatching rules (PDRs) are a greedy heuristic method for solving JSSP in $\left|\mathcal{O}\right|$ steps \cite{zhang2020learning}. Each step identifies a set of eligible operations by selecting unscheduled operations whose precedent operation has already been scheduled. Then, for each eligible operation, PDR computes a priority index and selects the one with the highest priority to be dispatched \cite{zhang2020learning}. The start time must also be determined for the selected operation, but it is sensible to start it as soon as possible \cite{discovering_dispatching_rules}. In FJSP, PDR also selects the machine by computing the priority index for each eligible machine after selecting an operation.
 \par
-Traditional PDRs compute the priority index based on the set of features for each operation \cite{Haupt_1989a}. In the literature, many PDRs have been studied over time \cite{doi:10.1080/00207543.2011.611539, Haupt_1989a, discovering_dispatching_rules, 7232991}. In this thesis, only a few of them will be mentioned, notably \cite{0226873, Haupt_1989a}:
+Traditional PDRs compute the priority index based on the set of features for each operation \cite{Haupt_1989a}. In the literature, many PDRs have been studied over time \cite{doi:10.1080/00207543.2011.611539, Haupt_1989a, discovering_dispatching_rules, 7232991}. In this thesis, only a few of them will be mentioned, notably \cite{10226873, Haupt_1989a}:
 \begin{itemize}
     \item \textit{First in first out} (FIFO) - select earliest available operation 
     \item \textit{Most operation remaining} (MOR) - select operation of a job with most remaining operations
@@ -77,7 +77,7 @@ As mentioned in \ref{JSSP as a disjunctive graph}, solving job scheduling can be
 
 \subsection{MDP for JSSP} \label{MDP for JSSP}
 
-MDP is a stochastic decision-making process defined as a tuple $(\mathcal{S}, \mathcal{A}, \mathcal{R}, \mathcal{P}, \gamma)$, where $\mathcal{S}$ is a finite set of possible states, $\mathcal{A}$ is the set of possible actions, $\mathcal{R}(s, a)$ is the reward function for action $a$ in states $s$,  $\mathcal{P} (s' | s, a)$ is the probability of transition from state $s$ to state $s'$ after taking action $a$, and $\gamma$ is the discount factor \cite{10226873, jssp_rl_env}. 
+MDP is a stochastic decision-making process defined as a tuple $(\mathcal{S}, \mathcal{A}, \mathcal{R}, \mathcal{P}, \gamma)$, where $\mathcal{S}$ is a finite set of possible states, $\mathcal{A}$ is the set of possible actions, $\mathcal{R}(s, a)$ is the reward function for action $a$ in state $s$,  $\mathcal{P} (s' | s, a)$ is the probability of transition from state $s$ to state $s'$ after taking action $a$, and $\gamma$ is the discount factor \cite{10226873, jssp_rl_env}. 
 \par
 \textit{State} $s_t \in \mathcal{S}$ at timestep $t$ is a graph, either a disjunctive graph presented in \ref{JSSP as a disjunctive graph} \cite{zhang2020learning} or heterogeneous graph in \ref{JSSP as a heterogenous graph} \cite{10226873}. For the disjunctive graph, the initial state is the JSSP representation described in \ref{JSSP as a disjunctive graph}, and the final state is the disjunctive graph with all disjunctive edges $E$ turned into conjunctive arcs $A$ \cite{zhang2020learning}. For a heterogeneous graph, partial schedule $S_{ij}(t)$ is maintained, where $S_{ij}(t)$ is real dispatch time $S_{ij}$ if operation $O_{ij}$ has been already dispatched \cite{9826438}. Otherwise, $S_{ij}(t)$ is a recursive estimate calculated by precedence constraints.
 \par
@@ -85,7 +85,7 @@ MDP is a stochastic decision-making process defined as a tuple $(\mathcal{S}, \m
 \par
 A state transition from state $s_t$ to $s_{t+1}$ after executing $a_t$ in the disjunctive graph is done by updating the direction of the corresponding disjunctive edge \cite{zhang2020learning}. In a heterogeneous graph, the schedule $S_{ij}(t)$ and node features are updated.
 
-\textit{Reward} for each action is the difference between the makespan $C_\text{max}(s_t)$ at timestep $t$ and $C_\text{max}(s_{t+1})$ at timestep $t+1$. Summing over all rewards given $\gamma = 1$ gives us \textit{cumulative reward} $C_\text{max}(s_0) - C_\text{max}(s_{\left|\mathcal{O}\right|})$, where $C_\text{max}(s_{\left|\mathcal{O}\right|})$ corresponds to the makespan of final schedule. Since the $C_\text{max}(s_0)$ is a constant specific to the problem instance, maximizing cumulative reward minimizes final schedule makespan $C_\text{max}$ \cite{zhang2020learning, 9826438, 10226873}. 
+\textit{Reward} for each action is the difference between the makespan $C_\text{max}(s_t)$ at timestep $t$ and $C_\text{max}(s_{t+1})$ at timestep $t+1$. Summing over all rewards given $\gamma = 1$ gives us \textit{cumulative reward} $C_\text{max}(s_0) - C_\text{max}(s_{\left|\mathcal{O}\right|})$, where $C_\text{max}(s_{\left|\mathcal{O}\right|})$ corresponds to the makespan of final schedule $C_\text{max}$. Since the $C_\text{max}(s_0)$ is a constant specific to the problem instance, maximizing cumulative reward minimizes final schedule makespan $C_\text{max}$ \cite{zhang2020learning, 9826438, 10226873}. 
 
 \textit{Policy} $\pi(a_t|s_t)$ defines a probability distribution over available actions $a_t \in \mathcal{A}$ given state $s_t \in \mathcal{S}$. Traditional PDRs mentioned in \ref{priority dispatching rules} as a policy output one-hot distribution with the action with the highest priority having probability 1 \cite{zhang2020learning}. $\pi_\theta(a_t|s_t)$ denotes that the policy is parameterized, enabling learning.
 

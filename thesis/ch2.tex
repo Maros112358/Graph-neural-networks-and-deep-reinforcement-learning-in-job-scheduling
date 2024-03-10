@@ -15,56 +15,50 @@ Similarly, for text processing and RNNs, text can be thought of as a graph, wher
 
 \section{Graph Neural Networks}
 
-In the simplest case, when data is represented as a non-oriented graph $G = (O, E)$, each node $o \in O$ and each edge $(o, w) \in E$ has a seat of features $x_o$ and $y_{ow}$ respectively. For example, the processing time of each operation node in the JSSP disjunctive graph. 
+In the simplest case, when data is represented as a non-oriented graph $G = (O, E)$, each node $o \in O$ and each edge $(o, w) \in E$ has a seat of features $\vec{x}_o \in \mathbb{R}^N$ and $\vec{y}_{ow} \in \mathbb{R}^M$ respectively. For example, the processing time of each operation node in the JSSP disjunctive graph. 
 \par
-Simple GNN takes this graph as an input and processes its features in two phases. The first phase called \textit{message passing phase} \cite{pmlr-v70-gilmer17a}, runs for $T$ time steps and uses a message function $M_t$ and node update function $U_t$. In each time step $t$, for each node $o$, a message $m_o^{t + 1}$ is calculated, and the embedding of the node $h_o^{t}$ is updated according to \cite{pmlr-v70-gilmer17a}
+Simple GNN takes this graph as an input and processes its features in two phases. The first phase, called \textit{message passing phase} \cite{pmlr-v70-gilmer17a}, runs for $K$ steps and uses a message function $M_{(k)}$ and a node update function $U_{(k)}$. In each step $k$, for each node $o$, a message $\vec{m}_o^{(k + 1)} \in \mathbb{R}^L$ is calculated, and the embedding of the node $\vec{h}_o^{(k)} \in \mathbb{R}^P$ is updated according to \cite{pmlr-v70-gilmer17a}
 \begin{equation}\label{equation:2.1}
-	m_o^{(t + 1)} = \sum_{w \in \mathcal{N}(o)} M_{(t)} (h_o^{(t)}, h_w^{(t)}, y_{ow}) \, ,
+	\vec{m}_o^{(k + 1)} = \sum_{w \in \mathcal{N}(o)} M_{(k)} \left(\vec{h}_o^{(k)}, \vec{h}_w^{(k)}, \vec{y}_{ow} \right) \, ,
 \end{equation}
 \begin{equation}\label{equation:2.2}
-	h_o^{(t+1)} = U_{(t)} (h_o^{(t)}, m_o^{(t+1)})
+	\vec{h}_o^{(k+1)} = U_{(k)} \left(\vec{h}_o^{(k)}, \vec{m}_o^{(k+1)}\right)
 \end{equation}
-where $\mathcal{N}(o)$ in the sum defines the neighbourhood of the node $o$ in graph $G$. The initial embedding of the node is $h_o^{(0)} = x_o$. Each timestep is often called a \textit{layer} of GNN.
+where $\mathcal{N}(o)$ in the sum defines the neighbourhood of the node $o$ in graph $G$. The initial embedding of the node is $\vec{h}_o^{(0)} = x_o$. Each step is often called a \textit{layer} of GNN.
 \par
-In the \textit{readout phase}, a readout function $R$ computes a feature vector $z_o$ from obtained node embeddings \cite{pmlr-v70-gilmer17a}
+In the \textit{readout phase}, a readout function $R$ computes a feature vector $\vec{z}_o \in \mathbb{R}^R$ from obtained node embeddings \cite{pmlr-v70-gilmer17a}
 \begin{equation}\label{equation:2.3}
-	z_o = R(h_o^{(T)}) \hspace{2em} \forall o \in O \, .
+	\vec{z}_o = R\left(\vec{h}_o^{(K)}\right) \hspace{2em} \forall o \in O \, .
 \end{equation}
-Message function $M_{(t)}$, node update function $U_{(t)}$, and readout function $R$ can all be learned differentiable functions\\
-Different forms of equations \ref{equation:2.1}, \ref{equation:2.2}, and \ref{equation:2.3} lead to different types of GNNs performing different tasks, for example \cite{sanchez-lengeling2021a, 10.1145/3495161}:
-\begin{itemize}
-	\item Graph Convolutional Neural Networks (GCNNs)
-	\item Graph Recurrent Neural Networks (GRNNs)
-	\item Graph Attention Networks (GATs)
-\end{itemize} 
-This thesis will focus primarily on relevant GNN architectures used in available job scheduling models described in the next chapter, specifically Graph Isomorphism Network (GIN) and GAT.
+Message function $M_{(k)}$, node update function $U_{(k)}$, and readout function $R$ can all be learned differentiable functions.
+\par
+Different forms of equations \ref{equation:2.1}, \ref{equation:2.2}, and \ref{equation:2.3} lead to different types of GNNs performing different tasks, for example, Graph Convolutional Neural Networks (GCNNs), Graph Recurrent Neural Networks (GRNNs), Graph Attention Networks (GATs) \cite{sanchez-lengeling2021a, 10.1145/3495161}. This thesis will focus primarily on relevant GNN architectures used in available job scheduling models described in the next chapter, specifically Graph Isomorphism Network (GIN) and GAT.
 
 \subsection{Graph Isomorphism Network} \label{graph Isomorphism network}
-Graph Isomorphism Network (GIN) is a GNN variant achieving maximum discriminative power \cite{DBLP:journals/corr/abs-1810-00826}. Given undirected graph $G = (O, E)$, in the message passing phase, the update function $U_{(t)}$ is represented by a multi-layer perceptron $\text{MLP}^{(t)}$ and \ref{equation:2.2} has the following form \cite{DBLP:journals/corr/abs-1810-00826}
+Graph Isomorphism Network (GIN) is a GNN variant achieving maximum discriminative power \cite{DBLP:journals/corr/abs-1810-00826}. Given undirected graph $G = (O, E)$, in the message passing phase, the update function $U_{(k)}$ is represented by a multi-layer perceptron $\text{MLP}^{(k)}$ and \ref{equation:2.2} has the following form \cite{DBLP:journals/corr/abs-1810-00826}
 \begin{equation} \label{equation:2.4}
-	h_o^{(t+1)} = \text{MLP}^{(t)} \left ( \left ( 1 + \epsilon^{(t)} \right ) h_o^{(t-1)} + \sum_{w\in \mathcal{N}(o)} h_w^{(t - 1)} \right ) \, ,
+	\vec{h}_o^{(k+1)} = \text{MLP}^{(k)} \left ( \left ( 1 + \epsilon^{(k)} \right ) \vec{h}_o^{(k)} + \sum_{w\in \mathcal{N}(o)} \vec{h}_w^{(k)} \right ) \, ,
 \end{equation}
-where $\epsilon^{(t)}$ can be learned or a fixed scalar \cite{DBLP:journals/corr/abs-1810-00826}. In the readout phase, the readout function $R$ depends on the model's given task, e.g., node classification, link prediction, and graph classification \cite{DBLP:journals/corr/abs-1810-00826}. The next chapter will specify specific forms of readout function for the given models.
+where $\epsilon^{(k)} \in \mathbb{R}$ can be learned or a fixed scalar \cite{DBLP:journals/corr/abs-1810-00826}. In the readout phase, the readout function $R$ depends on the model's given task, e.g., node classification, link prediction, and graph classification \cite{DBLP:journals/corr/abs-1810-00826}. Readout functions will be specified for each model separately in the next chapter.
 \par
 A straightforward strategy to extend GIN to directed graphs $G = (O, A)$ is to define the neighborhood of node $o \in O$ as $\mathcal{N}(o) = \{ w | \ (w, o) \in A\}$, i.e., all incoming neighbors of $o$ \cite{zhang2020learning}.\\
 \\
-For GIN on heterogeneous graphs, the equation \ref{equation:2.4} is applied separately for each type of neighbor node and then combined \cite{10226873, pytorch_hetero_conv}. Let $a$ denote a type of node $o$, $b_i$ denote a type of node $w_i$, and $r_i$ be an edge type connecting nodes of types $a$ and $b_i$. Then, let neighborhood $\mathcal{N}_{r_i}(o)$ be a set of nodes connected to $o$ by an edge of type $r_i$. Then, for each edge type $r_i$, updated embedding $h_{o, r_i}^{(t+1)}$ of node $o$ is calculated by equation \ref{equation:2.4} separately (with separate multi-layer perceptrons) as follows \cite{pytorch_hetero_conv}
+For GIN on heterogeneous graphs, the equation \ref{equation:2.4} is applied separately for each type of neighbor node and then combined \cite{10226873, pytorch_hetero_conv}. Let $a$ denote a type of node $o$, $b_i$ denote a type of node $w_i$, and $r_i$ be an edge type connecting nodes of types $a$ and $b_i$. Then, let neighborhood $\mathcal{N}_{r_i}(o)$ be a set of nodes connected to $o$ by an edge of type $r_i$. Then, for each edge type $r_i$, updated embedding $\vec{h}_{o, r_i}^{(k+1)}$ of node $o$ is calculated by equation \ref{equation:2.4} separately (with separate multi-layer perceptrons) as follows \cite{pytorch_hetero_conv}
 \begin{equation} \label{equation:2.5}
-	h_{o, r_i}^{(t+1)} = \text{MLP}^{(t)}_{r_i} \left ( \left ( 1 + \epsilon_{r_i}^{(t)} \right ) h_{o}^{(t-1)} + \sum_{w\in \mathcal{N}_{r_i}(o)} h_{w}^{(t - 1)} \right ) \, ,
+	\vec{h}_{o, r_i}^{(k+1)} = \text{MLP}^{(k)}_{r_i} \left ( \left ( 1 + \epsilon_{r_i}^{(k)} \right ) \vec{h}_{o}^{(k)} + \sum_{w\in \mathcal{N}_{r_i}(o)} h_{w}^{(k)} \right ) \, ,
 \end{equation}
-where $\text{MLP}^{(t)}_{r_i}$ is a multilayer perceptron for given edge type \cite{pytorch_hetero_conv}. New embeddings for the node for each edge type $h_{o, r_i}^{(t+1)}$ are then combined via some aggregation function \cite{pytorch_hetero_conv}, for example, a sum.
+where $\text{MLP}^{(t)}_{r_i}$ is a multilayer perceptron for edge type $r_i$ \cite{pytorch_hetero_conv}. New embeddings for the node for each edge type $\vec{h}_{o, r_i}^{(k+1)}$ are then combined via some aggregation function \cite{pytorch_hetero_conv}, for example, a sum.
 
 \subsection{Graph Attention Network}
-Graph Attention Network (GAT) is a graph neural network architecture leveraging an attention mechanism \cite{veličković2018graph}. In each timestep (layer), nodes assign different importance weights to different nodes in their neighborhood by attending over their features. In job scheduling, higher importance weights may be assigned to operations expected to start sooner \cite{9826438}.  
-\newpage
+Graph Attention Network (GAT) is a graph neural network architecture leveraging an attention mechanism \cite{veličković2018graph}. In each step (layer) $k$, nodes assign different importance weights to different nodes in their neighborhood by attending over their features. In job scheduling, higher importance weights may be assigned to operations expected to start sooner \cite{9826438}.
 \par
 In the first step, \textit{attention coefficients} $e_{ij}$ are computed as follows \cite{9826438, veličković2018graph}
 \begin{equation} \label{equation:2.6}
-	e_{ow} = a\left ( \boldsymbol{W} h_o^{(t)}, \boldsymbol{W} h_w^{(t)}  \right ) \, ,
+	e_{ow} = a\left ( \boldsymbol{W} \vec{h}_o^{(k)}, \boldsymbol{W} \vec{h}_w^{(k)}  \right ) \, ,
 \end{equation}  
-where $a$ is a shared attention mechanism, and $\boldsymbol{W}$ is a shared learnable linear transformation. Attention mechanism $a$ is usually a single-layer feedforward neural network parametrized by a vector $\vec{a}$ with LeakyReLU activation \cite{9826438, veličković2018graph, DBLP:journals/corr/abs-2105-14491}
+where $a: \mathbb{R}^F \times \mathbb{R}^F \rightarrow \mathbb{R}$ is a shared attention mechanism, and $\boldsymbol{W} \in \mathbb{R}^{F \times N}$ is a shared learnable linear transformation. Attention mechanism $a$ is usually a single-layer feedforward neural network parametrized by a vector $\vec{b} \in \mathbb{R}^{2F}$ with LeakyReLU activation \cite{9826438, veličković2018graph, DBLP:journals/corr/abs-2105-14491}
 \begin{equation} \label{equation:2.7}
-	e_{ow} = \text{LeakyReLU}\left ( \vec{a}^T \left [ \boldsymbol{W}h_o^{(t)} || \boldsymbol{W}h_w^{(t)} \right ] \right ) \, ,
+	e_{ow} = \text{LeakyReLU}\left ( \vec{b} \cdot \left [ \boldsymbol{W}\vec{h}_o^{(k)} || \boldsymbol{W}\vec{h}_w^{(k)} \right ] \right ) \, ,
 \end{equation}
 where $\bullet||\bullet$ represents concatenation.
 \par
@@ -74,24 +68,24 @@ Then, the attention coefficients are normalized using the Softmax function only 
 \end{equation}
 As the last step, GAT computes a new node embedding as follows \cite{9826438, veličković2018graph}
 \begin{equation} \label{equation:2.9}
-	h_o^{(t+1)} = \sigma \left ( \sum_{w \in \mathcal{N}(o) \cup {o}} \alpha_{ow} \boldsymbol{W} h_w^{(t)} \right ) \, ,
+	\vec{h}_o^{(k+1)} = \sigma \left ( \sum_{w \in \mathcal{N}(o) \cup {o}} \alpha_{ow} \boldsymbol{W} \vec{h}_w^{(k)} \right ) \, ,
 \end{equation}
-where $\sigma$ is some non-linear function. 
+where $\sigma: \mathbb{R}^F \rightarrow \mathbb{R}$ is some non-linear function. 
 \par
 It is also possible to use \textit{multi-head attention} to stabilize the learning process. Multiple independent attention mechanisms execute the transformation in equation \ref{equation:2.9}, and their results are aggregated by concatenation or averaging \cite{veličković2018graph}. This process is illustrated in Figure 3.1 below \cite{veličković2018graph}.
 \begin{center}
-    \includegraphics[width=0.7\linewidth]{images/graph_attention_network_pdfa.pdf}\\
+    \includegraphics[width=0.5\linewidth]{images/graph_attention_network_pdfa.pdf}\\
     Figure 3.1: Illustration of multi-head attention with three heads on the neighborhood of node 1. Different arrow colors denote independent attention mechanisms, producing new node embedding by concatenation or averaging. Reproduced from \cite{veličković2018graph}.
 \end{center}
 One straightforward strategy to extend GAT on heterogeneous graphs is constructing separate learnable linear transformation $\boldsymbol{W}_{b_i}$ for each node type $b_i$ in equations \ref{equation:2.6}, \ref{equation:2.7}, \ref{equation:2.9}, projecting each node type to a shared latent space with the same dimension.
 
 \section{Deep reinforcement learning}
 
-Given MDP tuple $(\mathcal{S}, \mathcal{A}, \mathcal{R}, \mathcal{P}, \gamma)$ as described in \ref{MDP for JSSP}, at each time step $t$, the agent receives a state $s_t \in \mathcal{S}$, selects an action $a_t \in \mathcal{A}$ following a policy $\pi(a_t|s_t)$, receives a reward $r_t$ and a new state $s_{t+1}$, and the cycle repeats \cite{DBLP:journals/corr/Li17b}. A sequence of states, actions, and rewards is called a trajectory. The discounted cumulative reward of the trajectory is the sum $G_t = \sum_{k=0}^\infty \gamma^k r_{t+k}$. The goal of an agent is to maximize the expected discounted cumulative reward over all possible sequences of future states \cite{DBLP:journals/corr/Li17b}. Long term value of a state $s$ defined as $v(s) = \mathbb{E}\left [ G_t | s_t = s \right ]$ is the expected cumulative reward from the state $s$ following policy $\pi$. An optimal state value $v_*(s) = \max_\pi v_\pi(s)$ is the maximum achievable value for the state $s$. For the optimal state value, the Bellman equation holds \cite{DBLP:journals/corr/Li17b}
+Given MDP tuple $(\mathcal{S}, \mathcal{A}, \mathcal{R}, \mathcal{P}, \gamma)$ as described in \ref{MDP for JSSP}, at each time step $t$, the agent receives a state $s_t \in \mathcal{S}$, selects an action $a_t \in \mathcal{A}$ following a policy $\pi(a_t|s_t)$, receives a reward $r_t$ and a new state $s_{t+1}$, and the cycle repeats \cite{DBLP:journals/corr/Li17b}. A sequence of states, actions, and rewards is called a trajectory. The discounted cumulative reward of the trajectory is the sum $G_t = \sum_{k=0}^\infty \gamma^k r_{t+k}$. The goal of an agent is to maximize the expected discounted cumulative reward $\mathbb{E}[G_t]$ over all possible sequences of future states \cite{DBLP:journals/corr/Li17b}. Long term value of a state $s$ defined as $v(s) = \mathbb{E}\left [ G_t | s_t = s \right ]$ is the expected cumulative reward from the state $s$ following policy $\pi$. An optimal state value $v_*(s) = \max_\pi v_\pi(s)$ is the maximum achievable value for the state $s$. For the optimal state value, the Bellman equation holds \cite{DBLP:journals/corr/Li17b}
 \begin{equation}
 	v_*(s) = \max_a \sum_{s'} \mathcal{P} (s' | s,a)\left [ \mathcal{R}(s, a) + \gamma v_*(s') \right ] \, .
 \end{equation}
-The action-value function $q_\pi(s,a) = \mathbb{E} \left [ G_t | s_t=s, a_t=a\right ]$ is the expected cumulative reward after taking an action $a$ in state $s$. The optimal action-value function $q_* (s,a) = \max_\pi q_\pi(s, a)$ is the maximum state-action value possible for given state $s$ and action $a$. Policy maximizing $q_\pi(s,a)$ and $v_\pi(s)$ is called optimal policy and is denoted as $\pi_*$ \cite{DBLP:journals/corr/Li17b}.
+The action-value function $q_\pi(s,a) = \mathbb{E} \left [ G_t | s_t=s, a_t=a\right ]$ is the expected cumulative reward after taking an action $a$ in state $s$ following policy $\pi$. The optimal action-value function $q_* (s,a) = \max_\pi q_\pi(s, a)$ is the maximum state-action value possible for given state $s$ and action $a$. Policy maximizing $q_\pi(s,a)$ and $v_\pi(s)$ is called optimal policy and is denoted as $\pi_*$ \cite{DBLP:journals/corr/Li17b}.
 \par
 Traditional algorithms for finding optimal policies include value iteration \cite{barto1989learning}, policy iteration \cite{Howard1960DynamicPA}, temporal difference learning \cite{tesauro1995temporal}, Q-learning \cite{watkins1992q}, and SARSA \cite{sarsa}.
 \par
@@ -141,7 +135,7 @@ The full PPO algorithm is shown below \cite{DBLP:journals/corr/SchulmanWDRK17}. 
 
 \subsection{Deep Q-network}
 
-Deep Q-network (DQN) is an algorithm using a neural network to approximate the action-value function $\hat{q}_\theta(s, a)$ \cite{mnih2015human}. It also stores agent's experience as tuples $e_t = (s_t, a_t, r_t, s_{t+1})$ in a data set $D_t = \{e_1, ..., e_t\}$. During training, Q-learning updates are performed on samples drawn uniformly from the agent's experience $D$ to reduce correlation in the trajectories observations \cite{mnih2015human}. The Q-learning update uses the following loss \cite{mnih2015human}
+Deep Q-network (DQN) is an algorithm using a neural network to approximate the action-value function $\hat{q}_\theta(s, a)$ \cite{mnih2015human}. It also stores agent's experience as tuples $e_t = (s_t, a_t, r_t, s_{t+1})$ in a data set $D_t = \{e_1, ..., e_t\}$. During training, Q-learning updates are performed on samples drawn uniformly from the agent's experience $D$ to reduce correlation in the trajectories observations \cite{mnih2015human}. The Q-learning update uses the following loss function \cite{mnih2015human}
 \begin{equation} \label{equation:2.16}
 	L_i(\theta_i) = \mathbb{E}_{(s,a,r,s') \sim U(D)} \left [\left ( r + \gamma \max_{a'}\hat{q}_{\theta^-_i}(s',a') -\hat{q}_{\theta_i}(s,a) \right )^2 \right ] \, ,
 \end{equation}
