@@ -145,7 +145,7 @@ Deep Q-network (DQN) is an algorithm using a neural network to approximate the a
 \begin{equation}
 	L_i(\theta_i) = \mathbb{E}_{(s,a,r,s') \sim U(D)} \left [\left ( r + \gamma \max_{a'}\hat{q}_{\theta^-_i}(s',a') -\hat{q}_{\theta_i}(s,a) \right )^2 \right ] \, ,
 \end{equation}
-$\hat{q}_{\theta_i}(s,a)$ is the Q-network at iteration $i$ and $\hat{q}_{\theta^-_i}(s,a)$ is the target network used to compute targets at iteration $i$. The target network is updated with the Q-network parameters every $C$ step and fixed between updates \cite. The full algorithm is shown below \cite{mnih2015human}.
+$\hat{q}_{\theta_i}(s,a)$ is the Q-network at iteration $i$ and $\hat{q}_{\theta^-_i}(s,a)$ is the target network used to compute targets at iteration $i$. The target network is updated with the Q-network parameters every $C$ step and fixed between updates The full algorithm is shown below \cite{mnih2015human}.
 
 \begin{algorithm}
 	\caption{Deep Q-learning with experience replay}\label{algorithm:dqn}
