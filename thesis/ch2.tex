@@ -150,6 +150,9 @@ $\hat{q}_{\theta_i}(s,a)$ is the Q-network at iteration $i$ and $\hat{q}_{\theta
 \begin{algorithm}
 	\caption{Deep Q-learning with experience replay}\label{algorithm:dqn}
 	\begin{algorithmic}
+	\State Initialize replay memory $D$ to capacity $N$
+	\State Initialize action-value function $\hat{q}_\theta$ with random weights
+	\State Initialize target action-value function $\hat{q}_{\theta^-} = \hat{q}_\theta$
 	\For{episode $=1,...,M$}
 		\State Initialize sequence $s_1 = \{x_1\}$ and preprocessed sequence $\phi_1 = \phi(s_1)$
 		\For{t $=1,...,T$}
