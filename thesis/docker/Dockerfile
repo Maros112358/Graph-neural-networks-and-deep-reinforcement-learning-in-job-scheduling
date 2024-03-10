@@ -11,7 +11,6 @@ RUN apt-get -qq update && apt-get install -y \
   texlive-lang-english \
   texlive-latex-extra \
   texlive-latex-recommended \
-  texlive-luatex \
   texlive-pictures \
   texlive-publishers \
   texlive-science \
