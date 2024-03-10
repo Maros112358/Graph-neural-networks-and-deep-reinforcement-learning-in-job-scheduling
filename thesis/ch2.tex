@@ -142,10 +142,10 @@ The full PPO algorithm is shown below \cite{DBLP:journals/corr/SchulmanWDRK17}. 
 \subsection{Deep Q-network}
 
 Deep Q-network (DQN) is an algorithm using a neural network to approximate the action-value function $\hat{q}_\theta(s, a)$ \cite{mnih2015human}. It also stores agent's experience as tuples $e_t = (s_t, a_t, r_t, s_{t+1})$ in a data set $D_t = \{e_1, ..., e_t\}$. During training, Q-learning updates are performed on samples drawn uniformly from the agent's experience $D$ to reduce correlation in the trajectories observations \cite{mnih2015human}. The Q-learning update uses the following loss \cite{mnih2015human}
-\begin{equation}
+\begin{equation} \label{equation:2.16}
 	L_i(\theta_i) = \mathbb{E}_{(s,a,r,s') \sim U(D)} \left [\left ( r + \gamma \max_{a'}\hat{q}_{\theta^-_i}(s',a') -\hat{q}_{\theta_i}(s,a) \right )^2 \right ] \, ,
 \end{equation}
-$\hat{q}_{\theta_i}(s,a)$ is the Q-network at iteration $i$ and $\hat{q}_{\theta^-_i}(s,a)$ is the target network used to compute targets at iteration $i$. The target network is updated with the Q-network parameters every $C$ step and fixed between updates The full algorithm is shown below \cite{mnih2015human}.
+$\hat{q}_{\theta_i}(s,a)$ is the Q-network at iteration $i$ and $\hat{q}_{\theta^-_i}(s,a)$ is the target network used to compute targets at iteration $i$. The target network is updated with the Q-network parameters every $C$ step and fixed between updates. The full algorithm is shown below \cite{mnih2015human}.
 
 \begin{algorithm}
 	\caption{Deep Q-learning with experience replay}\label{algorithm:dqn}
@@ -170,3 +170,8 @@ $\hat{q}_{\theta_i}(s,a)$ is the Q-network at iteration $i$ and $\hat{q}_{\theta
 \end{algorithmic}
 \end{algorithm}
 
+The max operator in equation \ref{equation:2.16}, also present in standard Q-learning algorithm \cite{watkins1992q}, uses the same action-value function to select and evaluate the action, leading to overoptimistic value estimates. To counteract this, in Double Q-learning \cite{hasselt2010double}, two value functions are learned by randomly choosing which to update. During each update, one function selects a greedy action, and the other determines its value. Using this mechanism in DQN algorithm \ref{algorithm:dqn} leads to an algorithm called \textbf{Double DQN} \label{Double DQN} \cite{Hasselt_Guez_Silver_2016} (DDQN), as a reference to both Double Q-learning and DQN. DDQN replaces expression for target $y_j$ in case \textit{"otherwise"} in algorithm \ref{algorithm:dqn} with \cite{Hasselt_Guez_Silver_2016}
+\begin{equation}
+	y_j = r_j + \gamma \hat{q}_{\theta^-}(\phi_{j+1}, \text{argmax}_a \hat{q}_\theta(\phi_{j+1}, a)) \, .
+\end{equation}
+The Q-network selects the action, and the target network estimates its value.
