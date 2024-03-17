@@ -91,7 +91,7 @@ Traditional algorithms for finding optimal policies include value iteration \cit
 \par
 Deep reinforcement learning (DRL) methods use deep neural networks to approximate reinforcement learning components, such as value function $\hat{v}_\theta(s)$, action-value function $\hat{q}_\theta(s, a)$, policy $\pi_\theta(a|s)$, and also possibly state transition function and reward function. Symbol $\theta$ denotes the parameters of the neural network \cite{DBLP:journals/corr/Li17b}. 
 
-\subsection{Policy optimization}
+\subsection{Policy optimization} \label{policy_optimization}
 
 The policy $\pi_\theta$ can be improved by performing gradient ascent w.r.t. some loss function $L(\theta)$ \cite{openai_policy_optimization}
 \begin{equation}
