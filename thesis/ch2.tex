@@ -133,7 +133,7 @@ The full PPO algorithm is shown below \cite{DBLP:journals/corr/SchulmanWDRK17}. 
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Deep Q-network}
+\subsection{Deep Q-network} \label{dqn}
 
 Deep Q-network (DQN) is an algorithm using a neural network to approximate the action-value function $\hat{q}_\theta(s, a)$ \cite{mnih2015human}. It also stores agent's experience as tuples $e_t = (s_t, a_t, r_t, s_{t+1})$ in a data set $D_t = \{e_1, ..., e_t\}$. During training, Q-learning updates are performed on samples drawn uniformly from the agent's experience $D$ to reduce correlation in the trajectories observations \cite{mnih2015human}. The Q-learning update uses the following loss function \cite{mnih2015human}
 \begin{equation} \label{equation:2.16}
