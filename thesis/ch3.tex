@@ -20,8 +20,8 @@ To select the action $a_t$ at $s_t$ in the readout phase, obtained graph embeddi
 Since \textbf{L2D} is a model developed strictly for JSSP, we had to extend it to apply to DJSP. The main idea behind our algorithm is that when a new job $J_\text{new}$ arrives with the arrival time $t_a$, we want to reschedule all operations that have not started yet. To do this, we keep track of currently known jobs $J_\text{known}$, and a list of already started operations ($S_{ij} < t_a$) called \textit{plan}. When rescheduling, we first formulate the JSSP instance from known jobs and dispatch operations from the plan. By doing this, we get a partially solved JSSP with all operations with $S_{ij} \geq t_a$ removed. Then, we let \textbf{L2D} select operations to dispatch and enforce the lower bound for start time $S_{ij} \geq  t_a$. We repeat this until some termination criteria are not met, for example, no new jobs are expected. This algorithm, written in pseudocode, is shown below.
 
 \begin{algorithm}[H]
-	\caption{Dynamic L2D}\label{algorithm:dqn}
-	\begin{algorithmic}
+	\caption{Dynamic L2D}
+	\begin{algorithmic}[1]
 	\State $J_\text{known} \gets$ jobs known at the start
     \State $plan \gets$ initialize empty list of actions 
     \State $instance \gets$ formulate JSSP instance from $J_\text{known}$
