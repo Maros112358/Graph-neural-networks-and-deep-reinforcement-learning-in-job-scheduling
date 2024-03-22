@@ -124,3 +124,82 @@ To train the agent, the authors propose a multi-agent version of the PPO algorit
 	\State return $\theta_k$
 \end{algorithmic}
 \end{algorithm}
+
+\subsection{fjsp-drl}
+
+The model \textbf{fjsp-drl} was published in \cite{9826438}, and the source code was obtained from \cite{github_fjsp_drl}.
+\par
+Authors represented FJSP as a heterogeneous graph discussed in \ref{FJSP as a heterogenous graph}. The authors propose a two-stage embedding process to extract node embeddings in the message-passing phase called Heterogeneous Graph Neural Network (HGNN). In the first stage, using GIN discussed in \ref{graph Isomorphism network}, machine embeddings $\vec{\nu}_l^{(k)}$ are updated by aggregating the information from its neighborhood. Operation embeddings $\vec{\mu}_{ij}^{(k)}$ of operation $O_{ij} \in \mathcal{N}(M_l)$ are concatenated with edge embeddings $\vec{\lambda}_{ijk}$ of the corresponding $O-M$ edge connecting machine $M_l$ and operation $O_{ij}$ to obtain $\vec{\mu}_{ijl}^{(k)} = \left [ \vec{\mu}_{ij}^{(k)}||\vec{\lambda}_{ijl}\right ]$. Authors use two shared linear transformations $\boldsymbol{W}^M$ and $\boldsymbol{W}^O$ for machines and operations, respectively, to calculate attention coefficients $e_{ijl}$ as follows \cite{9826438}
+\begin{equation}
+    e_{ijl} = \text{LeakyRelu}\left (\vec{b} \cdot \left [ \boldsymbol{W}^M \vec{\nu}_l^{(k)} || \boldsymbol{W}^O \vec{\mu}_{ijl}^{(k)} \right ]\right ) \, .
+\end{equation}
+Attention coefficient $e_{ll}$ of the machine $M_l$ to itself is calculated as follows \cite{9826438}
+\begin{equation}
+    e_{ll} = \text{LeakyRelu}\left (\vec{b} \cdot \left [ \boldsymbol{W}^M \vec{\nu}_l^{(k)} || \boldsymbol{W}^M \vec{\nu}_l^{(k)} \right ]\right ) \, .
+\end{equation}
+Then, all attention coefficients $e_{ijl}$ and $e_{ll}$ are normalized using the Softmax function to get normalized attention coefficients $\alpha_{ijl}$ and $\alpha_{ll}$. New embeddings are then calculated as follows \cite{9826438}
+\begin{equation}
+    \vec{\nu}_l^{(k+1)} = \sigma \left ( \alpha_{ll} \boldsymbol{W}^M \vec{\nu}_l^{(k)} + \sum_{O_{ij} \in \mathcal{N}(M_l)} \alpha_{ijk} \boldsymbol{W}^O\vec{\mu}_{ijl}^{(k)}\right ) \hspace{2em} \forall M_l \in M
+\end{equation}
+\par
+In the second stage, to update operation node embeddings, authors use five MLPs (denoted as $\text{MLP}_{\theta_i}$ for i-th MLP). Individual MLPs are used to process embeddings of a preceding operation $\vec{\mu}_{i,j-1}^{(k)}$, succeeding operation $\vec{\mu}_{i,j+1}^{(k)}$, embedding of the operation itself in the previous step $\vec{\mu}_{ij}^{(k)}$, and aggregated neighboring machine embedding $\nu_{ij}^({k+1}) = \sum_{M_l\in\mathcal{N}(O_{ij})} \vec{\nu}_l^{(k+1)}$. Operation embedding update is then performed as follows \cite{9826438}
+\begin{equation}
+    \begin{split}
+        \mu_{ij}^{(k+1)}  = \text{MLP}_{\theta_0} \Bigg( 
+            &\text{ELU} \Big[ 
+                \text{MLP}_{\theta_1}\left(\vec{\mu}_{i,j-1}^{(k)}\right) || 
+                \text{MLP}_{\theta_2}\left(\vec{\mu}_{i,j+1}^{(k)}\right) || \\
+                &\text{MLP}_{\theta_3}\left(\vec{\nu}_{ij}^{(k+1)}\right) || 
+                \text{MLP}_{\theta_4}\left(\vec{\mu}_{ij}^{(k)}\right)
+            \Big]    
+        \Bigg) \, ,
+\end{split}
+\end{equation}
+where ELU is the Exponential Linear Unit function.
+\par
+This two-stage embedding process can be thought of as one HGNN step (layer). After K steps, final machine embeddings $\vec{\nu}_k^{(K)}$ and operation node embeddings $\vec{\mu}_{ij}^{(K)}$ are pooled using sum-pooling and concatenated. The final vector $\vec{h}_H$ is the embedding of the heterogeneous graph $H$ \cite{9826438}
+\begin{equation}
+    \vec{h}_H = 
+        \left [
+            \frac{1}{|O|}\sum_{O_{ij} \in O} \vec{\mu}_{ij}^{(K)} 
+            \middle\| 
+            \frac{1}{|M|}\sum_{M_k \in M} \vec{\nu}_k^{(K)}
+        \right ] \, .
+\end{equation}
+In the readout phase, for each feasible action $a_t = (O_{ij}, M_l) \in A_t$ in state $s_t$ at step $t$, corresponding operation node and machine embeddings are concatenated with heterogeneous graph embedding and fed into an MLP with parameters $\omega$ with a tanh activation to get the priority index \cite{9826438}
+\begin{equation}
+    P(a_t, s_t) = \text{MLP}_{\omega} \left [ \vec{\mu}_{ij}^{(K)} || \vec{\nu}_l^{(K)} || \vec{h}_H \right ] \, .
+\end{equation}
+The probability of selection action $a_t$ is obtained by applying softmax over all possible actions
+\begin{equation}
+    \pi_\omega (a_t|s_t) = \frac{\exp{P(a_t,s_t)}}{\sum_{a_t'\in A_t}\exp(P(a_t',s_t))} \hspace{2em} \forall a_t \in A_t \, . 
+\end{equation}
+The authors used a modified version of the PPO discussed in section \ref{policy_optimization} to train the agent. The actor is the policy network $\pi_\omega$, and critic $v_\phi$ is the network that takes $h_H$ computed by HGNN as an input and predicts the value $v(s_t)$. The critic has the same structure as the actor but has a different number of inputs. The full algorithm is written in pseudocode below. 
+
+\begin{algorithm}[H]
+	\caption{HGNN Training procedure with PPO} \label{algorithm:hgnnppo}
+	\begin{algorithmic}[1]
+	\renewcommand{\algorithmicrequire}{\hspace*{\algorithmicindent}  \textbf{Input:}}
+	\renewcommand{\algorithmicensure}{\hspace*{\algorithmicindent}  \textbf{Output:}}
+	\Require HGNN network, policy network and critic network with trainable parameters $\theta$, $\omega$ and $\phi$
+	\Ensure Trained parameters
+	\State Sample a batch of $B$ FJSP instances
+	\For{iter $=1,2,...,I$}
+		\For{b $=1,2,...,B$}  \Comment{In parallel}
+			\State Initialize $s_t$ based on instance $b$
+            \While{$s_t$ is not terminal}
+                \State Extract embeddings using HGNN
+                \State Sample $a_t \sim \pi_\omega(\cdot | s_t)$
+                \State Receive reward $r_t$ and next state $s_{t+1}$
+                \State $s_t \gets s_{t+1}$
+            \EndWhile
+			\State Compute the generalised advantage estimates $\hat{A_t}$ for each step
+        \State Compute  the PPO loss $L$, and optimize the parameters $\theta$, $\omega$, and $\phi$
+        \State Update network parameters
+        \State Validate the policy every 10 iterations
+        \State Sample a new batch of $B$ FJSP instances every 20 iterations
+		\EndFor
+	\EndFor
+	\State return $\theta_k$
+\end{algorithmic}
+\end{algorithm}
