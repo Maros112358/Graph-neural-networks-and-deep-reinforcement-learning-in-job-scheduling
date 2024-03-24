@@ -17,10 +17,10 @@ To select the action $a_t$ at $s_t$ in the readout phase, obtained graph embeddi
 
 \subsubsection{Dynamic L2D}
 
-Since \textbf{L2D} is a model developed strictly for JSSP, we had to extend it to apply to DJSP. The main idea behind our algorithm is that when a new job $J_\text{new}$ arrives with the arrival time $t_a$, we want to reschedule all operations that have not started yet. To do this, we keep track of currently known jobs $J_\text{known}$, and a list of already started operations ($S_{ij} < t_a$) called \textit{plan}. When rescheduling, we first formulate the JSSP instance from known jobs and dispatch operations from the plan. By doing this, we get a partially solved JSSP with all operations with $S_{ij} \geq t_a$ removed. Then, we let \textbf{L2D} select operations to dispatch and enforce the lower bound for start time $S_{ij} \geq  t_a$. We repeat this until some termination criteria are not met, for example, no new jobs are expected. This algorithm, written in pseudocode, is shown below.
+Since \textbf{L2D} is a model developed strictly for JSSP, we had to extend it to apply to DJSP. The main idea behind our algorithm is that when a new job $J_\text{new}$ arrives with the arrival time $t_a$, we want to reschedule all operations that have not started yet. To do this, we keep track of currently known jobs $J_\text{known}$, and a list of already started operations ($S_{ij} < t_a$) called \textit{plan}. When rescheduling, we first formulate the JSSP instance from known jobs and dispatch operations from the plan. By doing this, we get a partially solved JSSP with all operations with $S_{ij} \geq t_a$ removed. Then, we let \textbf{L2D} select operations to dispatch and enforce the lower bound for start time $S_{ij} \geq  t_a$. We repeat this until some termination criteria are not met, for example, no new jobs are expected. Full algorithm written in pseudocode is shown in algorithm \ref{algorithm:l2d}.
 
-\begin{algorithm}[H]
-	\caption{Dynamic L2D}
+\begin{algorithm}
+	\caption{Dynamic \textbf{L2D}} \label{algorithm:l2d}
 	\begin{algorithmic}[1]
 	\State $J_\text{known} \gets$ jobs known at the start
     \State $plan \gets$ initialize empty list of actions 
@@ -46,6 +46,18 @@ Since \textbf{L2D} is a model developed strictly for JSSP, we had to extend it t
     \State return $solution$
 \end{algorithmic}
 \end{algorithm}
+
+\subsection{Wheatley}
+
+\textbf{Wheatley} is an open-source model published solely on GitHub \cite{github_wheatley} designed not only for JSSP but also for resource-constrained project scheduling problems (RCPSPs). It has been motivated by the model \textbf{L2D} and by \cite{DBLP:journals/corr/abs-2104-03760}. It has many features beyond this thesis's scope. It supports scheduling for problems with bounded but uncertain durations and offers GNN architectures beyond those described in chapter \ref{chap:math}, e.g., Principal Neighbourhood Aggregation \cite{DBLP:journals/corr/abs-2004-05718}, Directional Graph Networks \cite{DBLP:journals/corr/abs-2010-02863}, Graph convolutional networks \cite{DBLP:journals/corr/abs-2007-02133}.
+\par
+JSSP is represented by a disjunctive graph described in \ref{JSSP as a disjunctive graph} with \textit{"arc adding scheme"} similar to \textbf{L2D}, i.e., it starts with the graph only containing conjunctive arcs representing precedence constraints between operations in the same job. New conjunctive arcs are added during scheduling. Node features include task completion times, a boolean feature representing if the operation has already been scheduled similarly to $I(o)$ in \textbf{L2D}, one-hot encoded machine id, a boolean feature representing if the operation is selectable. The rest can be selected from the list of options, where we selected the processing time of the operation.
+\par
+GNN used to obtain graph node embeddings can be chosen from multiple architectures. For this thesis, we have chosen GIN described in \ref{graph Isomorphism network} so that we can compare \textbf{Wheatley} with \textbf{L2D}. For the same reason, we have chosen average pooling after extracting the embeddings.
+\par
+In the readout phase, \textbf{Wheatley} passes extracted graph and node embeddings through an MLP to obtain the log-odds for each eligible operation.
+\par
+To train the agent, \textbf{Wheatley} uses the PPO algorithm discussed in \ref{policy_optimization}.
 
 \subsection{IEEE-ICCE-RL-JSP}
 
@@ -92,8 +104,8 @@ where $p_i (a_o)$ is the probability of selecting the operation $i \in O$, and $
 \par
 To train the agent, the authors propose a multi-agent version of the PPO algorithm discussed in \ref{policy_optimization}. In this case, the job operation actor makes job operation action-selection using stochastic policy $\pi_{\theta_o}(a_o|s)$, and the machine actor makes machine action-selection using a stochastic policy $\pi_{\theta_m}(a_m | s, a_o)$. A single critic network with parameters $\phi$ works as an estimator to learn the approximate state-value function $\hat{v}_\phi(s)$, which is used to calculate variance-reduced advantage function estiamtor $\hat{A}$. The job operation/machine actor network tries to maximize loss function $L(\theta_k)$ in \ref{algorithm:multippo}. The critic network is updated to minimize the Mean Squared Error (MSE) objective $L_\text{MSE}(\phi)$. The complete algorithm in pseudocode is written in algorithm \ref{algorithm:multippo} \cite{LEI2022117796}. On lines 3-12, two actors collect experience until all operations are scheduled and then calculate probability ratios. On lines 13-17, aggregate job operation actor, machine actor, and critic losses are calculated. Based on the losses, updates are performed $E_s$ times on lines 18-20. This whole process is repeated $E_t$ times. The multi-PPO outputs parameters of the two trained actor networks.
 
-\begin{algorithm}[H]
-	\caption{Multi-PPO for FJSP} \label{algorithm:multippo}
+\begin{algorithm}
+	\caption{Multi-PPO for \textbf{End-to-end-DRL-for-FJSP}} \label{algorithm:multippo}
 	\begin{algorithmic}[1]
 	\renewcommand{\algorithmicrequire}{\hspace*{\algorithmicindent}  \textbf{Input:}}
 	\renewcommand{\algorithmicensure}{\hspace*{\algorithmicindent}  \textbf{Output:}}
@@ -129,7 +141,7 @@ To train the agent, the authors propose a multi-agent version of the PPO algorit
 
 The model \textbf{fjsp-drl} was published in \cite{9826438}, and the source code was obtained from \cite{github_fjsp_drl}.
 \par
-Authors represented FJSP as a heterogeneous graph discussed in \ref{FJSP as a heterogenous graph}. The authors propose a two-stage embedding process to extract node embeddings in the message-passing phase called Heterogeneous Graph Neural Network (HGNN). In the first stage, using GIN discussed in \ref{graph Isomorphism network}, machine embeddings $\vec{\nu}_l^{(k)}$ are updated by aggregating the information from its neighborhood. Operation embeddings $\vec{\mu}_{ij}^{(k)}$ of operation $O_{ij} \in \mathcal{N}(M_l)$ are concatenated with edge embeddings $\vec{\lambda}_{ijk}$ of the corresponding $O-M$ edge connecting machine $M_l$ and operation $O_{ij}$ to obtain $\vec{\mu}_{ijl}^{(k)} = \left [ \vec{\mu}_{ij}^{(k)}||\vec{\lambda}_{ijl}\right ]$. Authors use two shared linear transformations $\boldsymbol{W}^M$ and $\boldsymbol{W}^O$ for machines and operations, respectively, to calculate attention coefficients $e_{ijl}$ as follows \cite{9826438}
+Authors represented FJSP as a heterogeneous graph discussed in \ref{FJSP as a heterogenous graph}. The authors propose a two-stage embedding process to extract node embeddings in the message-passing phase called Heterogeneous Graph Neural Network (HGNN). In the first stage, using GIN discussed in \ref{graph Isomorphism network}, machine embeddings $\vec{\nu}_l^{(k)}$ are updated by aggregating the information from its neighborhood. Operation embeddings $\vec{\mu}_{ij}^{(k)}$ of operation $O_{ij} \in \mathcal{N}(M_l)$ are concatenated with edge embeddings $\vec{\lambda}_{ijl}^{(k)}$ of the corresponding $O-M$ edge connecting machine $M_l$ and operation $O_{ij}$ to obtain $\vec{\mu}_{ijl}^{(k)} = \left [ \vec{\mu}_{ij}^{(k)}||\vec{\lambda}_{ijl}\right ]$. Authors use two shared linear transformations $\boldsymbol{W}^M$ and $\boldsymbol{W}^O$ for machines and operations, respectively, to calculate attention coefficients $e_{ijl}$ as follows \cite{9826438}
 \begin{equation}
     e_{ijl} = \text{LeakyRelu}\left (\vec{b} \cdot \left [ \boldsymbol{W}^M \vec{\nu}_l^{(k)} || \boldsymbol{W}^O \vec{\mu}_{ijl}^{(k)} \right ]\right ) \, .
 \end{equation}
@@ -174,10 +186,27 @@ The probability of selection action $a_t$ is obtained by applying softmax over a
 \begin{equation}
     \pi_\omega (a_t|s_t) = \frac{\exp{P(a_t,s_t)}}{\sum_{a_t'\in A_t}\exp(P(a_t',s_t))} \hspace{2em} \forall a_t \in A_t \, . 
 \end{equation}
-The authors used a modified version of the PPO discussed in section \ref{policy_optimization} to train the agent. The actor is the policy network $\pi_\omega$, and critic $v_\phi$ is the network that takes $h_H$ computed by HGNN as an input and predicts the value $v(s_t)$. The critic has the same structure as the actor but has a different number of inputs. The full algorithm is written in pseudocode below. 
+Initial operation node features $\vec{\mu}_{ij}^{(0)}$ include \cite{9826438}
+\begin{enumerate}
+    \item  binary value indicating whether the operation has been scheduled
+    \item number of neighboring machines $|\mathcal{O_{ij}}|$
+    \item processing time $p_{ijk}$ if $O_{ij}$ is scheduled, otherwise $\overline{p}_{ij} = \frac{1}{|\mathcal{O_{ij}}|}\sum_k p_{ijk}$
+    \item estimated or actual start time of $O_{ij}$ in the corresponding partial schedule $S_{ij}(t)$
+    \item number of unscheduled operations in the job
+    \item job completion time in the partial schedule $S(t)$
+\end{enumerate}
+Initial machine node features $\vec{\nu}_{l}^{(0)}$ include \cite{9826438}
+\begin{enumerate}
+    \item available time: time when machine $M_l$ will finish all its currently assigned operations
+    \item number of neighboring operations $\mathcal{N}(M_l)$
+    \item utilization: ratio of nonidle time to the to the total production time
+\end{enumerate}
+Initial $O-M$ arc features $\vec{\lambda}_{ijl}^{(0)}$ include only corresponding processing time $p_{ijl}$ \cite{9826438}.
+\par
+The authors used a modified version of the PPO discussed in section \ref{policy_optimization} to train the agent. The actor is the policy network $\pi_\omega$, and critic $v_\phi$ is the network that takes $h_H$ computed by HGNN as an input and predicts the value $v(s_t)$. The critic has the same structure as the actor but has a different number of inputs. The full algorithm is written in pseudocode in algorithm \ref{algorithm:hgnnppo}. 
 
-\begin{algorithm}[H]
-	\caption{HGNN Training procedure with PPO} \label{algorithm:hgnnppo}
+\begin{algorithm}
+	\caption{HGNN Training procedure with PPO for \textbf{fjsp-drl}} \label{algorithm:hgnnppo}
 	\begin{algorithmic}[1]
 	\renewcommand{\algorithmicrequire}{\hspace*{\algorithmicindent}  \textbf{Input:}}
 	\renewcommand{\algorithmicensure}{\hspace*{\algorithmicindent}  \textbf{Output:}}
