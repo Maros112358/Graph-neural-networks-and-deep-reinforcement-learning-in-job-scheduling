@@ -17,7 +17,7 @@ To select the action $a_t$ at $s_t$ in the readout phase, obtained graph embeddi
 
 \subsubsection{Dynamic L2D}
 
-Since \textbf{L2D} is a model developed strictly for JSSP, we had to extend it to apply to DJSP. The main idea behind our algorithm is that when a new job $J_\text{new}$ arrives with the arrival time $t_a$, we want to reschedule all operations that have not started yet. To do this, we keep track of currently known jobs $J_\text{known}$, and a list of already started operations ($S_{ij} < t_a$) called \textit{plan}. When rescheduling, we first formulate the JSSP instance from known jobs and dispatch operations from the plan. By doing this, we get a partially solved JSSP with all operations with $S_{ij} \geq t_a$ removed. Then, we let \textbf{L2D} select operations to dispatch and enforce the lower bound for start time $S_{ij} \geq  t_a$. We repeat this until some termination criteria are not met, for example, no new jobs are expected. Full algorithm written in pseudocode is shown in algorithm \ref{algorithm:l2d}.
+Since \textbf{L2D} is a model developed strictly for JSSP, we had to extend it to apply to DJSP. The main idea behind our algorithm is that when a new job $J_\text{new}$ arrives with the arrival time $t_a$, we want to reschedule all operations that have not started yet. To do this, we keep track of currently known jobs $J_\text{known}$, and a list of already started operations ($S_{ij} < t_a$) called \textit{plan}. When rescheduling, we first formulate the JSSP instance from known jobs and dispatch operations from the plan. By doing this, we get a partially solved JSSP with all operations with $S_{ij} \geq t_a$ removed. Then, we let \textbf{L2D} select operations to dispatch and enforce the lower bound for start time $S_{ij} \geq  t_a$. We repeat this until some termination criteria are not met; for example, no new jobs are expected. The complete algorithm written in pseudocode is shown in algorithm \ref{algorithm:l2d}.
 
 \begin{algorithm}
 	\caption{Dynamic \textbf{L2D}} \label{algorithm:l2d}
@@ -49,7 +49,7 @@ Since \textbf{L2D} is a model developed strictly for JSSP, we had to extend it t
 
 \subsection{Wheatley}
 
-\textbf{Wheatley} is an open-source model published solely on GitHub \cite{github_wheatley} designed not only for JSSP but also for resource-constrained project scheduling problems (RCPSPs). It has been motivated by the model \textbf{L2D} and by \cite{DBLP:journals/corr/abs-2104-03760}. It has many features beyond this thesis's scope. It supports scheduling for problems with bounded but uncertain durations and offers GNN architectures beyond those described in chapter \ref{chap:math}, e.g., Principal Neighbourhood Aggregation \cite{DBLP:journals/corr/abs-2004-05718}, Directional Graph Networks \cite{DBLP:journals/corr/abs-2010-02863}, Graph convolutional networks \cite{DBLP:journals/corr/abs-2007-02133}.
+\textbf{Wheatley} is an open-source model published in \cite{wheatley}, with source code available on GitHub \cite{github_wheatley}. It is designed not only for JSSP but also for resource-constrained project scheduling problems (RCPSPs). It has been motivated by the model \textbf{L2D} and by \cite{DBLP:journals/corr/abs-2104-03760}. It has many features beyond this thesis's scope. It supports scheduling for problems with bounded but uncertain durations and offers GNN architectures beyond those described in chapter \ref{chap:math}, e.g., Principal Neighbourhood Aggregation \cite{DBLP:journals/corr/abs-2004-05718}, Directional Graph Networks \cite{DBLP:journals/corr/abs-2010-02863}, Graph convolutional networks \cite{DBLP:journals/corr/abs-2007-02133}.
 \par
 JSSP is represented by a disjunctive graph described in \ref{JSSP as a disjunctive graph} with \textit{"arc adding scheme"} similar to \textbf{L2D}, i.e., it starts with the graph only containing conjunctive arcs representing precedence constraints between operations in the same job. New conjunctive arcs are added during scheduling. Node features include task completion times, a boolean feature representing if the operation has already been scheduled similarly to $I(o)$ in \textbf{L2D}, one-hot encoded machine id, a boolean feature representing if the operation is selectable. The rest can be selected from the list of options, where we selected the processing time of the operation.
 \par
@@ -58,6 +58,9 @@ GNN used to obtain graph node embeddings can be chosen from multiple architectur
 In the readout phase, \textbf{Wheatley} passes extracted graph and node embeddings through an MLP to obtain the log-odds for each eligible operation.
 \par
 To train the agent, \textbf{Wheatley} uses the PPO algorithm discussed in \ref{policy_optimization}.
+
+\subsubsection*{Dynamic Wheatley}
+To extend Wheatley to DJSP, we consulted Wheatley's authors in the Github issue \cite{github_wheatley_djsp}. To enforce the arrival time of the job $t_a$, we were advised to add a "virtual" operation at the start of the job with processing time $t_a$ being processed by a "virtual" machine. To avoid different jobs interfering with each other, we add one "virtual" machine per one "virtual" operation.
 
 \subsection{IEEE-ICCE-RL-JSP}
 

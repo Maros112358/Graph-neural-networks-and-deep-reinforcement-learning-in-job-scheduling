@@ -19,14 +19,14 @@ In the simplest case, when data is represented as a non-oriented graph $G = (O, 
 \par
 The Graph Neural Network (GNN) takes this graph as an input and processes its features in two phases. The first phase, called \textit{message passing phase} \cite{pmlr-v70-gilmer17a}, runs for $K$ steps and uses a message function $M_{(k)}$ and a node update function $U_{(k)}$. In each step $k$, for each node $o$, a message $\vec{m}_o^{(k + 1)}$ is calculated, and the embedding of the node $\vec{h}_o^{(k)}$ is updated according to \cite{pmlr-v70-gilmer17a}
 \begin{equation}\label{equation:2.1}
-	\vec{m}_o^{(k + 1)} = \sum_{w \in \mathcal{N}(o)} M_{(k)} \left(\vec{h}_o^{(k)}, \vec{h}_w^{(k)}, \vec{y}_{ow} \right) \hspace{2em} \forall o \in O \, ,
+	\vec{m}_o^{(k + 1)} = \sum_{w \in \mathcal{N}(o)} M_{(k)} \left(\vec{h}_o^{(k)}, \vec{h}_w^{(k)}\right) \hspace{2em} \forall o \in O \, ,
 \end{equation}
 \begin{equation}\label{equation:2.2}
 	\vec{h}_o^{(k+1)} = U_{(k)} \left(\vec{h}_o^{(k)}, \vec{m}_o^{(k+1)}\right) \hspace{2em }\forall o \in O \, , 
 \end{equation}
 where $\mathcal{N}(o)$ in the sum defines the neighbourhood of the node $o$ in graph $G$. The initial embedding of the node is $\vec{h}_o^{(0)} = \vec{x}_o$. Each step is often called a \textit{layer} of GNN.
 \par
-In the \textit{readout phase}, a readout function $R$ computes a feature vector $\vec{z}_o$ from obtained node embeddings \cite{pmlr-v70-gilmer17a}
+In the \textit{readout phase}, a readout function $R$ computes a vector $\vec{z}_o$ from obtained node embeddings \cite{pmlr-v70-gilmer17a}
 \begin{equation}\label{equation:2.3}
 	\vec{z}_o = R\left(\vec{h}_o^{(K)}\right) \hspace{2em} \forall o \in O \, .
 \end{equation}
@@ -35,7 +35,7 @@ Message function $M_{(k)}$, node update function $U_{(k)}$, and readout function
 Different forms of equations \ref{equation:2.1}, \ref{equation:2.2}, and \ref{equation:2.3} lead to different types of GNNs performing different tasks, for example, Graph Convolutional Neural Networks, Graph Recurrent Neural Networks, and Graph Attention Networks \cite{sanchez-lengeling2021a, 10.1145/3495161, DBLP:journals/corr/abs-1810-00826}. This thesis will focus primarily on relevant GNN architectures used in available job scheduling models described in the next chapter, specifically Graph Isomorphism Network and Graph Attention Network.
 
 \subsection{Graph Isomorphism Network} \label{graph Isomorphism network}
-Graph Isomorphism Network (GIN) is a GNN variant achieving maximum discriminative power \cite{DBLP:journals/corr/abs-1810-00826}, i.e., it has as large discriminative power as the Weisfeiler-Leman graph isomorphism test for the existence of an isomorphism between two graphs $G$ and $H$ \cite{leman1968reduction}. Given non-oriented graph $G = (O, E)$, in the message passing phase, the update function $U_{(k)}$ is represented by a multi-layer perceptron $\text{MLP}^{(k)}$ and \ref{equation:2.2} has the following form \cite{DBLP:journals/corr/abs-1810-00826}
+Graph Isomorphism Network (GIN) is a GNN variant, where in the message passing phase, the update function $U_{(k)}$ is represented by a multi-layer perceptron $\text{MLP}^{(k)}$, and the equation \ref{equation:2.2} has the following form \cite{DBLP:journals/corr/abs-1810-00826}
 \begin{equation} \label{equation:2.4}
 	\vec{h}_o^{(k+1)} = \text{MLP}^{(k)} \left ( \left ( 1 + \epsilon^{(k)} \right ) \vec{h}_o^{(k)} + \sum_{w\in \mathcal{N}(o)} \vec{h}_w^{(k)} \right ) \, ,
 \end{equation}
@@ -90,7 +90,7 @@ The action-value function $q_\pi(s,a) = \mathbb{E} \left [ G_t | s_t=s, a_t=a\ri
 \par
 Traditional algorithms for finding optimal policies include value iteration \cite{barto1989learning}, policy iteration \cite{Howard1960DynamicPA}, temporal difference learning \cite{tesauro1995temporal}, Q-learning \cite{watkins1992q}, and SARSA \cite{sarsa}.
 \par
-Deep reinforcement learning (DRL) methods use deep neural networks to approximate reinforcement learning components, such as value function $\hat{v}(s)$, action-value function $\hat{q}(s, a)$, policy $\pi(a|s)$, and also possibly state transition function and reward function  \cite{DBLP:journals/corr/Li17b}. 
+Deep reinforcement learning (DRL) methods use deep neural networks with parameters $\theta$ to approximate reinforcement learning components, such as value function $\hat{v}_\theta(s)$, action-value function $\hat{q}_\theta(s, a)$, policy $\pi_\theta(a|s)$, and also possibly state transition function and reward function \cite{DBLP:journals/corr/Li17b}. 
 
 \subsection{Policy optimization} \label{policy_optimization}
 
