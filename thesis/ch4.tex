@@ -1,0 +1,21 @@
+\chapter{Experimental comparison}
+
+In this chapter, we will experimentally compare the models presented in the previous chapter. We will describe the experimental setup for each job scheduling variant (JSSP, FJSP, DJSP) and interpret the results. 
+
+\section{Experimental setup}
+
+\subsection{Instances}
+
+\subsubsection*{JSSP}
+
+To compare models capable of solving JSSP, we obtained benchmark JSSP instances from \cite{jssp_benchmarks}. Each instance is a text file describing a JSSP instance using Taillard Specification \cite{taillard_specification}, where there are two numbers on the first line: the number of jobs $|\mathcal{J}|$ and the number of machines $|\mathcal{M}|$. Then, on the next $|\mathcal{J}|$ lines are operation processing times $p_{ij}$ with one line corresponding to one job. The next $|\mathcal{J}|$ lines describe on which machines should operations be processed \cite{jssp_benchmarks}. This text file is fed to each model, and the resulting schedule and makespan are obtained. In total,  An example of Taillard's Specification is shown below \cite{jssp_benchmarks}.
+\begin{verbatim}
+    1	3
+    6	7	5
+    2	3	1    
+\end{verbatim}
+In this example, there is one job and three machines. The first operation has a processing time of 6 and is processed on the second machine. The second operation is processed on the third machine with a processing time of 7, and the last operation is processed on the first machine with a processing time of 5.
+\par
+Since FJSP models take only FJSP instances as an input, we reformulate each JSSP instance as the FJSP instance with $|\mathcal{M}_{ij}| = 1$, whose text representation will be described in the following subsection. 
+\par
+To test the sensitivity of each model, we shuffle the order of jobs in each instance with 10 different seeds. 
