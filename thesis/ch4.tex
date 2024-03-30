@@ -29,7 +29,13 @@ To compare two models capable of solving FJSP presented in the previous chapter,
 \end{verbatim}
 This FJSP instance example has one job with three operations. The first operation can be processed only on the second machine, the second operation can only be processed on the third machine, and the last operation can only be processed on the first machine. This FJSP instance is the JSSP instance example described above reformulated as an FJSP instance.
 \par 
-This text file is then fed to the model, and we obtain the schedule and the makespan. Again, to test the model's sensitivity, we shuffled the order of jobs. 
+This text file is then fed to the model, and we obtain the schedule and the makespan. Again, to test the model's sensitivity, we shuffled the order of jobs with 10 different seeds.
 
 \subsubsection*{DJSP}
-
+To compare our extensions of JSSP models to DJSP presented in the previous chapter, we designed an experiment inspired by \cite{djsp_experiment_design}. We assume that there is a set of jobs known at the beginning. We then model the arrival of new jobs as a Poisson process, i.e., the arrival of two consecutive jobs follows an exponential distribution \cite{djsp_experiment_design}. We model the average arrival time as 
+\begin{equation}
+    \Delta t_\text{avg} = \frac{\mu_a}{U} \, ,
+\end{equation}
+where $\mu_a$ is the average processing time of all operations, and $U$ is a load factor of the dynamic job shop. We use $U = \{1,2,4 \}$ in the experiment. 
+\par
+To generate the set of known and arriving jobs, we take the JSSP benchmark instance, shuffle the order of jobs in the text file, and use the first half of the shuffled instance as known jobs and the rest as arriving jobs. Again, we use 10 different seeds to test the model's sensitivity.
