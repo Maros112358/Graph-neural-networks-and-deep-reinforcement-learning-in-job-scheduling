@@ -55,6 +55,11 @@ Authors of \textbf{IEEE-ICCE-RL-JSP} trained the model on randomly generated 3x3
 No parameter sets were found in the GitHub repository\cite{github_ieee_icce_rl_jsp}, so we had to train our own parameter sets using a script found in the repository. The script trains the model until the \textit{gap} between the best-known solution and the solution given by the model is not smaller than 20$\%$. We trained five parameter sets.
 
 \subsubsection{End-to-end-DRL-for-FJSP}
-Authors of \textbf{End-to-end-DRL-for-FJSP} trained the model on randomly generated instances with scales 6x6, 10x10, 15x15, 20x10, 20x20, and 30x20. The number of GIN layers was set to $K = 2$. Each GIN layer has MLP with two hidden layers with dimension 128 \cite{LEI2022117796}. Job operation action selection decoder, machine action selection decoder, and state-value function all have 2 hidden layers with dimension 128. Adam optimizer with learning rate $10^{-3}$ was used to update the policy.
+Authors of \textbf{End-to-end-DRL-for-FJSP} trained the model on randomly generated instances with sizes 6x6, 10x10, 15x15, 20x10, 20x20, and 30x20. The number of GIN layers was set to $K = 2$. Each GIN layer has MLP with two hidden layers with dimension 128 \cite{LEI2022117796}. Job operation action selection decoder, machine action selection decoder, and state-value function all have two hidden layers with dimension 128. Adam optimizer with learning rate $10^{-3}$ was used to update the policy.
 \par
 We obtained only one parameter set from the GitHub repository \cite{github_end_to_end_drl_for_fjsp}.
+
+\subsubsection{fjsp-drl}
+Authors of \textbf{fjsp-drl} trained the model on randomly generated instances with sizes 10x5, 20x5, 15x10, and 20x10 \cite{9826438}. The model was evaluated on instances with a size of 30x10 and 40x10. The number of HGNN layers was set to $K = 3$, and the dimensions of operation and machine embeddings were set to 8. Five networks $\text{MLP}_{\theta_i}$ have two hidden layers with dimension 128, actor-network $\text{MLP}_\omega$ has two hidden layers with hidden dimension 64, and critic network also has two hidden layers with dimension 64. Hyperparameters for PPO were set to $I = 1000$ and $B = 20$. Adam optimizer with learning rate $2x10^{-4}$ was used for policy optimization. The discount factor was set to 1.0.
+\par
+We obtained five parameter sets from the GitHub repository for this model \cite{github_fjsp_drl}.
