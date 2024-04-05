@@ -17,7 +17,7 @@ Similarly, for text processing and RNNs, text can be thought of as a graph, wher
 
 In the simplest case, when data is represented as a non-oriented graph $G = (O, E)$, each node $o \in O$ has a set of features $\vec{x}_o$. For example, the processing time of each operation node in the JSSP disjunctive graph. 
 \par
-The Graph Neural Network (GNN) takes this graph as an input and processes its features in two phases. The first phase, called \textit{message passing phase} \cite{pmlr-v70-gilmer17a}, runs for $K$ steps and uses a message function $M_{(k)}$ and a node update function $U_{(k)}$. In each step $k$, for each node $o$, a message $\vec{m}_o^{(k + 1)}$ is calculated, and the embedding of the node $\vec{h}_o^{(k)}$ is updated according to \cite{pmlr-v70-gilmer17a}
+A Graph Neural Network (GNN) takes this graph as an input and processes its features in two phases. The first phase, called \textit{message passing phase} \cite{pmlr-v70-gilmer17a}, runs for $K$ steps and uses a message function $M_{(k)}$ and a node update function $U_{(k)}$. In each step $k$, for each node $o$, a message $\vec{m}_o^{(k + 1)}$ is calculated, and the embedding of the node $\vec{h}_o^{(k)}$ is updated according to \cite{pmlr-v70-gilmer17a}
 \begin{equation}\label{equation:2.1}
 	\vec{m}_o^{(k + 1)} = \sum_{w \in \mathcal{N}(o)} M_{(k)} \left(\vec{h}_o^{(k)}, \vec{h}_w^{(k)}\right) \hspace{2em} \forall o \in O \, ,
 \end{equation}
@@ -56,11 +56,11 @@ In the first step, \textit{attention coefficients} $e_{ij}$ are computed as foll
 \begin{equation} \label{equation:2.6}
 	e_{ow} = a\left ( \boldsymbol{W} \vec{h}_o^{(k)}, \boldsymbol{W} \vec{h}_w^{(k)}  \right ) \, ,
 \end{equation}  
-where $a$ is a shared attention mechanism, and $\boldsymbol{W}$ is a shared learnable linear transformation. Attention mechanism $a$ is usually a single-layer feedforward neural network parametrized by a learnable vector $\vec{b}$ with LeakyReLU activation \cite{9826438, veličković2018graph, DBLP:journals/corr/abs-2105-14491}
+where $a$ is a shared attention mechanism, and $\boldsymbol{W}$ is a shared learnable linear transformation. The attention mechanism $a$ is usually a single-layer feedforward neural network parametrized by a learnable vector $\vec{b}$ with LeakyReLU activation \cite{9826438, veličković2018graph, DBLP:journals/corr/abs-2105-14491}
 \begin{equation} \label{equation:2.7}
 	e_{ow} = \text{LeakyReLU}\left ( \vec{b} \cdot \left [ \boldsymbol{W}\vec{h}_o^{(k)} || \boldsymbol{W}\vec{h}_w^{(k)} \right ] \right ) \, ,
 \end{equation}
-where $\bullet||\bullet$ represents concatenation.
+where $\bullet||\bullet$ represents concatenation, and $\text{LeakyRELU} = \text{max}(cx,x)$ with $c \in [0,1]$ \cite{leaky_relu}.
 \par
 Then, the attention coefficients are normalized using the Softmax function only across the neighborhood and the node itself \cite{9826438, veličković2018graph}
 \begin{equation}
@@ -82,7 +82,7 @@ One straightforward strategy to extend GAT on heterogeneous graphs is constructi
 
 \section{Deep reinforcement learning}
 
-Given MDP tuple $(\mathcal{S}, \mathcal{A}, \mathcal{R}, \mathcal{P}, \gamma)$ as described in \ref{MDP for JSSP}, at each time step $t$, the agent receives a state $s_t \in \mathcal{S}$, selects an action $a_t \in \mathcal{A}$ following a policy $\pi(a_t|s_t)$, receives a reward $r_t$ and a new state $s_{t+1}$ according to the probability distribution $\mathcal{P}(s_{t+1} | s_t, a_t)$, and the cycle repeats \cite{DBLP:journals/corr/Li17b}. A sequence of states, actions, and rewards is called a trajectory. The discounted cumulative reward of the trajectory with length $T$ starting at time $t$ is the sum $G_t = \sum_{k=0}^T \gamma^k r_{t+k}$. The probability of the trajectory is $P_t = \Pi_{k=0}^T \mathcal{P}(s_{t+k+1} | s_{t+k}, a_{t+k})$. The goal of an agent is to maximize the expected discounted cumulative reward $\mathbb{E}[G_t]$ over all possible trajectories \cite{DBLP:journals/corr/Li17b}. Long term value of a state $s$ defined as $v(s) = \mathbb{E}\left [ G_t | s_t = s \right ]$ is the expected cumulative reward from the state $s$ following policy $\pi$. An optimal state value $v_*(s) = \max_\pi v_\pi(s)$ is the maximum achievable value for the state $s$. For the optimal state value, the Bellman equation holds \cite{DBLP:journals/corr/Li17b}
+For a given MDP tuple $(\mathcal{S}, \mathcal{A}, \mathcal{R}, \mathcal{P}, \gamma)$ as described in \ref{MDP for JSSP}, at each time step $t$, the agent receives a state $s_t \in \mathcal{S}$, selects an action $a_t \in \mathcal{A}$ following a policy $\pi(a_t|s_t)$, receives a reward $r_t$ and a new state $s_{t+1}$ according to the probability distribution $\mathcal{P}(s_{t+1} | s_t, a_t)$, and the cycle repeats \cite{DBLP:journals/corr/Li17b}. A sequence of states, actions, and rewards is called a trajectory. The discounted cumulative reward of the trajectory with length $T$ starting at time $t$ is the sum $G_t = \sum_{k=0}^T \gamma^k r_{t+k}$. The probability of the trajectory is $P_t = \Pi_{k=0}^T \mathcal{P}(s_{t+k+1} | s_{t+k}, a_{t+k})$. The goal of an agent is to maximize the expected discounted cumulative reward $\mathbb{E}[G_t]$ over all possible trajectories \cite{DBLP:journals/corr/Li17b}. Long term value of a state $s$ defined as $v(s) = \mathbb{E}\left [ G_t | s_t = s \right ]$ is the expected cumulative reward from the state $s$ following policy $\pi$. An optimal state value $v_*(s) = \max_\pi v_\pi(s)$ is the maximum achievable value for the state $s$. For the optimal state value, the Bellman equation holds \cite{DBLP:journals/corr/Li17b}
 \begin{equation}
 	v_*(s) = \max_a \sum_{s'} \mathcal{P} (s' | s,a)\left [ \mathcal{R}(s, a) + \gamma v_*(s') \right ] \, .
 \end{equation}
@@ -121,7 +121,7 @@ where $\delta_t = r_t + \gamma v(s_{t+1}) - v(s_t)$, $\lambda$ is a hyperparamet
 The full PPO algorithm is shown below \cite{DBLP:journals/corr/SchulmanWDRK17}. In each iteration, $N$ actors collect $T$ timesteps of data. Then, the surrogate loss of these $NT$ timesteps of data is calculated and parameters $\theta$ are optimized.
 
 \begin{algorithm}[H]
-	\caption{PPO, Actor-Critic Style}\label{algorithm:ppo}
+	\caption{Proximal Policy Optimization algorithm}\label{algorithm:ppo}
 	\begin{algorithmic}[1]
 	\renewcommand{\algorithmicrequire}{\hspace*{\algorithmicindent}  \textbf{Input:}}
 	\renewcommand{\algorithmicensure}{\hspace*{\algorithmicindent}  \textbf{Output:}}
@@ -146,7 +146,7 @@ Deep Q-network (DQN) is an algorithm using a neural network to approximate the a
 \begin{equation} \label{equation:2.16}
 	L_i(\theta_i) = \mathbb{E} \left [\left ( r + \gamma \max_{a'}\hat{q}_{\theta^-_i}(s',a') -\hat{q}_{\theta_i}(s,a) \right )^2 \right ] \, ,
 \end{equation}
-where expectation averages over a batch of $e_t$,
+where the expectation is with respect to the batch of $e_t$,
 $\hat{q}_{\theta_i}(s,a)$ is the Q-network at iteration $i$, and $\hat{q}_{\theta^-_i}(s,a)$ is the target network used to compute targets at iteration $i$. The target network is updated with the Q-network parameters every $C$ step and fixed between updates. The full algorithm is shown below \cite{mnih2015human}.
 
 \begin{algorithm}[H]
