@@ -214,11 +214,9 @@ def get_dynamic_jssp(instance, arrival_times):
 if __name__ == '__main__':
     SEEDS = list(range(10))
     LOAD_FACTORS = [1, 2, 4]
-    MODELS = [os.path.join("saved_models", model, 'agent.pkl') for model in os.listdir("saved_models") if 'SAVE' not in model] 
+    MODELS = [os.path.join("saved_models", model, 'agent.pkl') for model in os.listdir("saved_models") if 'SAVE' not in model and '100_70' in model] 
+    print(MODELS)
     INSTANCES = sorted(get_all_instances_in_taillard_specification())
-    INSTANCES_TO_SKIP = [
-
-    ]
     DATA_FILE = 'experiment_dynamic_jssp_wheatley.csv'
     PREV_DATA_FILE = 'experiment_dynamic_jssp_wheatley_save.csv'
     df = pd.read_csv(PREV_DATA_FILE)
@@ -235,7 +233,6 @@ if __name__ == '__main__':
         for load_factor in LOAD_FACTORS:
             for seed in SEEDS:
                 for instance in INSTANCES:
-                    print(instance)
                     instance_name = instance.split('/')[-1]
 
                     filtered_df = df[(df['seed'] == seed) & (df['model'] == model) & (df['instance'] == instance_name) & (df['load_factor'] == load_factor)]
