@@ -121,6 +121,7 @@ class FJSP(gym.Env, EzPickle):
                                           self.dispatched_num_opera[i],
                                           self.input_min[i], self.job_col[i], self.input_max[i], self.rule,
                                           self.last_col[i], self.first_col[i])
+                    # print(f"xxx {self.rule=}")
                 else:
                     mch_space, mchForJobSpace, mask1, mch_mask = min_job_mch(self.mch_time[i], self.job_time[i],
                                                                          self.mchsEndTimes[i], self.number_of_machines,
@@ -361,6 +362,24 @@ class FJSP(gym.Env, EzPickle):
             dur = self.dur_cp.reshape(self.batch_sie,-1,self.max_operation)
         else:
             dur = self.op_dur
+
+        if self.rule != None:
+            masks = []
+            mch_masks = []
+            for i in range(self.batch_sie):
+                mask1, mch_mask = DRs(self.mch_time[i], self.job_time[i], self.mchsEndTimes[i],
+                            self.number_of_machines, self.dur_cp[i], self.temp1[i], self.omega[i],
+                            self.mask[i], self.done(), self.mask_mch[i], self.num_operation[i],
+                            self.dispatched_num_opera[i],
+                            self.input_min[i], self.job_col[i], self.input_max[i], self.rule,
+                            self.last_col[i], self.first_col[i])
+                
+                mch_masks.append(mch_mask)
+                masks.append(mask1)
+            
+            return self.adj, fea, self.omega, masks,mch_masks,dur,self.mch_time,self.job_time
+            # self.mask = masks
+            # self.mask_mch = mch_masks
 
         #self.mask_mch = self.mask_mch.reshape(self.batch_sie,-1,self.mask_mch.shape[-1])
         return self.adj, fea, self.omega, self.mask,self.mask_mch,dur,self.mch_time,self.job_time
