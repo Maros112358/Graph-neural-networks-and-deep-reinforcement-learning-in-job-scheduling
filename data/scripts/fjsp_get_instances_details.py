@@ -16,7 +16,7 @@ def get_all_fjsp_instances():
 
 with open('fjsp_details.csv', 'w') as info_file:
     info_file.write('instance,jobs,machines,best_makespan\n')
-    for i, instance in enumerate(get_all_fjsp_instances()):
+    for i, instance in enumerate(sorted(get_all_fjsp_instances())):
         with open(instance, 'r') as instance_file:
             header = instance_file.readline().removesuffix('\n').split()
             jobs = int(header[0])
