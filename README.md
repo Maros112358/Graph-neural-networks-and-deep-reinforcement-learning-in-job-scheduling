@@ -7,7 +7,8 @@
 - [SHOWCASE](models/Wheatley/repo/Showcase.ipynb)
 - trained 15x15 Wheatley model, showcase for small benchmark instances 
 - dynamic JSSP implemented by adding "virtual machines" at the start of the jobs
-
+- [STATIC JSSP DATA](data/experiment_static_jssp_wheatley.csv)
+- [DYNAMIC JSSP DATA](data/experiment_dynamic_jssp_wheatley.csv)
 
 ### [fjsp-drl](models/fjsp-drl/)
 
@@ -41,6 +42,10 @@
 - [STATIC JSSP DATA](data/experiment_static_jssp_end_to_end_drl_for_fjsp.csv)
 - [STATIC FJSP DATA](data/experiment_static_fjsp_end_to_end_drl_for_fjsp.csv)
 
+### [Baselines](models/baseline/)
+
+- [JSSP BASELINE DATA](data/experiment_static_jssp_baseline.csv) [IEEE-ICCE-RL-JSP](models/IEEE-ICCE-RL-JSP/)
+- [FJSP BASELiNE DATA](data/experiment_static_fjsp_baseline.csv) (code taken from [End-to-end-DRL-for-FJSP](models/End-to-end-DRL-for-FJSP/))
 
 ## Benchmarks
 
