@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+from scipy.stats import friedmanchisquare
 
 def find_duplicates(df):
     """Counts the number of duplicate rows ignoring seed and runtime"""
@@ -47,6 +48,7 @@ details_df = pd.read_csv('jssp_details.csv')
 
 # Join the dataframes on the "instance" column
 final_df = pd.merge(concatenated_df, details_df, on='instance', how='inner')
+print(len(final_df))
 original_number_of_rows = len(final_df)
 number_of_duplicates = find_duplicates(final_df)
 
@@ -78,5 +80,23 @@ for name, group in grouped:
 final_updated_df = pd.concat(updated_dfs, ignore_index=True)
 assert find_duplicates(final_updated_df) == 0
 assert original_number_of_rows - number_of_duplicates == len(final_updated_df)
-print(final_updated_df)
 
+# remove 6x6 instances (not enough data)
+final_updated_df = final_updated_df[final_updated_df['jobs'] != 6]
+final_updated_df['gap'] = (final_updated_df['makespan'] - final_updated_df['upper_bound']) / (final_updated_df['upper_bound'])
+
+# ======== MAIN ANALYSIS ======
+
+# Group by 'jobs' and 'machines'
+grouped_by_size = final_updated_df.groupby(['jobs', 'machines'])
+
+for size_name, size_group in grouped_by_size:
+    grouped_by_model = size_group.groupby('model')
+    test_groups = []
+    for model_name, model_group in grouped_by_model:
+        test_groups.append(model_group['gap'])
+    
+    print([len(group) for group in test_groups])
+    x = friedmanchisquare(*test_groups)
+    
+        # df_pivot = size_group.pivot(columns='model', values='gap')
