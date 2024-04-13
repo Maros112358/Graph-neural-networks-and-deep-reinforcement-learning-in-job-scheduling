@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from scipy.stats import friedmanchisquare
+from scipy.stats import friedmanchisquare, kruskal
 
 def find_duplicates(df):
     """Counts the number of duplicate rows ignoring seed and runtime"""
@@ -97,6 +97,7 @@ for size_name, size_group in grouped_by_size:
         test_groups.append(model_group['gap'])
     
     print([len(group) for group in test_groups])
-    x = friedmanchisquare(*test_groups)
+    x = kruskal(*test_groups)
+    print(size_name, x)
     
         # df_pivot = size_group.pivot(columns='model', values='gap')
