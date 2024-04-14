@@ -1,6 +1,7 @@
 import pandas as pd
 import os
-from scipy.stats import friedmanchisquare, kruskal
+from scipy.stats import kruskal, wilcoxon, mannwhitneyu
+import matplotlib.pyplot as plt
 
 def find_duplicates(df):
     """Counts the number of duplicate rows ignoring seed and runtime"""
@@ -91,13 +92,46 @@ final_updated_df['gap'] = (final_updated_df['makespan'] - final_updated_df['uppe
 grouped_by_size = final_updated_df.groupby(['jobs', 'machines'])
 
 for size_name, size_group in grouped_by_size:
+    # make a boxplot
+    plt.figure(figsize=(16, 10))  # Adjusted size
+    plt.title(f'Box Plot of Gaps for Jobs={size_name[0]}, Machines={size_name[1]}')
+    boxplot_data = [group['gap'] for _, group in size_group.groupby('model')]
+    plt.boxplot(boxplot_data, labels=[model for model in size_group['model'].unique()], vert=False)
+    plt.xlabel('Gap')
+    plt.ylabel('Model')
+    plt.yticks(rotation=45)  # Rotate y-axis labels
+    plot_filename = f'horizontal_boxplot_jobs_{size_name[0]}_machines_{size_name[1]}.png'
+    plt.savefig(plot_filename, bbox_inches='tight')
+    plt.close()
+
+    # collect data for each model
     grouped_by_model = size_group.groupby('model')
     test_groups = []
+    models = []
     for model_name, model_group in grouped_by_model:
         test_groups.append(model_group['gap'])
+        models.append(model_name)
     
-    print([len(group) for group in test_groups])
+    # Kruskal-Wallis Test
     x = kruskal(*test_groups)
     print(size_name, x)
-    
-        # df_pivot = size_group.pivot(columns='model', values='gap')
+    insignificant = 0
+    significant = 0
+    total_tests = 0
+    if x.pvalue < 0.05:
+        print("Performing pairwise comparisons:")
+        for i in range(len(models)):
+            for j in range(i + 1, len(models)):
+                stat, p = mannwhitneyu(test_groups[i], test_groups[j], alternative='two-sided')
+                if p > 0.05:
+                    insignificant += 1
+                else:
+                    print(f"Comparison {models[i]} vs {models[j]}: Stat={stat}, p-value={p}")
+                    significant += 1
+                total_tests += 1
+    else:
+        print("No significant difference found; pairwise comparisons not performed.")
+
+    print(f"{total_tests=} {significant=} {insignificant=}")
+
+
