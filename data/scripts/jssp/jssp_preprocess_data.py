@@ -46,6 +46,7 @@ for filename in os.listdir(directory):
         # Rename 'pdr' column to 'pdr' if it exists
         if 'pdr' in df.columns:
             df.rename(columns={'pdr': 'model'}, inplace=True)
+            df['parameter_set'] = df['model']
 
         # Remove ".txt" suffix from "instance" column
         if 'instance' in df.columns:
