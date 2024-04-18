@@ -33,7 +33,7 @@ def test_models(df):
 
 if __name__ == '__main__':  
     # load data
-    df = pd.read_csv('jssp_processed_data.csv')
+    df = pd.read_csv('jssp_preprocess_data.csv')
 
     # Group by 'jobs' and 'machines'
     test_results = pd.DataFrame(columns=["category", "number_of_data_points", "p_value"])
