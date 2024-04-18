@@ -26,7 +26,7 @@ def categorize(job_count):
         return 'large'
 
 # Directory where the CSV files are located
-directory = '../'
+directory = '../../'
 
 # List to hold all dataframes
 dataframes = []
@@ -54,11 +54,10 @@ for filename in os.listdir(directory):
 concatenated_df = pd.concat(dataframes, ignore_index=True)
 
 # Load the "jssp_details.csv"
-details_df = pd.read_csv('../jssp_details.csv')
+details_df = pd.read_csv('../../jssp_details.csv')
 
 # Join the dataframes on the "instance" column
 final_df = pd.merge(concatenated_df, details_df, on='instance', how='inner')
-print(len(final_df))
 original_number_of_rows = len(final_df)
 number_of_duplicates = find_duplicates(final_df)
 
