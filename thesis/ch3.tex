@@ -62,7 +62,7 @@ In the readout phase, \textbf{Wheatley} passes extracted graph and node embeddin
 \par
 To train the agent, \textbf{Wheatley} uses the PPO algorithm discussed in \ref{policy_optimization}.
 
-\subsubsection*{Dynamic Wheatley}
+\subsubsection*{Dynamic Wheatley} \label{dynamicwheatley}
 To extend Wheatley to DJSP, we consulted Wheatley's authors in the Github issue \cite{github_wheatley_djsp}. To enforce the arrival time of the job $t_a$, we were advised to add a "virtual" operation at the start of the job with processing time $t_a$ being processed by a "virtual" machine. To avoid different jobs interfering with each other, we add one "virtual" machine per one "virtual" operation.
 
 \subsection{IEEE-ICCE-RL-JSP}

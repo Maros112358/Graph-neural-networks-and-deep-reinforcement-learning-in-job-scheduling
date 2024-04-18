@@ -8,7 +8,7 @@ In this chapter, we will experimentally compare the models presented in the prev
 
 \subsubsection*{JSSP}
 
-To compare models capable of solving JSSP, we obtained benchmark JSSP instances from \cite{jssp_benchmarks}. Each instance is a text file describing a JSSP instance using Taillard Specification \cite{taillard_specification}, where there are two numbers on the first line: the number of jobs $|\mathcal{J}|$ and the number of machines $|\mathcal{M}|$. Then, on the next $|\mathcal{J}|$ lines are operation processing times $p_{ij}$ with one line corresponding to one job. The next $|\mathcal{J}|$ lines describe on which machines should operations be processed \cite{jssp_benchmarks}. This text file is fed to each model, and the resulting schedule and makespan are obtained.  An example of Taillard's Specification is shown below \cite{jssp_benchmarks}.
+To compare models capable of solving JSSP, we obtained 242 benchmark JSSP instances and their best known solutions from \cite{jssp_benchmarks}. Each instance is a text file describing a JSSP instance using Taillard Specification \cite{taillard_specification}, where there are two numbers on the first line: the number of jobs $|\mathcal{J}|$ and the number of machines $|\mathcal{M}|$. Then, on the next $|\mathcal{J}|$ lines are operation processing times $p_{ij}$ with one line corresponding to one job. The next $|\mathcal{J}|$ lines describe on which machines should operations be processed \cite{jssp_benchmarks}. This text file is fed to each model, and the resulting schedule and makespan are obtained.  An example of Taillard's Specification is shown below \cite{jssp_benchmarks}.
 \begin{verbatim}
     1   3
     6   7  5
@@ -18,18 +18,24 @@ In this example, there is one job and three machines. The first operation has a 
 \par
 Since FJSP models take only FJSP instances as an input, we reformulate each JSSP instance as the FJSP instance with $|\mathcal{M}_{ij}| = 1$, whose text representation will be described in the following subsection. 
 \par
-To test the sensitivity of each model, we shuffle the order of jobs in each text file with 10 different seeds before feeding it to the model. Changing the order of jobs in the text file does not change the underlying instance itself, only its text representation; therefore, shuffling should not affect the model. However, during the experiment, we observed that some models give different results when we shuffle the text file.
+For each model and each JSSP instance, we run the experiment with 10 different seeds. Besides makespan, we are also interested in \textit{gap}, which is given by the following equation
+\begin{equation}
+    gap  = \frac{C - C_\text{best}}{C_\text{best}} \, ,
+\end{equation}
+where $C$ is the makespan produced by the model or PDR, and $C_\text{best}$ is the best-known makespan from the literature \cite{jssp_benchmarks}.
+\par
+We also separated JSSP instances into three categories based on the number of jobs. Instances with less than 20 jobs are \textit{"small"}, instances with at least 50 jobs are \textit{"large"}, and \textit{"medium"} otherwise.
 
 \subsubsection*{FJSP}
 
-To compare two models capable of solving FJSP presented in the previous chapter, we obtained 402 benchmark FJSP instances from \cite{fjsp_benchmarks}. Each instance is again a text file, where on the first line are at least two numbers: the number of jobs, the number of machines, and the last number corresponding to the average number of machines per operation is optional. Then, the next $|\mathcal{J}|$ lines represent one job. The first number is the number of operations in that job; the second number is the number of machines $k$ that can process the first operation, and then there are $k$ pairs of numbers corresponding to the eligible machine and its processing time of the given operation. This is followed by the data for the second operation, and so on. An example of an FJSP instance is shown below.
+To compare two models capable of solving FJSP presented in the previous chapter, we obtained 402 benchmark FJSP instances and their best known solutions from \cite{fjsp_benchmarks}. Each instance is again a text file, where on the first line are at least two numbers: the number of jobs, the number of machines, and the last number corresponding to the average number of machines per operation is optional. Then, the next $|\mathcal{J}|$ lines represent one job. The first number is the number of operations in that job; the second number is the number of machines $k$ that can process the first operation, and then there are $k$ pairs of numbers corresponding to the eligible machine and its processing time of the given operation. This is followed by the data for the second operation, and so on. An example of an FJSP instance is shown below.
 \begin{verbatim}
     1   3
     3   1   2   6   1   3   7   1   1   5   
 \end{verbatim}
 This FJSP instance example has one job with three operations. The first operation can be processed only on the second machine, the second operation can only be processed on the third machine, and the last operation can only be processed on the first machine. This FJSP instance is the JSSP instance example described above reformulated as an FJSP instance.
 \par 
-This text file is then fed to the model, and we obtain the schedule and the makespan. Again, to test the model's sensitivity, we shuffled the order of jobs with 10 different seeds.
+This text file is then fed to the model, and we obtain the schedule and the makespan. Again, we repeat the experiment for each model and each FJSP instance with 10 different seeds.
 
 \subsubsection*{DJSP}
 To compare our extensions of JSSP models to DJSP presented in the previous chapter, we designed an experiment inspired by \cite{djsp_experiment_design}. We assume that there is a set of jobs known at the beginning. We then model the arrival of new jobs as a Poisson process, i.e., the arrival of two consecutive jobs follows an exponential distribution \cite{djsp_experiment_design}. We model the average arrival time as 
@@ -38,8 +44,7 @@ To compare our extensions of JSSP models to DJSP presented in the previous chapt
 \end{equation}
 where $\mu_a$ is the average processing time of all operations, and $U$ is a load factor of the dynamic job shop. We use $U = \{1,2,4 \}$ in the experiment. 
 \par
-To generate the set of known and arriving jobs, we take the JSSP benchmark instance, shuffle the order of jobs in the text file, and use the first half of the shuffled instance as known jobs and the rest as arriving jobs. Again, we use 10 different seeds to test the model's sensitivity.
-
+To generate the set of known and arriving jobs, we take the JSSP benchmark instance, shuffle the order of jobs in the text file, and use the first half of the shuffled instance as known jobs and the rest as arriving jobs. Again, we repeat each experiment with 10 different seeds.
 
 \subsection{Models}
 \subsubsection{L2D}
@@ -48,11 +53,16 @@ Authors of \textbf{L2D} trained \textbf{L2D} on randomly generated JSSP instance
 In each parameter set, each $\text{MLP}^{(k)}$ has two hidden layers, each with 64 neurons. The action selection and the value prediction networks have two hidden layers, each with 32 neurons. In PPO, the clipping parameter was set to $\epsilon = 0.2$. Number of GIN layers was set to $K = 2$. Parameters update was done using Adam optimizer with learning rate $2\times10^{-5}$. For specific details of the training process, we refer the reader to the supplementary material of \cite{zhang2020learning}.
 
 \subsubsection{Wheatley}
+For the experiment, we had to train \textbf{Wheatley} ourselves. To make \textbf{Wheatley} as similar to \textbf{L2D} as possible, we chose the same training hyperparameters as \text{L2D}. \textbf{Wheatley} has one extra training Hyperparameter specifying the maximum number of jobs and machines that the model will be able to process. 
+\par
+We trained three parameter sets capable of solving JSSP and one capable of solving DJSP. The first parameter set was trained on randomly generated 30x20 instances, capable of solving instances of size up to 100x20. The second parameter set was trained on randomly generated 20x20 instances, capable of solving instances of size up to 100x20. The last third parameter set was trained on randomly generated 20x20 instances and is able to solve instances of size up to \textbf{100x70} because, as discussed in \ref{dynamicwheatley}, for each arriving job, we add a new machine. And since the maximum number of jobs is 100, and half of them will be known at the start, we will have at most 70 machines. As a result, we used only the last parameter set for DJSP.
+\par
+The listed parameter sets were trained using a CPU on an Arm-based Ampere A1 virtual machine with 4 CPUs and 24 GB of RAM in Oracle Cloud Infrastructure with Ubuntu 20.04 64-bit operating system. We stopped the training when the model had not improved its objective for at least two days. Each model was trained for at least 3 weeks. 
 
 \subsubsection{IEEE-ICCE-RL-JSP}
 Authors of \textbf{IEEE-ICCE-RL-JSP} trained the model on randomly generated 3x3 and 10x10 JSSP instances. Parameter updates are done using Adam optimizer with a $10^{-5}$ learning rate. As PDRs for agents to select in each step, authors used FIFO, MOR, SPT, and MWKR discussed in \ref{priority dispatching rules}. The number of layers in HGIN was set to $K=3$. The value network has three dense layers. All hidden layers in both networks have dimension 128.
 \par
-No parameter sets were found in the GitHub repository\cite{github_ieee_icce_rl_jsp}, so we had to train our own parameter sets using a script found in the repository. The script trains the model until the \textit{gap} between the best-known solution and the solution given by the model is not smaller than 20$\%$. We trained five parameter sets.
+No parameter sets were found in the GitHub repository\cite{github_IEEE-ICCE-RL-JSP}, so we had to train our own parameter sets using a script found in the repository. The script trains the model until the \textit{gap} between the best-known solution and the solution given by the model is not smaller than 20$\%$. We trained five parameter sets. We trained the model using CPU on an Arm-based Ampere A1 virtual machine with 4 CPUs and 24 GB of RAM in Oracle Cloud Infrastructure with Ubuntu 20.04 64-bit operating system.
 
 \subsubsection{End-to-end-DRL-for-FJSP}
 Authors of \textbf{End-to-end-DRL-for-FJSP} trained the model on randomly generated instances with sizes 6x6, 10x10, 15x15, 20x10, 20x20, and 30x20. The number of GIN layers was set to $K = 2$. Each GIN layer has MLP with two hidden layers with dimension 128 \cite{LEI2022117796}. Job operation action selection decoder, machine action selection decoder, and state-value function all have two hidden layers with dimension 128. Adam optimizer with learning rate $10^{-3}$ was used to update the policy.
@@ -62,4 +72,105 @@ We obtained only one parameter set from the GitHub repository \cite{github_end_t
 \subsubsection{fjsp-drl}
 Authors of \textbf{fjsp-drl} trained the model on randomly generated instances with sizes 10x5, 20x5, 15x10, and 20x10 \cite{9826438}. The model was evaluated on instances with a size of 30x10 and 40x10. The number of HGNN layers was set to $K = 3$, and the dimensions of operation and machine embeddings were set to 8. Five networks $\text{MLP}_{\theta_i}$ have two hidden layers with dimension 128, actor-network $\text{MLP}_\omega$ has two hidden layers with hidden dimension 64, and critic network also has two hidden layers with dimension 64. Hyperparameters for PPO were set to $I = 1000$ and $B = 20$. Adam optimizer with learning rate $2x10^{-4}$ was used for policy optimization. The discount factor was set to 1.0.
 \par
-We obtained five parameter sets from the GitHub repository for this model \cite{github_fjsp_drl}.
+We obtained five parameter sets from the GitHub repository for this model \cite{github_fjsp-drl}.
+
+\subsubsection{Baselines}
+We also compared previously described models with PDRs.
+\par
+For JSSP, we used PDR implementations from the code of the model \textbf{IEEE-ICCE-RL-JSP}. On top of FIFO, MOR, SPT, and MWKR discussed in \ref{priority dispatching rules}, we also used the following PDRs available in the code of \textbf{IEEE-ICCE-RL-JSP} \cite{github_IEEE-ICCE-RL-JSP}:
+\begin{enumerate}
+    \item \textit{EDD} (Earliest Due Date)
+    \item \textit{LOR} (Least Operations Remaining)
+    \item \textit{LPT} (Longest Processing Time)
+    \item \textit{LS} (Least Slack)
+    \item \textit{SRPT} (Shortest Remaining Processing Time)
+\end{enumerate}
+
+\section{Results}
+We ran all experiments on a MacBook Pro with an Apple M2 Max chip, 32 GB of RAM, and Sonoma 14.4.1 macOS operating system. Besides reporting makespan and gap, we also report runtime for each experiment.
+
+\begin{tabular}{llll}
+    \toprule
+    Model / Category & large & medium & small \\
+    \midrule
+    EDD & 0.30 ± 0.09 & 0.44 ± 0.11 & 0.35 ± 0.13 \\
+    FIFO & 0.28 ± 0.18 & 0.33 ± 0.11 & 0.25 ± 0.09 \\
+    LOR & 0.35 ± 0.09 & 0.44 ± 0.11 & 0.36 ± 0.12 \\
+    LPT & 0.42 ± 0.11 & 0.48 ± 0.11 & 0.36 ± 0.10 \\
+    LRPT & 0.19 ± 0.13 & 0.27 ± 0.11 & 0.17 ± 0.08 \\
+    LS & 0.24 ± 0.10 & 0.34 ± 0.09 & 0.31 ± 0.14 \\
+    MOR & 0.26 ± 0.20 & 0.28 ± 0.12 & 0.20 ± 0.08 \\
+    SPT & 0.22 ± 0.07 & 0.30 ± 0.08 & 0.24 ± 0.10 \\
+    SRPT & 0.35 ± 0.09 & 0.46 ± 0.11 & 0.39 ± 0.11 \\
+    End-to-end-DRL-for-FJSP & 0.28 ± 0.18 & 0.33 ± 0.12 & 0.24 ± 0.09 \\
+    fjsp-drl & 0.20 ± 0.15 & 0.25 ± 0.11 & 0.16 ± 0.08 \\
+    \textbf{IEEE-ICCE-RL-JSP} & \textbf{0.18 ± 0.13} & \textbf{0.24 ± 0.09} & \textbf{0.16 ± 0.07} \\
+    L2D & 0.28 ± 0.19 & 0.35 ± 0.12 & 0.25 ± 0.11 \\
+    Wheatley & 0.79 ± 0.59 & 0.43 ± 0.18 & 0.26 ± 0.11 \\
+    \bottomrule
+\end{tabular}
+
+\begin{tabular}{llll}
+    \toprule
+    Model / Category & large & medium & small \\
+    \midrule
+    EDD & 8.13 ± 7.10 & 0.75 ± 0.62 & 0.06 ± 0.05 \\
+    FIFO & 4.99 ± 5.67 & 0.70 ± 0.61 & 0.06 ± 0.05 \\
+    LOR & 3.26 ± 3.70 & 0.47 ± 0.40 & 0.04 ± 0.04 \\
+    LPT & 3.84 ± 4.20 & 0.70 ± 0.51 & 0.06 ± 0.05 \\
+    LRPT & 5.00 ± 4.86 & 0.60 ± 0.49 & 0.05 ± 0.04 \\
+    LS & 4.76 ± 4.72 & 0.52 ± 0.44 & 0.04 ± 0.03 \\
+    MOR & 3.83 ± 4.18 & 0.53 ± 0.46 & 0.05 ± 0.04 \\
+    SPT & 3.71 ± 4.20 & 0.60 ± 0.47 & 0.06 ± 0.04 \\
+    SRPT & 4.86 ± 4.58 & 0.46 ± 0.39 & 0.05 ± 0.03 \\
+    End-to-end-DRL-for-FJSP & 10.90 ± 11.96 & 1.74 ± 1.14 & 0.36 ± 0.20 \\
+    fjsp-drl & 49.13 ± 65.99 & 7.69 ± 5.22 & 1.14 ± 0.90 \\
+    IEEE-ICCE-RL-JSP & 16.26 ± 14.29 & 3.74 ± 2.16 & 0.58 ± 0.29 \\
+    l2d & 4.45 ± 3.99 & 1.10 ± 0.54 & 0.26 ± 0.14 \\
+    Wheatley & 32.34 ± 42.37 & 5.02 ± 3.56 & 0.89 ± 0.56 \\
+    \bottomrule
+\end{tabular}
+    
+\begin{tabular}{llll}
+    \toprule
+    category & large & medium & small \\
+    parameter-set &  &  &  \\
+    \midrule
+    DQN-ep1400 & 0.18 ± 0.12 & 0.24 ± 0.09 & 0.16 ± 0.07 \\
+    DQN-ep1530 & 0.18 ± 0.13 & 0.25 ± 0.09 & 0.15 ± 0.06 \\
+    DQN-ep1670 & 0.18 ± 0.13 & 0.24 ± 0.09 & 0.16 ± 0.08 \\
+    DQN-ep2590 & 0.18 ± 0.12 & 0.24 ± 0.09 & 0.16 ± 0.07 \\
+    DQN-ep3480 & 0.18 ± 0.14 & 0.24 ± 0.11 & 0.15 ± 0.07 \\
+    EDD & 0.30 ± 0.09 & 0.44 ± 0.11 & 0.35 ± 0.13 \\
+    FIFO & 0.28 ± 0.18 & 0.33 ± 0.11 & 0.25 ± 0.09 \\
+    LOR & 0.35 ± 0.09 & 0.44 ± 0.11 & 0.36 ± 0.12 \\
+    LPT & 0.42 ± 0.11 & 0.48 ± 0.11 & 0.36 ± 0.10 \\
+    LRPT & 0.19 ± 0.13 & 0.27 ± 0.11 & 0.17 ± 0.08 \\
+    LS & 0.24 ± 0.10 & 0.34 ± 0.09 & 0.31 ± 0.14 \\
+    MOR & 0.26 ± 0.20 & 0.28 ± 0.12 & 0.20 ± 0.08 \\
+    SPT & 0.22 ± 0.07 & 0.30 ± 0.08 & 0.24 ± 0.10 \\
+    SRPT & 0.35 ± 0.09 & 0.46 ± 0.11 & 0.39 ± 0.11 \\
+    SavedNetwork/10-10-1-99.pth & 0.28 ± 0.19 & 0.32 ± 0.13 & 0.24 ± 0.11 \\
+    SavedNetwork/15-15-1-99.pth & 0.30 ± 0.21 & 0.33 ± 0.13 & 0.23 ± 0.09 \\
+    SavedNetwork/20-15-1-199.pth & 0.25 ± 0.18 & 0.34 ± 0.12 & 0.22 ± 0.10 \\
+    SavedNetwork/20-15-1-99.pth & 0.32 ± 0.21 & 0.33 ± 0.12 & 0.24 ± 0.11 \\
+    SavedNetwork/20-20-1-199.pth & 0.29 ± 0.20 & 0.34 ± 0.12 & 0.24 ± 0.11 \\
+    SavedNetwork/20-20-1-99.pth & 0.29 ± 0.19 & 0.35 ± 0.12 & 0.23 ± 0.09 \\
+    SavedNetwork/30-15-1-199.pth & 0.28 ± 0.18 & 0.37 ± 0.12 & 0.28 ± 0.11 \\
+    SavedNetwork/30-15-1-99.pth & 0.27 ± 0.19 & 0.33 ± 0.13 & 0.25 ± 0.10 \\
+    SavedNetwork/30-20-1-199.pth & 0.27 ± 0.18 & 0.37 ± 0.11 & 0.31 ± 0.11 \\
+    SavedNetwork/30-20-1-99.pth & 0.25 ± 0.17 & 0.33 ± 0.12 & 0.23 ± 0.09 \\
+    SavedNetwork/6-6-1-99.pth & 0.28 ± 0.15 & 0.39 ± 0.09 & 0.30 ± 0.14 \\
+    model/save-10-5.pt & 0.18 ± 0.13 & 0.24 ± 0.11 & 0.16 ± 0.08 \\
+    results/save-10-5.pt & 0.18 ± 0.13 & 0.24 ± 0.11 & 0.16 ± 0.08 \\
+    results/save-15-10.pt & 0.18 ± 0.12 & 0.24 ± 0.09 & 0.16 ± 0.09 \\
+    results/save-20-10.pt & 0.24 ± 0.19 & 0.28 ± 0.12 & 0.18 ± 0.09 \\
+    results/save-20-5.pt & 0.20 ± 0.17 & 0.24 ± 0.11 & 0.16 ± 0.08 \\
+    saved-models/1 & 0.57 ± 0.23 & 0.41 ± 0.15 & 0.27 ± 0.11 \\
+    saved-models/2& 0.74 ± 0.41 & 0.45 ± 0.18 & 0.27 ± 0.11 \\
+    saved-models/3 & 1.06 ± 0.85 & 0.42 ± 0.21 & 0.24 ± 0.10 \\
+    saved-network/FJSP-J15M15/best-value0 & 0.28 ± 0.18 & 0.33 ± 0.12 & 0.24 ± 0.09 \\
+    \bottomrule
+    \end{tabular}
+    
+    
