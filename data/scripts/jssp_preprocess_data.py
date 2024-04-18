@@ -16,8 +16,17 @@ def find_duplicates(df):
 
     return total_duplicates
 
+def categorize(job_count):
+    """Calculate job category based on its size"""
+    if job_count < 20:
+        return 'small'
+    elif 20 <= job_count < 50:
+        return 'medium'
+    else:
+        return 'large'
+
 # Directory where the CSV files are located
-directory = './'
+directory = '../'
 
 # List to hold all dataframes
 dataframes = []
@@ -45,7 +54,7 @@ for filename in os.listdir(directory):
 concatenated_df = pd.concat(dataframes, ignore_index=True)
 
 # Load the "jssp_details.csv"
-details_df = pd.read_csv('jssp_details.csv')
+details_df = pd.read_csv('../jssp_details.csv')
 
 # Join the dataframes on the "instance" column
 final_df = pd.merge(concatenated_df, details_df, on='instance', how='inner')
@@ -83,55 +92,11 @@ assert find_duplicates(final_updated_df) == 0
 assert original_number_of_rows - number_of_duplicates == len(final_updated_df)
 
 # remove 6x6 instances (not enough data)
-final_updated_df = final_updated_df[final_updated_df['jobs'] != 6]
+# final_updated_df = final_updated_df[final_updated_df['jobs'] != 6]
+
+# calculate gap
 final_updated_df['gap'] = (final_updated_df['makespan'] - final_updated_df['upper_bound']) / (final_updated_df['upper_bound'])
 
-# ======== MAIN ANALYSIS ======
-
-# Group by 'jobs' and 'machines'
-grouped_by_size = final_updated_df.groupby(['jobs', 'machines'])
-
-for size_name, size_group in grouped_by_size:
-    # make a boxplot
-    plt.figure(figsize=(16, 10))  # Adjusted size
-    plt.title(f'Box Plot of Gaps for Jobs={size_name[0]}, Machines={size_name[1]}')
-    boxplot_data = [group['gap'] for _, group in size_group.groupby('model')]
-    plt.boxplot(boxplot_data, labels=[model for model in size_group['model'].unique()], vert=False)
-    plt.xlabel('Gap')
-    plt.ylabel('Model')
-    plt.yticks(rotation=45)  # Rotate y-axis labels
-    plot_filename = f'horizontal_boxplot_jobs_{size_name[0]}_machines_{size_name[1]}.png'
-    plt.savefig(plot_filename, bbox_inches='tight')
-    plt.close()
-
-    # collect data for each model
-    grouped_by_model = size_group.groupby('model')
-    test_groups = []
-    models = []
-    for model_name, model_group in grouped_by_model:
-        test_groups.append(model_group['gap'])
-        models.append(model_name)
-    
-    # Kruskal-Wallis Test
-    x = kruskal(*test_groups)
-    print(size_name, x)
-    insignificant = 0
-    significant = 0
-    total_tests = 0
-    if x.pvalue < 0.05:
-        print("Performing pairwise comparisons:")
-        for i in range(len(models)):
-            for j in range(i + 1, len(models)):
-                stat, p = mannwhitneyu(test_groups[i], test_groups[j], alternative='two-sided')
-                if p > 0.05:
-                    insignificant += 1
-                else:
-                    print(f"Comparison {models[i]} vs {models[j]}: Stat={stat}, p-value={p}")
-                    significant += 1
-                total_tests += 1
-    else:
-        print("No significant difference found; pairwise comparisons not performed.")
-
-    print(f"{total_tests=} {significant=} {insignificant=}")
-
-
+# calculate category
+final_updated_df['category'] = final_updated_df['jobs'].apply(categorize)
+final_updated_df.to_csv('jssp_processed_data.csv', index=False)
