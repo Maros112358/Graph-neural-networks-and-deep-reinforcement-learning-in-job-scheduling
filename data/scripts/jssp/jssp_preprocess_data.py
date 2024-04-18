@@ -39,6 +39,10 @@ for filename in os.listdir(directory):
         # Read the CSV file
         df = pd.read_csv(file_path)
 
+        if 'model' in df.columns:
+            df.rename(columns={'model': 'parameter_set'}, inplace=True)
+            df['model'] = filename.removeprefix("experiment_static_jssp_").removesuffix('.csv')
+
         # Rename 'pdr' column to 'pdr' if it exists
         if 'pdr' in df.columns:
             df.rename(columns={'pdr': 'model'}, inplace=True)
@@ -98,4 +102,4 @@ final_updated_df['gap'] = (final_updated_df['makespan'] - final_updated_df['uppe
 
 # calculate category
 final_updated_df['category'] = final_updated_df['jobs'].apply(categorize)
-final_updated_df.to_csv('jssp_processed_data.csv', index=False)
+final_updated_df.to_csv('jssp_preprocess_data.csv', index=False)
