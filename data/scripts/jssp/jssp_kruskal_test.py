@@ -40,9 +40,12 @@ if __name__ == '__main__':
 
     grouped_by_size = df.groupby(['category'])
     check_models = ['fjsp_drl', "ieee_icce_rl_jsp", "LRPT"]
-    # for index, (size_name, size_group) in enumerate(grouped_by_size):
+    for index, (size_name, size_group) in enumerate(grouped_by_size):
         # collect data for each model
-    grouped_by_model = df.groupby('model')
+        pass
+
+    size_name, size_group = 'all', df
+    grouped_by_model = size_group.groupby('model')
     test_groups = []
     models = []
     for model_name, model_group in grouped_by_model:
@@ -56,7 +59,7 @@ if __name__ == '__main__':
     print(len(models), len(test_groups))
     # Kruskal-Wallis Test
     x = kruskal(*test_groups)
-    print( x.pvalue)
+    print(size_name, x.pvalue)
     # test_results.loc[index] = [size_name[0], len(size_group), x.pvalue]
 
     # test_results.to_csv('jssp_kruskal_test.csv', index=False)
