@@ -149,26 +149,30 @@ Average gaps for different models and instance categories are shown in Table 4.1
 A boxplot for JSSP gaps for small instances is shown in Figure 4.1, for medium instances in Figure 4.2, and large instances in Figure 4.3. The model with the lowest average gap is highlighted as a blue box.
 
 \begin{center}
-    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_jssp_small.pdf}\\
+    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_jssp_small.pdf}\\
     Figure 4.1: JSSP gaps for small instances
 \end{center}
 
 \begin{center}
-    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_jssp_medium.pdf}\\
+    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_jssp_medium.pdf}\\
     Figure 4.2: JSSP gaps for medium instances
 \end{center}
 \begin{center}
-    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_jssp_large.pdf}\\
+    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_jssp_large.pdf}\\
     Figure 4.3: JSSP gaps for large instances
+\end{center}
+\begin{center}
+    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_jssp_all.pdf}\\
+    Figure 4.4: JSSP gaps for all instances
 \end{center}
 
 To test the null hypothesis that the median values of all models and PDRs are from the same population, we used the Kruskal-Wallis test \cite{doi:10.1080/01621459.1952.10483441}. The p-value for JSSP gaps, including all models and PDRs in Table 4.1, is $p < 1\%$ for all sizes. We, therefore, reject the null hypothesis that all models and PDRs are equal. Without PDRs, the p-value is also $p < 1\%$. We reject the null hypothesis that all models are equal, too.
 \par
 From Table 4.1 and Figures 4.1, 4.2, 4.3, and 4.4, we observed that priority dispatching rule \textbf{LRPT} and model \textbf{fjsp-drl} produced similar results as the model \textbf{IEEE-ICCE-RL-JSP}, which had the lowest mean gap. Therefore, we tested the null hypothesis that \textbf{LRPT}, \textbf{fjsp-drl}, and \textbf{IEEE-ICCE-RL-JSP} are from the same population. The p-value for small instances is $45.7\%$, for medium instances $1.1\%$, $3.8\%$ for large instances, and 0.1$\%$ for all instances. We, therefore, reject the null hypothesis that these three models are from the same population for medium and large instances.
-For each pair of these three models, we then tested the null hypothesis, which was that the pair of models was equal. Obtained p-values are shown in Table 4.3.
+For each pair of these three models, we then tested the null hypothesis using the Mann-Whitney \textit{U} test: that the pair of models was equal. Obtained p-values are shown in Table 4.3.
 
 \begin{table}[H]
-    Table 4.3: p-values for Kruskal-Wallis test between pairs of models\\
+    Table 4.3: p-values for Mann-Whitney \textit{U} test between pairs of models\\
     \vspace{1mm}
     \begin{tabular}{llr}
     \toprule
@@ -191,6 +195,8 @@ For each pair of these three models, we then tested the null hypothesis, which w
 \end{table}
 
 We could reject the null hypothesis only for three pairs from the Kruskal-Wallis test.
+
+\subsection{FJSP}
 
 
 % \begin{tabular}{llll}

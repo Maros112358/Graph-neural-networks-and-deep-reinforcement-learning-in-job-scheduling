@@ -52,37 +52,37 @@ if __name__ == '__main__':
     for size_name, size_group in grouped_by_size:
         models = ['LRPT', 'fjsp_drl', "ieee_icce_rl_jsp"]
         # Grouping data and calculating means
-        pass
-    size_group = df
-    grouped_data = size_group.groupby('model')
-    boxplot_data = [group['gap'] for model, group in grouped_data ]
-    means = [group['gap'].mean() for model, group in grouped_data ]
-    labels = [model for model in size_group['model'].unique()]
+        # pass
+        size_group = df
+        grouped_data = size_group.groupby('model')
+        boxplot_data = [group['gap'] for model, group in grouped_data ]
+        means = [group['gap'].mean() for model, group in grouped_data ]
+        labels = [model for model in size_group['model'].unique()]
 
-        # Find the index of the boxplot with the lowest mean gap
-    min_mean_index = means.index(min(means))
-    print(min_mean_index)
+            # Find the index of the boxplot with the lowest mean gap
+        min_mean_index = means.index(min(means))
+        print(min_mean_index)
 
-        # make a boxplot
-    plt.figure(figsize=(16, 10))  # Adjusted size
-    # plt.title(f'JSSP gaps for "{size_name[0]}" instances', fontsize=20)
-    boxplot_data = [group['gap'] * 100 for _, group in size_group.groupby('model')]
-    box = plt.boxplot(boxplot_data, labels=[correct_label(model) for model in size_group['model'].unique()], patch_artist=True)
-    # Highlight the boxplot with the lowest mean
-    for patch in box['boxes']:
-        patch.set_facecolor('lightgray')  # Default color
-    box['boxes'][min_mean_index].set_facecolor('cyan')  # Highlight color
-    plt.ylabel('Gap [%]', fontsize=18)
-    plt.xlabel('Model', fontsize=18)
-    plt.xticks(rotation=45, fontsize=14, ha='right', rotation_mode='anchor')  # Rotate y-axis labels
-    max_gap = max([max(group) for group in boxplot_data])
-    max_y_limit = min(1, max_gap) * 100 # Cap the y-axis at 1 or lower if the max value is less than 1
-    plt.gca().set_ylim(top=max_y_limit, bottom=-5) 
-    size_name = ('all', 0)
-    plot_filename = f'/home/maros_b/Graph-neural-networks-and-deep-reinforcement-learning-in-job-scheduling/thesis/images/horizontal_boxplot_jssp_{size_name[0]}.pdf'
-    print(plot_filename)
-    plt.savefig(plot_filename, bbox_inches='tight')
-    plt.close()
+            # make a boxplot
+        plt.figure(figsize=(16, 10))  # Adjusted size
+        # plt.title(f'JSSP gaps for "{size_name[0]}" instances', fontsize=20)
+        boxplot_data = [group['gap'] * 100 for _, group in size_group.groupby('model')]
+        box = plt.boxplot(boxplot_data, labels=[correct_label(model) for model in size_group['model'].unique()], patch_artist=True)
+        # Highlight the boxplot with the lowest mean
+        for patch in box['boxes']:
+            patch.set_facecolor('lightgray')  # Default color
+        box['boxes'][min_mean_index].set_facecolor('cyan')  # Highlight color
+        plt.ylabel('Gap [%]', fontsize=22)
+        # plt.xlabel('Model', fontsize=18)
+        plt.xticks(rotation=45, fontsize=18, ha='right', rotation_mode='anchor')  # Rotate y-axis labels
+        max_gap = max([max(group) for group in boxplot_data])
+        max_y_limit = min(1, max_gap) * 100 # Cap the y-axis at 1 or lower if the max value is less than 1
+        plt.gca().set_ylim(top=max_y_limit, bottom=-5) 
+        size_name = ('all', 0)
+        plot_filename = f'/home/maros_b/Graph-neural-networks-and-deep-reinforcement-learning-in-job-scheduling/thesis/images/horizontal_boxplot_jssp_{size_name[0]}.pdf'
+        print(plot_filename)
+        plt.savefig(plot_filename, bbox_inches='tight')
+        plt.close()
 
 
     results = test_models(size_group, 'model')
