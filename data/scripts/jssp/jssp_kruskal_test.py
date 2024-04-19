@@ -38,34 +38,25 @@ if __name__ == '__main__':
     # Group by 'jobs' and 'machines'
     test_results = pd.DataFrame(columns=["category", "number_of_data_points", "p_value"])
 
-    grouped_by_size = df.groupby(['jobs', 'machines'])
-    for index, (size_name, size_group) in enumerate(grouped_by_size):
-
-        # collect data for each model
-        grouped_by_model = size_group.groupby('model')
-        test_groups = []
-        models = []
-        for model_name, model_group in grouped_by_model:
-            test_groups.append(model_group['makespan'])
-            models.append(model_name)
-        
-        # Kruskal-Wallis Test
-        x = kruskal(*test_groups)
-        test_results.loc[index] = [f"{size_name[0]}_{size_name[1]}", len(size_group), x.pvalue]
-
     grouped_by_size = df.groupby(['category'])
-    last_index = index
-    for index, (size_name, size_group) in enumerate(grouped_by_size):
+    check_models = ['fjsp_drl', "ieee_icce_rl_jsp", "LRPT"]
+    # for index, (size_name, size_group) in enumerate(grouped_by_size):
         # collect data for each model
-        grouped_by_model = size_group.groupby('model')
-        test_groups = []
-        models = []
-        for model_name, model_group in grouped_by_model:
-            test_groups.append(model_group['makespan'])
-            models.append(model_name)
-        
-        # Kruskal-Wallis Test
-        x = kruskal(*test_groups)
-        test_results.loc[last_index + index] = [size_name[0], len(size_group), x.pvalue]
+    grouped_by_model = df.groupby('model')
+    test_groups = []
+    models = []
+    for model_name, model_group in grouped_by_model:
+        if model_name not in check_models:
+            continue
 
-    test_results.to_csv('jssp_kruskal_test.csv', index=False)
+        test_groups.append(model_group['gap'])
+        models.append(model_name)
+
+    print(models)
+    print(len(models), len(test_groups))
+    # Kruskal-Wallis Test
+    x = kruskal(*test_groups)
+    print( x.pvalue)
+    # test_results.loc[index] = [size_name[0], len(size_group), x.pvalue]
+
+    # test_results.to_csv('jssp_kruskal_test.csv', index=False)

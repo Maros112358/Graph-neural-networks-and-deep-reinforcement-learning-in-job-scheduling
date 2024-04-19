@@ -90,115 +90,146 @@ For JSSP, we used PDR implementations from the code of the model \textbf{IEEE-IC
 We ran all experiments on a MacBook Pro with an Apple M2 Max chip, 32 GB of RAM, and Sonoma 14.4.1 macOS operating system. Besides reporting makespan and gap, we also report runtime for each experiment. 
 
 \subsection{JSSP}
-Average gaps for different models and instance categories are shown in Table 4.1, with the lowest average gap highlighted in bold. Average runtimes are in Table 4.2. 
+Average gaps for different models and instance categories are shown in Table 4.1. The model with the lowest average gap is highlighted in bold. Average runtimes are in Table 4.2. 
 
 \begin{table}[H]
     Table 4.1: Average JSSP gaps for different models and categories\\
     \vspace{1mm}
-    \begin{tabular}{llll}
+    \small 
+    \begin{tabular}{lllll}
         \toprule
-        Model / Category & large & medium & small \\
+        Model / Category & large & medium & small & all \\ 
         \midrule
-        EDD & 0.30 ± 0.09 & 0.44 ± 0.11 & 0.35 ± 0.13 \\
-        FIFO & 0.28 ± 0.18 & 0.33 ± 0.11 & 0.25 ± 0.09 \\
-        LOR & 0.35 ± 0.09 & 0.44 ± 0.11 & 0.36 ± 0.12 \\
-        LPT & 0.42 ± 0.11 & 0.48 ± 0.11 & 0.36 ± 0.10 \\
-        LRPT & 0.19 ± 0.13 & 0.27 ± 0.11 & 0.17 ± 0.08 \\
-        LS & 0.24 ± 0.10 & 0.34 ± 0.09 & 0.31 ± 0.14 \\
-        MOR & 0.26 ± 0.20 & 0.28 ± 0.12 & 0.20 ± 0.08 \\
-        SPT & 0.22 ± 0.07 & 0.30 ± 0.08 & 0.24 ± 0.10 \\
-        SRPT & 0.35 ± 0.09 & 0.46 ± 0.11 & 0.39 ± 0.11 \\
-        End-to-end-DRL-for-FJSP & 0.28 ± 0.18 & 0.33 ± 0.12 & 0.24 ± 0.09 \\
-        fjsp-drl & 0.20 ± 0.15 & 0.25 ± 0.11 & 0.16 ± 0.08 \\
-        \textbf{IEEE-ICCE-RL-JSP} & \textbf{0.18 ± 0.13} & \textbf{0.24 ± 0.09} & \textbf{0.16 ± 0.07} \\
-        L2D & 0.28 ± 0.19 & 0.35 ± 0.12 & 0.25 ± 0.11 \\
-        Wheatley & 0.79 ± 0.59 & 0.43 ± 0.18 & 0.26 ± 0.11 \\
+        EDD & 0.30 ± 0.09 & 0.44 ± 0.11 & 0.35 ± 0.13 & 0.36 ± 0.12 \\
+        FIFO & 0.28 ± 0.18 & 0.33 ± 0.11 & 0.25 ± 0.09 & 0.30 ± 0.13  \\
+        LOR & 0.35 ± 0.09 & 0.44 ± 0.11 & 0.36 ± 0.12 & 0.40 ± 0.11\\
+        LPT & 0.42 ± 0.11 & 0.48 ± 0.11 & 0.36 ± 0.10 & 0.44 ± 0.11\\
+        LRPT & 0.19 ± 0.13 & 0.27 ± 0.11 & 0.17 ± 0.08 & 0.22 ± 0.12 \\
+        LS & 0.24 ± 0.10 & 0.34 ± 0.09 & 0.31 ± 0.14 & 0.29 ± 0.11 \\
+        MOR & 0.26 ± 0.20 & 0.28 ± 0.12 & 0.20 ± 0.08 & 0.26 ± 0.14 \\
+        SPT & 0.22 ± 0.07 & 0.30 ± 0.08 & 0.24 ± 0.10 & 0.26 ± 0.09 \\
+        SRPT & 0.35 ± 0.09 & 0.46 ± 0.11 & 0.39 ± 0.11 & 0.40 ± 0.11 \\
+        End-to-end-DRL-for-FJSP & 0.28 ± 0.18 & 0.33 ± 0.12 & 0.30 ± 0.14 & 0.30 ± 0.14  \\
+        fjsp-drl & 0.20 ± 0.15 & 0.25 ± 0.11 & 0.16 ± 0.08 & 0.22 ± 0.12 \\
+        \textbf{IEEE-ICCE-RL-JSP} & \textbf{0.18 ± 0.13} & \textbf{0.24 ± 0.09} & \textbf{0.16 ± 0.07} & \textbf{0.20 ± 0.12} \\
+        L2D & 0.28 ± 0.19 & 0.35 ± 0.12 & 0.25 ± 0.11 & 0.31 ± 0.16 \\
+        Wheatley & 0.79 ± 0.59 & 0.43 ± 0.18 & 0.26 ± 0.11 & 0.48 ± 0.38 \\
         \bottomrule
     \end{tabular}
 \end{table}
 
+
 \begin{table}[H]
     Table 4.2: Average JSSP runtimes for different models and categories\\
     \vspace{1mm}
-    \begin{tabular}{llll}
-    \toprule
-    Model / Category & large & medium & small \\
-    \midrule
-    EDD & 8.13 ± 7.10 & 0.75 ± 0.62 & 0.06 ± 0.05 \\
-    FIFO & 4.99 ± 5.67 & 0.70 ± 0.61 & 0.06 ± 0.05 \\
-    LOR & 3.26 ± 3.70 & 0.47 ± 0.40 & 0.04 ± 0.04 \\
-    LPT & 3.84 ± 4.20 & 0.70 ± 0.51 & 0.06 ± 0.05 \\
-    LRPT & 5.00 ± 4.86 & 0.60 ± 0.49 & 0.05 ± 0.04 \\
-    LS & 4.76 ± 4.72 & 0.52 ± 0.44 & 0.04 ± 0.03 \\
-    MOR & 3.83 ± 4.18 & 0.53 ± 0.46 & 0.05 ± 0.04 \\
-    SPT & 3.71 ± 4.20 & 0.60 ± 0.47 & 0.06 ± 0.04 \\
-    SRPT & 4.86 ± 4.58 & 0.46 ± 0.39 & 0.05 ± 0.03 \\
-    End-to-end-DRL-for-FJSP & 10.90 ± 11.96 & 1.74 ± 1.14 & 0.36 ± 0.20 \\
-    fjsp-drl & 49.13 ± 65.99 & 7.69 ± 5.22 & 1.14 ± 0.90 \\
-    IEEE-ICCE-RL-JSP & 16.26 ± 14.29 & 3.74 ± 2.16 & 0.58 ± 0.29 \\
-    l2d & 4.45 ± 3.99 & 1.10 ± 0.54 & 0.26 ± 0.14 \\
-    Wheatley & 32.34 ± 42.37 & 5.02 ± 3.56 & 0.89 ± 0.56 \\
-    \bottomrule
-\end{tabular}
+    \small
+    \begin{tabular}{lllll}
+        \toprule
+        category & large & medium & small & all \\
+        model &  &  &  &  \\
+        \midrule
+        EDD & 8.13 ± 7.10 & 0.75 ± 0.62 & 0.06 ± 0.05 & 4.04 ± 6.11 \\
+        FIFO & 4.99 ± 5.67 & 0.70 ± 0.61 & 0.06 ± 0.05 & 1.69 ± 3.51 \\
+        LOR & 3.26 ± 3.70 & 0.47 ± 0.40 & 0.04 ± 0.04 & 1.09 ± 2.26 \\
+        LPT & 3.84 ± 4.20 & 0.70 ± 0.51 & 0.06 ± 0.05 & 2.20 ± 3.39 \\
+        LRPT & 5.00 ± 4.86 & 0.60 ± 0.49 & 0.05 ± 0.04 & 2.31 ± 3.82 \\
+        LS & 4.76 ± 4.72 & 0.52 ± 0.44 & 0.04 ± 0.03 & 2.43 ± 3.88 \\
+        MOR & 3.83 ± 4.18 & 0.53 ± 0.46 & 0.05 ± 0.04 & 1.26 ± 2.58 \\
+        SPT & 3.71 ± 4.20 & 0.60 ± 0.47 & 0.06 ± 0.04 & 2.10 ± 3.37 \\
+        SRPT & 4.86 ± 4.58 & 0.46 ± 0.39 & 0.05 ± 0.03 & 2.41 ± 3.82 \\
+        End-to-end-DRL-for-FJSP & 10.90 ± 11.96 & 1.74 ± 1.14 & 0.36 ± 0.20 & 4.97 ± 8.69 \\
+        fjsp-drl & 49.13 ± 65.99 & 7.69 ± 5.22 & 1.14 ± 0.90 & 16.70 ± 38.10 \\
+        IEEE-ICCE-RL-JSP & 16.26 ± 14.29 & 3.74 ± 2.16 & 0.58 ± 0.29 & 9.85 ± 12.17 \\
+        L2D & 4.45 ± 3.99 & 1.10 ± 0.54 & 0.26 ± 0.14 & 2.46 ± 3.18 \\
+        Wheatley & 32.34 ± 42.37 & 5.02 ± 3.56 & 0.89 ± 0.56 & 10.98 ± 24.60 \\
+        \bottomrule
+        \end{tabular}        
 \end{table}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{images/horizontal_boxplot_jssp_small.pdf}
-    \caption{xxx}
-    \label{fig:boxplot_small}
-\end{figure}
+A boxplot for JSSP gaps for small instances is shown in Figure 4.1, for medium instances in Figure 4.2, and large instances in Figure 4.3. The model with the lowest average gap is highlighted as a blue box.
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{images/horizontal_boxplot_jssp_medium.pdf}
-    \caption{xxx}
-    \label{fig:boxplot_medium}
-\end{figure}
 \begin{center}
-    \includegraphics[width=\linewidth]{images/horizontal_boxplot_jssp_large.pdf}\\
-    Figure 4.3: xxx
+    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_jssp_small.pdf}\\
+    Figure 4.1: JSSP gaps for small instances
 \end{center}
 
-    
-\begin{tabular}{llll}
+\begin{center}
+    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_jssp_medium.pdf}\\
+    Figure 4.2: JSSP gaps for medium instances
+\end{center}
+\begin{center}
+    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_jssp_large.pdf}\\
+    Figure 4.3: JSSP gaps for large instances
+\end{center}
+
+To test the null hypothesis that the median values of all models and PDRs are from the same population, we used the Kruskal-Wallis test \cite{doi:10.1080/01621459.1952.10483441}. The p-value for JSSP gaps, including all models and PDRs in Table 4.1, is $p < 1\%$ for all sizes. We, therefore, reject the null hypothesis that all models and PDRs are equal. Without PDRs, the p-value is also $p < 1\%$. We reject the null hypothesis that all models are equal, too.
+\par
+From Table 4.1 and Figures 4.1, 4.2, 4.3, and 4.4, we observed that priority dispatching rule \textbf{LRPT} and model \textbf{fjsp-drl} produced similar results as the model \textbf{IEEE-ICCE-RL-JSP}, which had the lowest mean gap. Therefore, we tested the null hypothesis that \textbf{LRPT}, \textbf{fjsp-drl}, and \textbf{IEEE-ICCE-RL-JSP} are from the same population. The p-value for small instances is $45.7\%$, for medium instances $1.1\%$, and $3.8\%$ for large instances. We, therefore, reject the null hypothesis that these three models are from the same population for medium and large instances.
+For each pair of these three models, we then tested the null hypothesis, which was that the pair of models was equal. Results o
+
+\begin{table}[H]
+    Table 4.3: p-values for Kruskal-Wallis test between pairs of models\\
+    \vspace{1mm}
+    \begin{tabular}{llr}
     \toprule
-    category & large & medium & small \\
-    parameter-set &  &  &  \\
+    Category & Models & p-value \\
     \midrule
-    DQN-ep1400 & 0.18 ± 0.12 & 0.24 ± 0.09 & 0.16 ± 0.07 \\
-    DQN-ep1530 & 0.18 ± 0.13 & 0.25 ± 0.09 & 0.15 ± 0.06 \\
-    DQN-ep1670 & 0.18 ± 0.13 & 0.24 ± 0.09 & 0.16 ± 0.08 \\
-    DQN-ep2590 & 0.18 ± 0.12 & 0.24 ± 0.09 & 0.16 ± 0.07 \\
-    DQN-ep3480 & 0.18 ± 0.14 & 0.24 ± 0.11 & 0.15 ± 0.07 \\
-    EDD & 0.30 ± 0.09 & 0.44 ± 0.11 & 0.35 ± 0.13 \\
-    FIFO & 0.28 ± 0.18 & 0.33 ± 0.11 & 0.25 ± 0.09 \\
-    LOR & 0.35 ± 0.09 & 0.44 ± 0.11 & 0.36 ± 0.12 \\
-    LPT & 0.42 ± 0.11 & 0.48 ± 0.11 & 0.36 ± 0.10 \\
-    LRPT & 0.19 ± 0.13 & 0.27 ± 0.11 & 0.17 ± 0.08 \\
-    LS & 0.24 ± 0.10 & 0.34 ± 0.09 & 0.31 ± 0.14 \\
-    MOR & 0.26 ± 0.20 & 0.28 ± 0.12 & 0.20 ± 0.08 \\
-    SPT & 0.22 ± 0.07 & 0.30 ± 0.08 & 0.24 ± 0.10 \\
-    SRPT & 0.35 ± 0.09 & 0.46 ± 0.11 & 0.39 ± 0.11 \\
-    SavedNetwork/10-10-1-99.pth & 0.28 ± 0.19 & 0.32 ± 0.13 & 0.24 ± 0.11 \\
-    SavedNetwork/15-15-1-99.pth & 0.30 ± 0.21 & 0.33 ± 0.13 & 0.23 ± 0.09 \\
-    SavedNetwork/20-15-1-199.pth & 0.25 ± 0.18 & 0.34 ± 0.12 & 0.22 ± 0.10 \\
-    SavedNetwork/20-15-1-99.pth & 0.32 ± 0.21 & 0.33 ± 0.12 & 0.24 ± 0.11 \\
-    SavedNetwork/20-20-1-199.pth & 0.29 ± 0.20 & 0.34 ± 0.12 & 0.24 ± 0.11 \\
-    SavedNetwork/20-20-1-99.pth & 0.29 ± 0.19 & 0.35 ± 0.12 & 0.23 ± 0.09 \\
-    SavedNetwork/30-15-1-199.pth & 0.28 ± 0.18 & 0.37 ± 0.12 & 0.28 ± 0.11 \\
-    SavedNetwork/30-15-1-99.pth & 0.27 ± 0.19 & 0.33 ± 0.13 & 0.25 ± 0.10 \\
-    SavedNetwork/30-20-1-199.pth & 0.27 ± 0.18 & 0.37 ± 0.11 & 0.31 ± 0.11 \\
-    SavedNetwork/30-20-1-99.pth & 0.25 ± 0.17 & 0.33 ± 0.12 & 0.23 ± 0.09 \\
-    SavedNetwork/6-6-1-99.pth & 0.28 ± 0.15 & 0.39 ± 0.09 & 0.30 ± 0.14 \\
-    model/save-10-5.pt & 0.18 ± 0.13 & 0.24 ± 0.11 & 0.16 ± 0.08 \\
-    results/save-10-5.pt & 0.18 ± 0.13 & 0.24 ± 0.11 & 0.16 ± 0.08 \\
-    results/save-15-10.pt & 0.18 ± 0.12 & 0.24 ± 0.09 & 0.16 ± 0.09 \\
-    results/save-20-10.pt & 0.24 ± 0.19 & 0.28 ± 0.12 & 0.18 ± 0.09 \\
-    results/save-20-5.pt & 0.20 ± 0.17 & 0.24 ± 0.11 & 0.16 ± 0.08 \\
-    saved-models/1 & 0.57 ± 0.23 & 0.41 ± 0.15 & 0.27 ± 0.11 \\
-    saved-models/2& 0.74 ± 0.41 & 0.45 ± 0.18 & 0.27 ± 0.11 \\
-    saved-models/3 & 1.06 ± 0.85 & 0.42 ± 0.21 & 0.24 ± 0.10 \\
-    saved-network/FJSP-J15M15/best-value0 & 0.28 ± 0.18 & 0.33 ± 0.12 & 0.24 ± 0.09 \\
+    large & LRPT + fjsp-drl & 85.1$\%$ \\
+    large & LRPT + IEEE-ICCE-RL-JSP & 3.0$\%$ \\
+    large & fjsp-drl + IEEE-ICCE-RL-JSP & 10.8$\%$ \\
+    medium & LRPT + fjsp-drl & 0.6$\%$ \\
+    medium & LRPT + IEEE-ICCE-RL-JSP & 0.4$\%$ \\
+    medium & fjsp-drl + IEEE-ICCE-RL-JSP & 61.6$\%$ \\
+    small & LRPT + fjsp-drl & 48.3$\%$ \\
+    small & LRPT + IEEE-ICCE-RL-JSP & 22.7$\%$ \\
+    small & fjsp-drl + IEEE-ICCE-RL-JSP & 48.0$\%$ \\
+    all & LRPT + fjsp-drl & 0.482982 \\
+    all & LRPT + IEEE-ICCE-RL-JSP & 0.226689 \\
+    all & fjsp-drl + IEEE-ICCE-RL-JSP & 0.480123 \\
+
     \bottomrule
-\end{tabular}
+    \end{tabular}
+\end{table}
+
+
+% \begin{tabular}{llll}
+%     \toprule
+%     category & large & medium & small \\
+%     parameter-set &  &  &  \\
+%     \midrule
+%     DQN-ep1400 & 0.18 ± 0.12 & 0.24 ± 0.09 & 0.16 ± 0.07 \\
+%     DQN-ep1530 & 0.18 ± 0.13 & 0.25 ± 0.09 & 0.15 ± 0.06 \\
+%     DQN-ep1670 & 0.18 ± 0.13 & 0.24 ± 0.09 & 0.16 ± 0.08 \\
+%     DQN-ep2590 & 0.18 ± 0.12 & 0.24 ± 0.09 & 0.16 ± 0.07 \\
+%     DQN-ep3480 & 0.18 ± 0.14 & 0.24 ± 0.11 & 0.15 ± 0.07 \\
+%     EDD & 0.30 ± 0.09 & 0.44 ± 0.11 & 0.35 ± 0.13 \\
+%     FIFO & 0.28 ± 0.18 & 0.33 ± 0.11 & 0.25 ± 0.09 \\
+%     LOR & 0.35 ± 0.09 & 0.44 ± 0.11 & 0.36 ± 0.12 \\
+%     LPT & 0.42 ± 0.11 & 0.48 ± 0.11 & 0.36 ± 0.10 \\
+%     LRPT & 0.19 ± 0.13 & 0.27 ± 0.11 & 0.17 ± 0.08 \\
+%     LS & 0.24 ± 0.10 & 0.34 ± 0.09 & 0.31 ± 0.14 \\
+%     MOR & 0.26 ± 0.20 & 0.28 ± 0.12 & 0.20 ± 0.08 \\
+%     SPT & 0.22 ± 0.07 & 0.30 ± 0.08 & 0.24 ± 0.10 \\
+%     SRPT & 0.35 ± 0.09 & 0.46 ± 0.11 & 0.39 ± 0.11 \\
+%     SavedNetwork/10-10-1-99.pth & 0.28 ± 0.19 & 0.32 ± 0.13 & 0.24 ± 0.11 \\
+%     SavedNetwork/15-15-1-99.pth & 0.30 ± 0.21 & 0.33 ± 0.13 & 0.23 ± 0.09 \\
+%     SavedNetwork/20-15-1-199.pth & 0.25 ± 0.18 & 0.34 ± 0.12 & 0.22 ± 0.10 \\
+%     SavedNetwork/20-15-1-99.pth & 0.32 ± 0.21 & 0.33 ± 0.12 & 0.24 ± 0.11 \\
+%     SavedNetwork/20-20-1-199.pth & 0.29 ± 0.20 & 0.34 ± 0.12 & 0.24 ± 0.11 \\
+%     SavedNetwork/20-20-1-99.pth & 0.29 ± 0.19 & 0.35 ± 0.12 & 0.23 ± 0.09 \\
+%     SavedNetwork/30-15-1-199.pth & 0.28 ± 0.18 & 0.37 ± 0.12 & 0.28 ± 0.11 \\
+%     SavedNetwork/30-15-1-99.pth & 0.27 ± 0.19 & 0.33 ± 0.13 & 0.25 ± 0.10 \\
+%     SavedNetwork/30-20-1-199.pth & 0.27 ± 0.18 & 0.37 ± 0.11 & 0.31 ± 0.11 \\
+%     SavedNetwork/30-20-1-99.pth & 0.25 ± 0.17 & 0.33 ± 0.12 & 0.23 ± 0.09 \\
+%     SavedNetwork/6-6-1-99.pth & 0.28 ± 0.15 & 0.39 ± 0.09 & 0.30 ± 0.14 \\
+%     model/save-10-5.pt & 0.18 ± 0.13 & 0.24 ± 0.11 & 0.16 ± 0.08 \\
+%     results/save-10-5.pt & 0.18 ± 0.13 & 0.24 ± 0.11 & 0.16 ± 0.08 \\
+%     results/save-15-10.pt & 0.18 ± 0.12 & 0.24 ± 0.09 & 0.16 ± 0.09 \\
+%     results/save-20-10.pt & 0.24 ± 0.19 & 0.28 ± 0.12 & 0.18 ± 0.09 \\
+%     results/save-20-5.pt & 0.20 ± 0.17 & 0.24 ± 0.11 & 0.16 ± 0.08 \\
+%     saved-models/1 & 0.57 ± 0.23 & 0.41 ± 0.15 & 0.27 ± 0.11 \\
+%     saved-models/2& 0.74 ± 0.41 & 0.45 ± 0.18 & 0.27 ± 0.11 \\
+%     saved-models/3 & 1.06 ± 0.85 & 0.42 ± 0.21 & 0.24 ± 0.10 \\
+%     saved-network/FJSP-J15M15/best-value0 & 0.28 ± 0.18 & 0.33 ± 0.12 & 0.24 ± 0.09 \\
+%     \bottomrule
+% \end{tabular}
