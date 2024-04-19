@@ -62,7 +62,7 @@ The listed parameter sets were trained using a CPU on an Arm-based Ampere A1 vir
 \subsubsection{IEEE-ICCE-RL-JSP}
 Authors of \textbf{IEEE-ICCE-RL-JSP} trained the model on randomly generated 3x3 and 10x10 JSSP instances. Parameter updates are done using Adam optimizer with a $10^{-5}$ learning rate. As PDRs for agents to select in each step, authors used FIFO, MOR, SPT, and MWKR discussed in \ref{priority dispatching rules}. The number of layers in HGIN was set to $K=3$. The value network has three dense layers. All hidden layers in both networks have dimension 128.
 \par
-No parameter sets were found in the GitHub repository\cite{github_IEEE-ICCE-RL-JSP}, so we had to train our own parameter sets using a script found in the repository. The script trains the model until the \textit{gap} between the best-known solution and the solution given by the model is not smaller than 20$\%$. We trained five parameter sets. We trained the model using CPU on an Arm-based Ampere A1 virtual machine with 4 CPUs and 24 GB of RAM in Oracle Cloud Infrastructure with Ubuntu 20.04 64-bit operating system.
+No parameter sets were found in the GitHub repository\cite{github_ieee_icce_rl_jsp}, so we had to train our own parameter sets using a script found in the repository. The script trains the model until the \textit{gap} between the best-known solution and the solution given by the model is not smaller than 20$\%$. We trained five parameter sets. We trained the model using CPU on an Arm-based Ampere A1 virtual machine with 4 CPUs and 24 GB of RAM in Oracle Cloud Infrastructure with Ubuntu 20.04 64-bit operating system.
 
 \subsubsection{End-to-end-DRL-for-FJSP}
 Authors of \textbf{End-to-end-DRL-for-FJSP} trained the model on randomly generated instances with sizes 6x6, 10x10, 15x15, 20x10, 20x20, and 30x20. The number of GIN layers was set to $K = 2$. Each GIN layer has MLP with two hidden layers with dimension 128 \cite{LEI2022117796}. Job operation action selection decoder, machine action selection decoder, and state-value function all have two hidden layers with dimension 128. Adam optimizer with learning rate $10^{-3}$ was used to update the policy.
@@ -72,12 +72,12 @@ We obtained only one parameter set from the GitHub repository \cite{github_end_t
 \subsubsection{fjsp-drl}
 Authors of \textbf{fjsp-drl} trained the model on randomly generated instances with sizes 10x5, 20x5, 15x10, and 20x10 \cite{9826438}. The model was evaluated on instances with a size of 30x10 and 40x10. The number of HGNN layers was set to $K = 3$, and the dimensions of operation and machine embeddings were set to 8. Five networks $\text{MLP}_{\theta_i}$ have two hidden layers with dimension 128, actor-network $\text{MLP}_\omega$ has two hidden layers with hidden dimension 64, and critic network also has two hidden layers with dimension 64. Hyperparameters for PPO were set to $I = 1000$ and $B = 20$. Adam optimizer with learning rate $2x10^{-4}$ was used for policy optimization. The discount factor was set to 1.0.
 \par
-We obtained five parameter sets from the GitHub repository for this model \cite{github_fjsp-drl}.
+We obtained five parameter sets from the GitHub repository for this model \cite{github_fjsp_drl}.
 
 \subsubsection{Baselines}
 We also compared previously described models with PDRs.
 \par
-For JSSP, we used PDR implementations from the code of the model \textbf{IEEE-ICCE-RL-JSP}. On top of FIFO, MOR, SPT, and MWKR discussed in \ref{priority dispatching rules}, we also used the following PDRs available in the code of \textbf{IEEE-ICCE-RL-JSP} \cite{github_IEEE-ICCE-RL-JSP}:
+For JSSP, we used PDR implementations from the code of the model \textbf{IEEE-ICCE-RL-JSP}. On top of FIFO, MOR, SPT, and MWKR discussed in \ref{priority dispatching rules}, we also used the following PDRs available in the code of \textbf{IEEE-ICCE-RL-JSP} \cite{github_ieee_icce_rl_jsp}:
 \begin{enumerate}
     \item \textit{EDD} (Earliest Due Date)
     \item \textit{LOR} (Least Operations Remaining)
@@ -87,30 +87,40 @@ For JSSP, we used PDR implementations from the code of the model \textbf{IEEE-IC
 \end{enumerate}
 
 \section{Results}
-We ran all experiments on a MacBook Pro with an Apple M2 Max chip, 32 GB of RAM, and Sonoma 14.4.1 macOS operating system. Besides reporting makespan and gap, we also report runtime for each experiment.
+We ran all experiments on a MacBook Pro with an Apple M2 Max chip, 32 GB of RAM, and Sonoma 14.4.1 macOS operating system. Besides reporting makespan and gap, we also report runtime for each experiment. 
 
-\begin{tabular}{llll}
-    \toprule
-    Model / Category & large & medium & small \\
-    \midrule
-    EDD & 0.30 ± 0.09 & 0.44 ± 0.11 & 0.35 ± 0.13 \\
-    FIFO & 0.28 ± 0.18 & 0.33 ± 0.11 & 0.25 ± 0.09 \\
-    LOR & 0.35 ± 0.09 & 0.44 ± 0.11 & 0.36 ± 0.12 \\
-    LPT & 0.42 ± 0.11 & 0.48 ± 0.11 & 0.36 ± 0.10 \\
-    LRPT & 0.19 ± 0.13 & 0.27 ± 0.11 & 0.17 ± 0.08 \\
-    LS & 0.24 ± 0.10 & 0.34 ± 0.09 & 0.31 ± 0.14 \\
-    MOR & 0.26 ± 0.20 & 0.28 ± 0.12 & 0.20 ± 0.08 \\
-    SPT & 0.22 ± 0.07 & 0.30 ± 0.08 & 0.24 ± 0.10 \\
-    SRPT & 0.35 ± 0.09 & 0.46 ± 0.11 & 0.39 ± 0.11 \\
-    End-to-end-DRL-for-FJSP & 0.28 ± 0.18 & 0.33 ± 0.12 & 0.24 ± 0.09 \\
-    fjsp-drl & 0.20 ± 0.15 & 0.25 ± 0.11 & 0.16 ± 0.08 \\
-    \textbf{IEEE-ICCE-RL-JSP} & \textbf{0.18 ± 0.13} & \textbf{0.24 ± 0.09} & \textbf{0.16 ± 0.07} \\
-    L2D & 0.28 ± 0.19 & 0.35 ± 0.12 & 0.25 ± 0.11 \\
-    Wheatley & 0.79 ± 0.59 & 0.43 ± 0.18 & 0.26 ± 0.11 \\
-    \bottomrule
-\end{tabular}
+\subsection{JSSP}
+Average gaps for different models and instance categories are shown in Table 4.1, with the lowest average gap highlighted in bold. Average runtimes are in Table 4.2. 
 
-\begin{tabular}{llll}
+\begin{table}[H]
+    Table 4.1: Average JSSP gaps for different models and categories\\
+    \vspace{1mm}
+    \begin{tabular}{llll}
+        \toprule
+        Model / Category & large & medium & small \\
+        \midrule
+        EDD & 0.30 ± 0.09 & 0.44 ± 0.11 & 0.35 ± 0.13 \\
+        FIFO & 0.28 ± 0.18 & 0.33 ± 0.11 & 0.25 ± 0.09 \\
+        LOR & 0.35 ± 0.09 & 0.44 ± 0.11 & 0.36 ± 0.12 \\
+        LPT & 0.42 ± 0.11 & 0.48 ± 0.11 & 0.36 ± 0.10 \\
+        LRPT & 0.19 ± 0.13 & 0.27 ± 0.11 & 0.17 ± 0.08 \\
+        LS & 0.24 ± 0.10 & 0.34 ± 0.09 & 0.31 ± 0.14 \\
+        MOR & 0.26 ± 0.20 & 0.28 ± 0.12 & 0.20 ± 0.08 \\
+        SPT & 0.22 ± 0.07 & 0.30 ± 0.08 & 0.24 ± 0.10 \\
+        SRPT & 0.35 ± 0.09 & 0.46 ± 0.11 & 0.39 ± 0.11 \\
+        End-to-end-DRL-for-FJSP & 0.28 ± 0.18 & 0.33 ± 0.12 & 0.24 ± 0.09 \\
+        fjsp-drl & 0.20 ± 0.15 & 0.25 ± 0.11 & 0.16 ± 0.08 \\
+        \textbf{IEEE-ICCE-RL-JSP} & \textbf{0.18 ± 0.13} & \textbf{0.24 ± 0.09} & \textbf{0.16 ± 0.07} \\
+        L2D & 0.28 ± 0.19 & 0.35 ± 0.12 & 0.25 ± 0.11 \\
+        Wheatley & 0.79 ± 0.59 & 0.43 ± 0.18 & 0.26 ± 0.11 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    Table 4.2: Average JSSP runtimes for different models and categories\\
+    \vspace{1mm}
+    \begin{tabular}{llll}
     \toprule
     Model / Category & large & medium & small \\
     \midrule
@@ -130,6 +140,26 @@ We ran all experiments on a MacBook Pro with an Apple M2 Max chip, 32 GB of RAM,
     Wheatley & 32.34 ± 42.37 & 5.02 ± 3.56 & 0.89 ± 0.56 \\
     \bottomrule
 \end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{images/horizontal_boxplot_jssp_small.pdf}
+    \caption{xxx}
+    \label{fig:boxplot_small}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{images/horizontal_boxplot_jssp_medium.pdf}
+    \caption{xxx}
+    \label{fig:boxplot_medium}
+\end{figure}
+\begin{center}
+    \includegraphics[width=\linewidth]{images/horizontal_boxplot_jssp_large.pdf}\\
+    Figure 4.3: xxx
+\end{center}
+
     
 \begin{tabular}{llll}
     \toprule
@@ -171,6 +201,4 @@ We ran all experiments on a MacBook Pro with an Apple M2 Max chip, 32 GB of RAM,
     saved-models/3 & 1.06 ± 0.85 & 0.42 ± 0.21 & 0.24 ± 0.10 \\
     saved-network/FJSP-J15M15/best-value0 & 0.28 ± 0.18 & 0.33 ± 0.12 & 0.24 ± 0.09 \\
     \bottomrule
-    \end{tabular}
-    
-    
+\end{tabular}
