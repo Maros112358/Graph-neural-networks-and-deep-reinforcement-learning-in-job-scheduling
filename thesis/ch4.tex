@@ -74,9 +74,10 @@ Authors of \textbf{fjsp-drl} trained the model on randomly generated instances w
 \par
 We obtained five parameter sets from the GitHub repository for this model \cite{github_fjsp_drl}.
 
-\subsubsection{Baselines}
+\subsection{Baselines}
 We also compared previously described models with PDRs.
 \par
+\subsubsection*{JSSP}
 For JSSP, we used PDR implementations from the code of the model \textbf{IEEE-ICCE-RL-JSP}. On top of FIFO, MOR, SPT, and MWKR discussed in \ref{priority dispatching rules}, we also used the following PDRs available in the code of \textbf{IEEE-ICCE-RL-JSP} \cite{github_ieee_icce_rl_jsp}:
 \begin{enumerate}
     \item \textit{EDD} (Earliest Due Date)
@@ -85,6 +86,20 @@ For JSSP, we used PDR implementations from the code of the model \textbf{IEEE-IC
     \item \textit{LS} (Least Slack)
     \item \textit{SRPT} (Shortest Remaining Processing Time)
 \end{enumerate}
+
+\subsubsection*{FJSP}
+For FJSP, we used PDR implementations from the code of the model \textbf{End-to-end-DRL-for-FJSP}. For operation selection, besides FIFO, we used three PDRs available in the code:
+\begin{enumerate}
+    \item \textit{MOPNR} (Most Operation Number Remaining)
+    \item \textit{LWKR} (Least Work Remaining)
+    \item \textit{MWKR} (Most Work Remaining)
+\end{enumerate}
+After selecting the operation, we used two machine selection PDRs available in the code:
+\begin{enumerate}
+    \item \textit{SPT} (Shortest Processing Time)
+    \item \textit{EET} (Earliest End Time)
+\end{enumerate}
+All eight different combinations are used as baselines.
 
 \section{Results}
 We ran all experiments on a MacBook Pro with an Apple M2 Max chip, 32 GB of RAM, and Sonoma 14.4.1 macOS operating system. Besides reporting makespan and gap, we also report runtime for each experiment. 
