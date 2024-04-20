@@ -109,7 +109,7 @@ We ran all experiments on a MacBook Pro with an Apple M2 Max chip, 32 GB of RAM,
 \subsection{JSSP}
 Average gaps for different models and instance categories are shown in Table 4.1. The model with the lowest average gap is highlighted in bold. Average runtimes are in Table 4.2. 
 
-\begin{table}[H]
+\begin{table}
     Table 4.1: Average JSSP gaps for different models and categories\\
     \vspace{1mm}
     \small 
@@ -133,12 +133,14 @@ Average gaps for different models and instance categories are shown in Table 4.1
         Wheatley & 0.79 ± 0.59 & 0.43 ± 0.18 & 0.26 ± 0.11 & 0.48 ± 0.38 \\
         \bottomrule
     \end{tabular}
+    \label{table:4.1}
 \end{table}
 
 
-\begin{table}[H]
+\begin{table}
     Table 4.2: Average JSSP runtimes for different models and categories\\
     \vspace{1mm}
+    \label{table:4.2}
     \small
     \begin{tabular}{lllll}
         \toprule
@@ -188,9 +190,10 @@ To test the null hypothesis that the median values of all models and PDRs are fr
 From Table 4.1 and Figures 4.1, 4.2, 4.3, and 4.4, we observed that priority dispatching rule \textbf{LRPT} and model \textbf{fjsp-drl} produced similar results as the model \textbf{IEEE-ICCE-RL-JSP}, which had the lowest mean gap. Therefore, we tested the null hypothesis that \textbf{LRPT}, \textbf{fjsp-drl}, and \textbf{IEEE-ICCE-RL-JSP} are from the same population. The p-value for small instances is $45.8\%$, for medium instances $1.1\%$, $3.8\%$ for large instances, and 0.1$\%$ for all instances. We, therefore, reject the null hypothesis that these three models are from the same population for medium and large instances.
 For each pair of these three models, we then tested the null hypothesis using the Mann-Whitney \textit{U} test: that the pair of models was equal. Obtained p-values are shown in Table 4.3.
 
-\begin{table}[H]
+\begin{table}
     Table 4.3: p-values for Mann-Whitney \textit{U} test between pairs of models\\
     \vspace{1mm}
+    \label{table:4.3}
     \begin{tabular}{llr}
     \toprule
     Category & Models & p-value \\
@@ -215,9 +218,10 @@ For each pair of these three models, we then tested the null hypothesis using th
 
 Average gaps for different model and instance categories are shown in Table 4.4. The model with the lowest average gap is highlighted in bold. Average runtimes for different models and instance categories are shown in Table 4.5. A negative gap means that the model found a better solution than the one listed in \cite{fjsp_benchmarks}.
 
-\begin{table}[H]
+\begin{table}
     Table 4.4: Average FJSP gaps for different models and instance categories\\
     \vspace{1mm}
+    \label{table:4.4}
     \footnotesize 
     \begin{tabular}{lllll}
         \toprule
@@ -238,9 +242,10 @@ Average gaps for different model and instance categories are shown in Table 4.4.
     \end{tabular}
 \end{table}
 
-\begin{table}[H]
-    Table 4.4: Average FJSP runtimes for different models and instance categories\\
+\begin{table}
+    Table 4.5: Average FJSP runtimes for different models and instance categories\\
     \vspace{1mm}
+    \label{table:4.5}
     \footnotesize 
     \begin{tabular}{lllll}
         \toprule
@@ -286,139 +291,140 @@ We tested the null hypothesis that the median values of gaps of all models and P
 
 \subsection{DJSP}
 
-\begin{table}[H]
-    Table 4.5: Average DJSP makespan with load factor 1\\
+For DJSP, we don't have any upper bound available and can't compute the gap. Therefore, we will compare absolute makespans produced by different models for each size and load factor. Average DJSP makespans with load factor 1 are shown in Table 4.5, with load factor 2 in Table 4.6, and with load factor 4 in Table 4.7. The model with the smallest average makespan is highlighted in bold. For each size and load factor, we also tested the null hypothesis, which is that all models are equal. The corresponding p-values are also shown in each table.
+
+\begin{table}
+    Table 4.6: Average DJSP makespan with load factor 1\\
     \vspace{1mm}
+    \label{table:4.6}
     \footnotesize 
     \begin{tabular}{ccccc}
         \toprule
         Size & L2D & IEEE-ICCE-RL-JSP & Wheatley & p-value \\
         \midrule
-        6x6 & 72.03 ± 9.40 & 74.69 ± 11.38 & 77.00 ± 9.24 & 22.0$\%$ \\
-        10x5 & 780.24 ± 90.34 & 874.43 ± 153.79 & 817.90 ± 78.99 & < 1$\%$ \\
-        10x10 & 1204.43 ± 219.98 & 1259.91 ± 257.09 & 1212.22 ± 217.04 & < 1$\%$ \\
-        15x5 & 1031.16 ± 61.63 & 1198.84 ± 108.35 & 1080.24 ± 89.20 & < 1$\%$ \\
-        15x10 & 1329.93 ± 94.21 & 1413.15 ± 116.03 & 1442.65 ± 129.44 & < 1$\%$ \\
-        15x15 & 1676.67 ± 116.37 & 1716.56 ± 119.06 & 1817.81 ± 145.40 & < 1$\%$ \\
-        20x5 & 1363.52 ± 148.91 & 1701.57 ± 203.56 & 1367.97 ± 104.40 & < 1$\%$ \\
-        20x10 & 1858.25 ± 213.24 & 2081.56 ± 257.26 & 1918.04 ± 161.88 & < 1$\%$ \\
-        20x15 & 2779.05 ± 1270.01 & 3009.12 ± 1383.13 & 2988.77 ± 1338.80 & < 1$\%$ \\
-        20x20 & 3208.98 ± 1522.30 & 3402.65 ± 1637.48 & 3655.56 ± 1662.28 & < 1$\%$ \\
-        30x10 & 2143.03 ± 126.54 & 2511.60 ± 222.45 & 2510.66 ± 181.78 & < 1$\%$ \\
-        30x15 & 4034.07 ± 1660.43 & 4484.68 ± 1833.57 & 4819.48 ± 1847.26 & < 1$\%$ \\
-        30x20 & 4469.95 ± 1779.81 & 4844.21 ± 1961.36 & 5805.12 ± 2149.98 & < 1$\%$ \\
-        40x15 & 6835.81 ± 1080.76 & 7789.19 ± 1137.65 & 8884.73 ± 862.80 & < 1$\%$ \\
-        40x20 & 7556.13 ± 1071.72 & 8496.36 ± 1179.83 & 10985.64 ± 1032.40 & < 1$\%$ \\
-        50x10 & 3809.08 ± 766.24 & 4456.46 ± 684.34 & 4948.68 ± 604.10 & < 1$\%$ \\
-        50x15 & 5882.77 ± 2621.21 & 6689.03 ± 2736.00 & 9118.45 ± 3524.75 & < 1$\%$ \\
-        50x20 & 6320.83 ± 2770.31 & 7050.68 ± 3024.71 & 11367.83 ± 4334.55 & < 1$\%$ \\
-        100x20 & 6310.22 ± 178.01 & 8150.22 ± 347.98 & 22838.04 ± 1550.05 & < 1$\%$ \\
+        6x6 & \textbf{72.03 ± 9.40} & 74.69 ± 11.38 & 77.00 ± 9.24 & 22.0$\%$ \\
+        10x5 & \textbf{780.24 ± 90.34} & 874.43 ± 153.79 & 817.90 ± 78.99 & $< 1\%$ \\
+        10x10 & \textbf{1204.43 ± 219.98} & 1259.91 ± 257.09 & 1212.22 ± 217.04 & $< 1\%$ \\
+        15x5 & \textbf{1031.16 ± 61.63} & 1198.84 ± 108.35 & 1080.24 ± 89.20 & $< 1\%$ \\
+        15x10 & \textbf{1329.93 ± 94.21} & 1413.15 ± 116.03 & 1442.65 ± 129.44 & $< 1\%$ \\
+        15x15 & \textbf{1676.67 ± 116.37} & 1716.56 ± 119.06 & 1817.81 ± 145.40 & $< 1\%$ \\
+        20x5 & \textbf{1363.52 ± 148.91} & 1701.57 ± 203.56 & 1367.97 ± 104.40 & $< 1\%$ \\
+        20x10 & \textbf{1858.25 ± 213.24} & 2081.56 ± 257.26 & 1918.04 ± 161.88 & $< 1\%$ \\
+        20x15 & \textbf{2779.05 ± 1270.01} & 3009.12 ± 1383.13 & 2988.77 ± 1338.80 & $< 1\%$ \\
+        20x20 & \textbf{3208.98 ± 1522.30} & 3402.65 ± 1637.48 & 3655.56 ± 1662.28 & $< 1\%$ \\
+        30x10 & \textbf{2143.03 ± 126.54} & 2511.60 ± 222.45 & 2510.66 ± 181.78 & $< 1\%$ \\
+        30x15 & \textbf{4034.07 ± 1660.43} & 4484.68 ± 1833.57 & 4819.48 ± 1847.26 & $< 1\%$ \\
+        30x20 & \textbf{4469.95 ± 1779.81} & 4844.21 ± 1961.36 & 5805.12 ± 2149.98 & $< 1\%$ \\
+        40x15 & \textbf{6835.81 ± 1080.76} & 7789.19 ± 1137.65 & 8884.73 ± 862.80 & $< 1\%$ \\
+        40x20 & \textbf{7556.13 ± 1071.72} & 8496.36 ± 1179.83 & 10985.64 ± 1032.40 & $< 1\%$ \\
+        50x10 & \textbf{3809.08 ± 766.24} & 4456.46 ± 684.34 & 4948.68 ± 604.10 & $< 1\%$ \\
+        50x15 & \textbf{5882.77 ± 2621.21} & 6689.03 ± 2736.00 & 9118.45 ± 3524.75 & $< 1\%$ \\
+        50x20 & \textbf{6320.83 ± 2770.31} & 7050.68 ± 3024.71 & 11367.83 ± 4334.55 & $< 1\%$ \\
+        100x20 & \textbf{6310.22 ± 178.01} & 8150.22 ± 347.98 & 22838.04 ± 1550.05 & $< 1\%$ \\
         \bottomrule
     \end{tabular}
 \end{table}
     
-\begin{table}[H]
-    Table 4.6: Average DJSP makespan with load factor 2\\
+\begin{table}
+    Table 4.7: Average DJSP makespan with load factor 2\\
     \vspace{1mm}
+    \label{table:4.7}
     \footnotesize 
     \begin{tabular}{ccccc}
     \toprule
     Size & L2D & IEEE-ICCE-RL-JSP & Wheatley & p-value \\
     \midrule
-    6x6 & 70.47 ± 8.20 & 67.65 ± 7.26 & 76.67 ± 6.82 & 1.0$\%$ \\
-    10x5 & 755.77 ± 83.86 & 782.58 ± 101.48 & 792.24 ± 71.32 & < 1$\%$ \\
-    10x10 & 1189.79 ± 216.81 & 1157.23 ± 214.02 & 1190.19 ± 215.12 & < 1$\%$ \\
-    15x5 & 1006.95 ± 55.52 & 1045.68 ± 63.48 & 1027.94 ± 70.34 & < 1$\%$ \\
-    15x10 & 1287.60 ± 92.94 & 1261.18 ± 81.78 & 1352.46 ± 97.29 & < 1$\%$ \\
-    15x15 & 1620.90 ± 99.44 & 1567.52 ± 81.21 & 1723.14 ± 114.35 & < 1$\%$ \\
-    20x5 & 1345.86 ± 175.94 & 1453.60 ± 147.46 & 1334.19 ± 115.78 & < 1$\%$ \\
-    20x10 & 1843.55 ± 254.44 & 1819.53 ± 224.32 & 1865.27 ± 199.47 & 8.0$\%$ \\
-    20x15 & 2711.67 ± 1266.34 & 2672.22 ± 1241.38 & 2873.04 ± 1324.80 & < 1$\%$ \\
-    20x20 & 3101.05 ± 1513.44 & 3059.03 ± 1483.54 & 3487.31 ± 1644.74 & < 1$\%$ \\
-    30x10 & 2066.74 ± 112.36 & 2155.90 ± 129.13 & 2290.94 ± 143.52 & < 1$\%$ \\
-    30x15 & 3980.79 ± 1722.64 & 3976.93 ± 1644.38 & 4503.40 ± 1835.45 & < 1$\%$ \\
-    30x20 & 4365.50 ± 1814.25 & 4335.11 ± 1776.02 & 5335.82 ± 2091.11 & < 1$\%$ \\
-    40x15 & 6792.66 ± 1268.41 & 6872.78 ± 1083.83 & 8185.63 ± 1053.13 & < 1$\%$ \\
-    40x20 & 7478.68 ± 1261.55 & 7541.90 ± 1112.00 & 10009.41 ± 1058.23 & < 1$\%$ \\
-    50x10 & 3852.59 ± 847.80 & 3920.64 ± 658.72 & 4468.24 ± 702.64 & < 1$\%$ \\
-    50x15 & 5842.31 ± 2704.56 & 5887.95 ± 2467.82 & 7981.61 ± 3227.05 & < 1$\%$ \\
-    50x20 & 6249.35 ± 2860.16 & 6276.52 ± 2763.67 & 10040.22 ± 3978.86 & < 1$\%$ \\
-    100x20 & 6129.85 ± 201.99 & 6858.02 ± 240.68 & 19085.54 ± 1326.74 & < 1$\%$ \\
+    6x6 & 70.47 ± 8.20 & \textbf{67.65 ± 7.26} & 76.67 ± 6.82 & 1.0$\%$ \\
+    10x5 & \textbf{755.77 ± 83.86} & 782.58 ± 101.48 & 792.24 ± 71.32 & $< 1\%$ \\
+    10x10 & 1189.79 ± 216.81 & \textbf{1157.23 ± 214.02} & 1190.19 ± 215.12 & $< 1\%$ \\
+    15x5 & \textbf{1006.95 ± 55.52} & 1045.68 ± 63.48 & 1027.94 ± 70.34 & $< 1\%$ \\
+    15x10 & 1287.60 ± 92.94 & \textbf{1261.18 ± 81.78} & 1352.46 ± 97.29 & $< 1\%$ \\
+    15x15 & 1620.90 ± 99.44 & \textbf{1567.52 ± 81.21} & 1723.14 ± 114.35 & $< 1\%$ \\
+    20x5 & 1345.86 ± 175.94 & 1453.60 ± 147.46 & \textbf{1334.19 ± 115.78} & $< 1\%$ \\
+    20x10 & 1843.55 ± 254.44 & \textbf{1819.53 ± 224.32} & 1865.27 ± 199.47 & 8.0$\%$ \\
+    20x15 & 2711.67 ± 1266.34 & \textbf{2672.22 ± 1241.38} & 2873.04 ± 1324.80 & $< 1\%$ \\
+    20x20 & 3101.05 ± 1513.44 & \textbf{3059.03 ± 1483.54} & 3487.31 ± 1644.74 & $< 1\%$ \\
+    30x10 & \textbf{2066.74 ± 112.36} & 2155.90 ± 129.13 & 2290.94 ± 143.52 & $< 1\%$ \\
+    30x15 & 3980.79 ± 1722.64 & \textbf{3976.93 ± 1644.38} & 4503.40 ± 1835.45 & $< 1\%$ \\
+    30x20 & 4365.50 ± 1814.25 & \textbf{4335.11 ± 1776.02} & 5335.82 ± 2091.11 & $< 1\%$ \\
+    40x15 & \textbf{6792.66 ± 1268.41} & 6872.78 ± 1083.83 & 8185.63 ± 1053.13 & $< 1\%$ \\
+    40x20 & \textbf{7478.68 ± 1261.55} & 7541.90 ± 1112.00 & 10009.41 ± 1058.23 & $< 1\%$ \\
+    50x10 & \textbf{3852.59 ± 847.80} & 3920.64 ± 658.72 & 4468.24 ± 702.64 & $< 1\%$ \\
+    50x15 & \textbf{5842.31 ± 2704.56} & 5887.95 ± 2467.82 & 7981.61 ± 3227.05 & $< 1\%$ \\
+    50x20 & \textbf{6249.35 ± 2860.16} & 6276.52 ± 2763.67 & 10040.22 ± 3978.86 & $< 1\%$ \\
+    100x20 & \textbf{6129.85 ± 201.99} & 6858.02 ± 240.68 & 19085.54 ± 1326.74 & $< 1\%$ \\
     \bottomrule
     \end{tabular}
 \end{table}
     
-\begin{table}[H]
-    Table 4.7: Average DJSP makespan with load factor 4\\
+\begin{table}
+    Table 4.8: Average DJSP makespan with load factor 4\\
     \vspace{1mm}
+    \label{table:4.8}
     \footnotesize 
     \begin{tabular}{ccccc}
     \toprule
     Size & L2D & IEEE-ICCE-RL-JSP & Wheatley & p-value \\
     \midrule
-    6x6 & 70.05 ± 8.25 & 64.48 ± 3.84 & 75.50 ± 8.55 & < 1$\%$ \\
-    10x5 & 747.63 ± 75.82 & 741.80 ± 78.28 & 775.62 ± 77.70 & 2.0$\%$ \\
-    10x10 & 1176.08 ± 221.28 & 1109.18 ± 200.95 & 1187.33 ± 212.06 & < 1$\%$ \\
-    15x5 & 1006.18 ± 53.37 & 984.55 ± 44.94 & 1008.57 ± 61.81 & < 1$\%$ \\
-    15x10 & 1274.83 ± 76.31 & 1191.63 ± 70.89 & 1321.84 ± 85.92 & < 1$\%$ \\
-    15x15 & 1598.28 ± 96.13 & 1506.20 ± 70.61 & 1681.24 ± 97.81 & < 1$\%$ \\
-    20x5 & 1343.42 ± 184.64 & 1339.17 ± 134.68 & 1333.13 ± 131.26 & 67.0$\%$ \\
-    20x10 & 1835.01 ± 272.46 & 1710.64 ± 218.77 & 1868.15 ± 233.91 & < 1$\%$ \\
-    20x15 & 2695.64 ± 1268.49 & 2541.11 ± 1179.87 & 2852.97 ± 1325.87 & < 1$\%$ \\
-    20x20 & 3066.77 ± 1509.04 & 2902.33 ± 1419.60 & 3446.61 ± 1688.14 & < 1$\%$ \\
-    30x10 & 2036.46 ± 114.04 & 1993.52 ± 92.45 & 2207.02 ± 132.10 & < 1$\%$ \\
-    30x15 & 3955.84 ± 1730.05 & 3742.95 ± 1567.90 & 4412.12 ± 1870.05 & < 1$\%$ \\
-    30x20 & 4330.06 ± 1818.44 & 4122.12 ± 1719.04 & 5214.83 ± 2106.46 & < 1$\%$ \\
-    40x15 & 6757.92 ± 1322.93 & 6408.27 ± 1070.14 & 7954.02 ± 1196.00 & < 1$\%$ \\
-    40x20 & 7463.87 ± 1319.68 & 7114.58 ± 1091.71 & 9642.57 ± 1169.56 & < 1$\%$ \\
-    50x10 & 3885.63 ± 873.73 & 3676.22 ± 659.45 & 4241.08 ± 729.50 & < 1$\%$ \\
-    50x15 & 5810.45 ± 2723.58 & 5504.96 ± 2345.68 & 7504.37 ± 3180.44 & < 1$\%$ \\
-    50x20 & 6227.76 ± 2894.36 & 5883.56 ± 2631.55 & 9320.83 ± 3888.32 & < 1$\%$ \\
-    100x20 & 6076.26 ± 226.25 & 6225.12 ± 206.62 & 16734.28 ± 1051.45 & < 1$\%$ \\
+    6x6 & 70.05 ± 8.25 & \textbf{64.48 ± 3.84} & 75.50 ± 8.55 & $< 1\%$ \\
+    10x5 & 747.63 ± 75.82 & \textbf{741.80 ± 78.28} & 775.62 ± 77.70 & 2.0$\%$ \\
+    10x10 & 1176.08 ± 221.28 & \textbf{1109.18 ± 200.95} & 1187.33 ± 212.06 & $< 1\%$ \\
+    15x5 & 1006.18 ± 53.37 & \textbf{984.55 ± 44.94} & 1008.57 ± 61.81 & $< 1\%$ \\
+    15x10 & 1274.83 ± 76.31 & \textbf{1191.63 ± 70.89} & 1321.84 ± 85.92 & $< 1\%$ \\
+    15x15 & 1598.28 ± 96.13 & \textbf{1506.20 ± 70.61} & 1681.24 ± 97.81 & $< 1\%$ \\
+    20x5 & 1343.42 ± 184.64 & 1339.17 ± 134.68 & \textbf{1333.13 ± 131.26} & 67.0$\%$ \\
+    20x10 & 1835.01 ± 272.46 & \textbf{1710.64 ± 218.77} & 1868.15 ± 233.91 & $< 1\%$ \\
+    20x15 & 2695.64 ± 1268.49 & \textbf{2541.11 ± 1179.87} & 2852.97 ± 1325.87 & $< 1\%$ \\
+    20x20 & 3066.77 ± 1509.04 & \textbf{2902.33 ± 1419.60} & 3446.61 ± 1688.14 & $< 1\%$ \\
+    30x10 & 2036.46 ± 114.04 & \textbf{1993.52 ± 92.45} & 2207.02 ± 132.10 & $< 1\%$ \\
+    30x15 & 3955.84 ± 1730.05 & \textbf{3742.95 ± 1567.90} & 4412.12 ± 1870.05 & $< 1\%$ \\
+    30x20 & 4330.06 ± 1818.44 & \textbf{4122.12 ± 1719.04} & 5214.83 ± 2106.46 & $< 1\%$ \\
+    40x15 & 6757.92 ± 1322.93 & \textbf{6408.27 ± 1070.14} & 7954.02 ± 1196.00 & $< 1\%$ \\
+    40x20 & 7463.87 ± 1319.68 & \textbf{7114.58 ± 1091.71} & 9642.57 ± 1169.56 & $< 1\%$ \\
+    50x10 & 3885.63 ± 873.73 & \textbf{3676.22 ± 659.45} & 4241.08 ± 729.50 & $< 1\%$ \\
+    50x15 & 5810.45 ± 2723.58 & \textbf{5504.96 ± 2345.68} & 7504.37 ± 3180.44 & $< 1\%$ \\
+    50x20 & 6227.76 ± 2894.36 & \textbf{5883.56 ± 2631.55} & 9320.83 ± 3888.32 & $< 1\%$ \\
+    100x20 & \textbf{6076.26 ± 226.25} & 6225.12 ± 206.62 & 16734.28 ± 1051.45 & $< 1\%$ \\
     \bottomrule
     \end{tabular}
 \end{table}
     
+We can reject the null hypothesis for almost all sizes and load factors. We also tested the null hypothesis for each load factor and instance size, that the pair of models are equal using the Mann-Whitney \textit{U} test. The majority of instance sizes and load factors had p-value $< 5\%$, and thus, we rejected the null hypothesis for them. Cases, where we could not reject the null hypothesis, are shown in Table 4.8.
 
-
-% \begin{tabular}{llll}
-%     \toprule
-%     category & large & medium & small \\
-%     parameter-set &  &  &  \\
-%     \midrule
-%     DQN-ep1400 & 0.18 ± 0.12 & 0.24 ± 0.09 & 0.16 ± 0.07 \\
-%     DQN-ep1530 & 0.18 ± 0.13 & 0.25 ± 0.09 & 0.15 ± 0.06 \\
-%     DQN-ep1670 & 0.18 ± 0.13 & 0.24 ± 0.09 & 0.16 ± 0.08 \\
-%     DQN-ep2590 & 0.18 ± 0.12 & 0.24 ± 0.09 & 0.16 ± 0.07 \\
-%     DQN-ep3480 & 0.18 ± 0.14 & 0.24 ± 0.11 & 0.15 ± 0.07 \\
-%     EDD & 0.30 ± 0.09 & 0.44 ± 0.11 & 0.35 ± 0.13 \\
-%     FIFO & 0.28 ± 0.18 & 0.33 ± 0.11 & 0.25 ± 0.09 \\
-%     LOR & 0.35 ± 0.09 & 0.44 ± 0.11 & 0.36 ± 0.12 \\
-%     LPT & 0.42 ± 0.11 & 0.48 ± 0.11 & 0.36 ± 0.10 \\
-%     LRPT & 0.19 ± 0.13 & 0.27 ± 0.11 & 0.17 ± 0.08 \\
-%     LS & 0.24 ± 0.10 & 0.34 ± 0.09 & 0.31 ± 0.14 \\
-%     MOR & 0.26 ± 0.20 & 0.28 ± 0.12 & 0.20 ± 0.08 \\
-%     SPT & 0.22 ± 0.07 & 0.30 ± 0.08 & 0.24 ± 0.10 \\
-%     SRPT & 0.35 ± 0.09 & 0.46 ± 0.11 & 0.39 ± 0.11 \\
-%     SavedNetwork/10-10-1-99.pth & 0.28 ± 0.19 & 0.32 ± 0.13 & 0.24 ± 0.11 \\
-%     SavedNetwork/15-15-1-99.pth & 0.30 ± 0.21 & 0.33 ± 0.13 & 0.23 ± 0.09 \\
-%     SavedNetwork/20-15-1-199.pth & 0.25 ± 0.18 & 0.34 ± 0.12 & 0.22 ± 0.10 \\
-%     SavedNetwork/20-15-1-99.pth & 0.32 ± 0.21 & 0.33 ± 0.12 & 0.24 ± 0.11 \\
-%     SavedNetwork/20-20-1-199.pth & 0.29 ± 0.20 & 0.34 ± 0.12 & 0.24 ± 0.11 \\
-%     SavedNetwork/20-20-1-99.pth & 0.29 ± 0.19 & 0.35 ± 0.12 & 0.23 ± 0.09 \\
-%     SavedNetwork/30-15-1-199.pth & 0.28 ± 0.18 & 0.37 ± 0.12 & 0.28 ± 0.11 \\
-%     SavedNetwork/30-15-1-99.pth & 0.27 ± 0.19 & 0.33 ± 0.13 & 0.25 ± 0.10 \\
-%     SavedNetwork/30-20-1-199.pth & 0.27 ± 0.18 & 0.37 ± 0.11 & 0.31 ± 0.11 \\
-%     SavedNetwork/30-20-1-99.pth & 0.25 ± 0.17 & 0.33 ± 0.12 & 0.23 ± 0.09 \\
-%     SavedNetwork/6-6-1-99.pth & 0.28 ± 0.15 & 0.39 ± 0.09 & 0.30 ± 0.14 \\
-%     model/save-10-5.pt & 0.18 ± 0.13 & 0.24 ± 0.11 & 0.16 ± 0.08 \\
-%     results/save-10-5.pt & 0.18 ± 0.13 & 0.24 ± 0.11 & 0.16 ± 0.08 \\
-%     results/save-15-10.pt & 0.18 ± 0.12 & 0.24 ± 0.09 & 0.16 ± 0.09 \\
-%     results/save-20-10.pt & 0.24 ± 0.19 & 0.28 ± 0.12 & 0.18 ± 0.09 \\
-%     results/save-20-5.pt & 0.20 ± 0.17 & 0.24 ± 0.11 & 0.16 ± 0.08 \\
-%     saved-models/1 & 0.57 ± 0.23 & 0.41 ± 0.15 & 0.27 ± 0.11 \\
-%     saved-models/2& 0.74 ± 0.41 & 0.45 ± 0.18 & 0.27 ± 0.11 \\
-%     saved-models/3 & 1.06 ± 0.85 & 0.42 ± 0.21 & 0.24 ± 0.10 \\
-%     saved-network/FJSP-J15M15/best-value0 & 0.28 ± 0.18 & 0.33 ± 0.12 & 0.24 ± 0.09 \\
-%     \bottomrule
-% \end{tabular}
+\begin{table}
+    Table 4.9: DJSP cases without rejected null hypothesis\\
+    \vspace{1mm}
+    \label{table:4.9}
+    \begin{tabular}{ccccc}
+    \toprule
+    Size & Load factor & First model & Second model & p-value \\
+    \midrule
+    6x6 & 1 & IEEE-ICCE-RL-JSP & L2D & 33.0$\%$ \\
+    6x6 & 1 & IEEE-ICCE-RL-JSP & Wheatley & 32.0$\%$ \\
+    6x6 & 1 & L2D & Wheatley & 11.0$\%$ \\
+    10x10 & 1 & L2D & Wheatley & 65.0$\%$ \\
+    15x10 & 1 & IEEE-ICCE-RL-JSP & Wheatley & 12.0$\%$ \\
+    20x5 & 1 & L2D & Wheatley & 42.0$\%$ \\
+    20x15 & 1 & IEEE-ICCE-RL-JSP & Wheatley & 78.0$\%$ \\
+    30x10 & 1 & IEEE-ICCE-RL-JSP & Wheatley & 64.0$\%$ \\
+    6x6 & 2 & IEEE-ICCE-RL-JSP & L2D & 22.0$\%$ \\
+    10x5 & 2 & IEEE-ICCE-RL-JSP & Wheatley & 34.0$\%$ \\
+    10x10 & 2 & L2D & Wheatley & 91.0$\%$ \\
+    20x5 & 2 & L2D & Wheatley & 64.0$\%$ \\
+    20x10 & 2 & IEEE-ICCE-RL-JSP & L2D & 9.0$\%$ \\
+    20x10 & 2 & L2D & Wheatley & 28.0$\%$ \\
+    20x15 & 2 & IEEE-ICCE-RL-JSP & L2D & 10.0$\%$ \\
+    30x15 & 2 & IEEE-ICCE-RL-JSP & L2D & 26.0$\%$ \\
+    30x20 & 2 & IEEE-ICCE-RL-JSP & L2D & 16.0$\%$ \\
+    40x15 & 2 & IEEE-ICCE-RL-JSP & L2D & 7.0$\%$ \\
+    6x6 & 4 & L2D & Wheatley & 8.0$\%$ \\
+    10x5 & 4 & IEEE-ICCE-RL-JSP & L2D & 58.0$\%$ \\
+    10x10 & 4 & L2D & Wheatley & 59.0$\%$ \\
+    15x5 & 4 & L2D & Wheatley & 76.0$\%$ \\
+    20x5 & 4 & IEEE-ICCE-RL-JSP & L2D & 37.0$\%$ \\
+    20x5 & 4 & IEEE-ICCE-RL-JSP & Wheatley & 94.0$\%$ \\
+    20x5 & 4 & L2D & Wheatley & 79.0$\%$ \\
+    20x10 & 4 & L2D & Wheatley & 12.0$\%$ \\
+    \bottomrule
+    \end{tabular}
+\end{table}
