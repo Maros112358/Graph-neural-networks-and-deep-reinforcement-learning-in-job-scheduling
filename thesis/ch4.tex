@@ -213,7 +213,7 @@ For each pair of these three models, we then tested the null hypothesis using th
 
 \subsection{FJSP}
 
-Average gaps for different model and instance categories are shown in Table 4.4. The model with the lowest average gap is highlighted in bold. Average runtimes for different models and instance categories are shown in Table 4.5.
+Average gaps for different model and instance categories are shown in Table 4.4. The model with the lowest average gap is highlighted in bold. Average runtimes for different models and instance categories are shown in Table 4.5. A negative gap means that the model found a better solution than the one listed in \cite{fjsp_benchmarks}.
 
 \begin{table}[H]
     Table 4.4: Average FJSP gaps for different models and instance categories\\
@@ -283,6 +283,8 @@ A boxplot for FJSP gaps for small instances is shown in Figure 4.5, for medium i
 \end{center}
 
 We tested the null hypothesis that the median values of gaps of all models and PDRs are from the same population using the Kruskal-Wallis test. The p-value is less than 1$\%$. Therefore, we reject this hypothesis. We also tested the null hypothesis that models \textbf{End-to-end-DRL-for-FJSP} and \textbf{fjsp-drl} are equal. The p-value was less than $1\%$ for small, medium, large, and all instances. Therefore, we rejected this null hypothesis.
+
+\subsection{DJSP}
 
 
 
