@@ -36,6 +36,8 @@ To compare two models capable of solving FJSP presented in the previous chapter,
 This FJSP instance example has one job with three operations. The first operation can be processed only on the second machine, the second operation can only be processed on the third machine, and the last operation can only be processed on the first machine. This FJSP instance is the JSSP instance example described above reformulated as an FJSP instance.
 \par 
 This text file is then fed to the model, and we obtain the schedule and the makespan. Again, we repeat the experiment for each model and each FJSP instance with 10 different seeds.
+\par
+As in the case of JSSP, we separated FJSP instances into three categories based on the number of jobs in the same way. Instances with less than 20 jobs are \textit{"small"}, instances with at least 50 jobs are \textit{"large"}, and \textit{"medium"} otherwise.
 
 \subsubsection*{DJSP}
 To compare our extensions of JSSP models to DJSP presented in the previous chapter, we designed an experiment inspired by \cite{djsp_experiment_design}. We assume that there is a set of jobs known at the beginning. We then model the arrival of new jobs as a Poisson process, i.e., the arrival of two consecutive jobs follows an exponential distribution \cite{djsp_experiment_design}. We model the average arrival time as 
@@ -161,7 +163,7 @@ Average gaps for different models and instance categories are shown in Table 4.1
         \end{tabular}        
 \end{table}
 
-A boxplot for JSSP gaps for small instances is shown in Figure 4.1, for medium instances in Figure 4.2, and large instances in Figure 4.3. The model with the lowest average gap is highlighted as a blue box.
+A boxplot for JSSP gaps for small instances is shown in Figure 4.1, for medium instances in Figure 4.2, for large instances in Figure 4.3, and for all instances in Figure 4.4. The model with the lowest average gap is highlighted as a blue box.
 
 \begin{center}
     \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_jssp_small.pdf}\\
@@ -182,7 +184,7 @@ A boxplot for JSSP gaps for small instances is shown in Figure 4.1, for medium i
 \end{center}
 
 To test the null hypothesis that the median values of all models and PDRs are from the same population, we used the Kruskal-Wallis test \cite{doi:10.1080/01621459.1952.10483441}. The p-value for JSSP gaps, including all models and PDRs in Table 4.1, is $p < 1\%$ for all sizes. We, therefore, reject the null hypothesis that all models and PDRs are equal. Without PDRs, the p-value is also $p < 1\%$. We reject the null hypothesis that all models are equal, too.
-\par
+\par  
 From Table 4.1 and Figures 4.1, 4.2, 4.3, and 4.4, we observed that priority dispatching rule \textbf{LRPT} and model \textbf{fjsp-drl} produced similar results as the model \textbf{IEEE-ICCE-RL-JSP}, which had the lowest mean gap. Therefore, we tested the null hypothesis that \textbf{LRPT}, \textbf{fjsp-drl}, and \textbf{IEEE-ICCE-RL-JSP} are from the same population. The p-value for small instances is $45.8\%$, for medium instances $1.1\%$, $3.8\%$ for large instances, and 0.1$\%$ for all instances. We, therefore, reject the null hypothesis that these three models are from the same population for medium and large instances.
 For each pair of these three models, we then tested the null hypothesis using the Mann-Whitney \textit{U} test: that the pair of models was equal. Obtained p-values are shown in Table 4.3.
 
@@ -210,6 +212,78 @@ For each pair of these three models, we then tested the null hypothesis using th
 \end{table}
 
 \subsection{FJSP}
+
+Average gaps for different model and instance categories are shown in Table 4.4. The model with the lowest average gap is highlighted in bold. Average runtimes for different models and instance categories are shown in Table 4.5.
+
+\begin{table}[H]
+    Table 4.4: Average FJSP gaps for different models and instance categories\\
+    \vspace{1mm}
+    \footnotesize 
+    \begin{tabular}{lllll}
+        \toprule
+        category & large & medium & small & all \\
+        model &  &  &  &  \\
+        \midrule
+        FIFO-EET & 3.03 ± 0.23 & 0.54 ± 0.86 & 0.44 ± 0.96 & 0.67 ± 1.13 \\
+        FIFO-SPT & 0.06 ± 0.12 & 0.37 ± 0.20 & 0.41 ± 0.22 & 0.37 ± 0.22 \\
+        LWKR-EET & 3.09 ± 0.22 & 0.98 ± 0.83 & 0.91 ± 1.02 & 1.10 ± 1.10 \\
+        LWKR-SPT & 0.15 ± 0.14 & 0.64 ± 0.28 & 0.71 ± 0.29 & 0.64 ± 0.32 \\
+        MOPNR-EET & 3.63 ± 0.29 & 0.81 ± 1.11 & 0.72 ± 1.16 & 0.97 ± 1.35 \\
+        MOPNR-SPT & 0.16 ± 0.15 & 0.39 ± 0.20 & 0.44 ± 0.22 & 0.40 ± 0.22 \\
+        MWKR-EET & 3.18 ± 0.21 & 0.68 ± 0.96 & 0.57 ± 0.91 & 0.80 ± 1.13 \\
+        MWKR-SPT & 0.17 ± 0.15 & 0.39 ± 0.18 & 0.43 ± 0.21 & 0.40 ± 0.21 \\
+        \textbf{End-to-end-DRL-for-FJSP} & \textbf{-0.02 ± 0.09} & \textbf{0.17 ± 0.09} & \textbf{0.20 ± 0.11} & \textbf{0.13 ± 0.13} \\
+        fjsp-drl & 0.26 ± 0.13 & 0.17 ± 0.18 & 0.22 ± 0.41 & 0.21 ± 0.35 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    Table 4.4: Average FJSP runtimes for different models and instance categories\\
+    \vspace{1mm}
+    \footnotesize 
+    \begin{tabular}{lllll}
+        \toprule
+        category & large & medium & small & all \\
+        model &  &  &  &  \\
+        \midrule
+        FIFO-EET & 0.79 ± 0.47 & 0.14 ± 0.09 & 0.05 ± 0.05 & 0.13 ± 0.24 \\
+        FIFO-SPT & 0.75 ± 0.45 & 0.14 ± 0.09 & 0.05 ± 0.05 & 0.13 ± 0.23 \\
+        LWKR-EET & 0.64 ± 0.37 & 0.15 ± 0.09 & 0.05 ± 0.05 & 0.12 ± 0.20 \\
+        LWKR-SPT & 0.65 ± 0.38 & 0.15 ± 0.09 & 0.05 ± 0.05 & 0.12 ± 0.20 \\
+        MOPNR-EET & 0.67 ± 0.39 & 0.15 ± 0.09 & 0.05 ± 0.05 & 0.13 ± 0.21 \\
+        MOPNR-SPT & 0.71 ± 0.41 & 0.16 ± 0.10 & 0.05 ± 0.05 & 0.13 ± 0.22 \\
+        MWKR-EET & 0.67 ± 0.40 & 0.15 ± 0.09 & 0.05 ± 0.05 & 0.12 ± 0.21 \\
+        MWKR-SPT & 0.68 ± 0.41 & 0.15 ± 0.09 & 0.05 ± 0.05 & 0.13 ± 0.21 \\
+        End-to-end-DRL-for-FJSP & 3.21 ± 1.98 & 0.55 ± 0.29 & 0.23 ± 0.18 & 1.13 ± 1.63 \\
+        fjsp-drl & 7.05 ± 3.65 & 2.33 ± 1.65 & 0.80 ± 0.84 & 1.70 ± 2.27 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+
+A boxplot for FJSP gaps for small instances is shown in Figure 4.5, for medium instances in Figure 4.6, for large instances in Figure 4.7, and for all instances in Figure 4.8. The model with the lowest average gap is highlighted as a blue box.
+
+\begin{center}
+    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_fjsp_small.pdf}\\
+    Figure 4.5: FJSP gaps for small instances
+\end{center}
+
+\begin{center}
+    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_fjsp_medium.pdf}\\
+    Figure 4.6: FJSP gaps for medium instances
+\end{center}
+\begin{center}
+    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_fjsp_large.pdf}\\
+    Figure 4.7: FJSP gaps for large instances
+\end{center}
+\begin{center}
+    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_fjsp_all.pdf}\\
+    Figure 4.8: FJSP gaps for all instances
+\end{center}
+
+We tested the null hypothesis that the median values of gaps of all models and PDRs are from the same population using the Kruskal-Wallis test. The p-value is less than 1$\%$. Therefore, we reject this hypothesis. We also tested the null hypothesis that models \textbf{End-to-end-DRL-for-FJSP} and \textbf{fjsp-drl} are equal. The p-value was less than $1\%$ for small, medium, large, and all instances. Therefore, we rejected this null hypothesis.
+
 
 
 % \begin{tabular}{llll}
