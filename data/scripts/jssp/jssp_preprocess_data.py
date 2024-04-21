@@ -41,7 +41,9 @@ for filename in os.listdir(directory):
 
         if 'model' in df.columns:
             df.rename(columns={'model': 'parameter_set'}, inplace=True)
-            df['model'] = filename.removeprefix("experiment_static_jssp_").removesuffix('.csv')
+            df['model'] = df['parameter_set'].apply(
+                lambda x: 'l2d_large' if x.startswith('SavedNetwork/30') else filename.removeprefix("experiment_static_jssp_").removesuffix('.csv'))
+
 
         # Rename 'pdr' column to 'pdr' if it exists
         if 'pdr' in df.columns:

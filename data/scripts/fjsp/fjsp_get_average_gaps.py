@@ -13,8 +13,8 @@ if __name__ == '__main__':
 
     # Create pivot table
     print(df.dtypes)
-    pivot_df = df.pivot_table(index='model', columns='category', values='runtime', aggfunc=mean_std, fill_value='-')
+    pivot_df = df.pivot_table(index='model', columns='category', values='gap', aggfunc=mean_std, fill_value='-')
 
-    average_gaps_overall = df.groupby('model')['runtime'].agg(mean_std)
+    average_gaps_overall = df.groupby('model')['gap'].agg(mean_std)
     pivot_df['all'] = average_gaps_overall
     print(pivot_df.to_latex())

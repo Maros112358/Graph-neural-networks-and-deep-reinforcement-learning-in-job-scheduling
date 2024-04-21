@@ -8,7 +8,7 @@ In this chapter, we will experimentally compare the models presented in the prev
 
 \subsubsection*{JSSP}
 
-To compare models capable of solving JSSP, we obtained 242 benchmark JSSP instances and their best known solutions from \cite{jssp_benchmarks}. Each instance is a text file describing a JSSP instance using Taillard Specification \cite{taillard_specification}, where there are two numbers on the first line: the number of jobs $|\mathcal{J}|$ and the number of machines $|\mathcal{M}|$. Then, on the next $|\mathcal{J}|$ lines are operation processing times $p_{ij}$ with one line corresponding to one job. The next $|\mathcal{J}|$ lines describe on which machines should operations be processed \cite{jssp_benchmarks}. This text file is fed to each model, and the resulting schedule and makespan are obtained.  An example of Taillard's Specification is shown below \cite{jssp_benchmarks}.
+To compare models capable of solving JSSP, we obtained 242 benchmark JSSP instances and their best-known solutions from \cite{jssp_benchmarks}. Each instance is a text file describing a JSSP instance using Taillard Specification \cite{taillard_specification}, where there are two numbers on the first line: the number of jobs $|\mathcal{J}|$ and the number of machines $|\mathcal{M}|$. Then, on the next $|\mathcal{J}|$ lines are operation processing times $p_{ij}$ with one line corresponding to one job. The next $|\mathcal{J}|$ lines describe on which machines should operations be processed \cite{jssp_benchmarks}. This text file is fed to each model, and the resulting schedule and makespan are obtained.  An example of Taillard's Specification is shown below \cite{jssp_benchmarks}.
 \begin{verbatim}
     1   3
     6   7  5
@@ -143,8 +143,7 @@ Average gaps for different models and instance categories are shown in Table 4.1
     \small
     \begin{tabular}{lllll}
         \toprule
-        category & large & medium & small & all \\
-        model &  &  &  &  \\
+        Category & large & medium & small & all \\
         \midrule
         EDD & 8.13 ± 7.10 & 0.75 ± 0.62 & 0.06 ± 0.05 & 4.04 ± 6.11 \\
         FIFO & 4.99 ± 5.67 & 0.70 ± 0.61 & 0.06 ± 0.05 & 1.69 ± 3.51 \\
@@ -190,10 +189,10 @@ From Table 4.1 and Figures 4.1, 4.2, 4.3, and 4.4, we observed that priority dis
 For each pair of these three models, we then tested the null hypothesis using the Mann-Whitney \textit{U} test: that the pair of models was equal. Obtained p-values are shown in Table 4.3.
 
 \begin{table}
-    Table 4.3: p-values for Mann-Whitney \textit{U} test between pairs of models\\
+    Table 4.3: p-values for Mann-Whitney \textit{U} test between pairs of JSSP models\\
     \vspace{1mm}
     \label{table:4.3}
-    \begin{tabular}{llr}
+    \begin{tabular}{ccc}
     \toprule
     Category & Models & p-value \\
     \midrule
@@ -213,12 +212,44 @@ For each pair of these three models, we then tested the null hypothesis using th
     \end{tabular}
 \end{table}
 
-\subsection{FJSP}
 
-Average gaps for different model and instance categories are shown in Table 4.4. The model with the lowest average gap is highlighted in bold. Average runtimes for different models and instance categories are shown in Table 4.5. A negative gap means that the model found a better solution than the one listed in \cite{fjsp_benchmarks}.
+Authors of \textbf{L2D} also reported that parameter sets trained on instances of size 30x20 and 20x20 generalize better to large instances \cite{zhang2020learning}. To investigate this, we separated parameter sets trained on instances of size 30x20 and 20x20 into a separate "model" we call \textbf{L2D-LARGE}. Using the Mann-Whitney U test, we then tested the difference between \textbf{L2D} containing only parameter sets trained on small instances and \textbf{L2D-LARGE}. Average makespans are in Table 4.4, and p-values for the Mann-Whitney U test are in Table 4.5.
 
 \begin{table}
-    Table 4.4: Average FJSP gaps for different models and instance categories\\
+    Table 4.4: Average JSSP makespans of \textbf{L2D} and \textbf{L2D-LARGE}\\
+    \vspace{1mm}
+\begin{tabular}{ccccc}
+    \toprule
+    Category & Large & Medium & Small & All \\
+    \midrule
+    L2D & 0.29 ± 0.19 & 0.34 ± 0.12 & 0.25 ± 0.11 & 0.31 ± 0.16 \\
+    L2D-LARGE & 0.27 ± 0.18 & 0.35 ± 0.12 & 0.27 ± 0.11 & 0.31 ± 0.15 \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}
+    Table 4.5: Mann-Whitney U test p-values between \textbf{L2D} and \textbf{L2D-LARGE}\\
+    \begin{tabular}{cccc}
+        \toprule
+        Category & p-value \\
+        \midrule
+        large & 2.3$\%$ \\
+        medium & 0.5$\%$ \\
+        small & 1.0$\%$ \\
+        all & 26.6$\%$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+We can reject the null hypothesis that \textbf{L2D} and \textbf{L2D-LARGE} are the same for small, medium, and large instances. However, overall, the difference is not statistically significant. As also suggested by table 4.4.
+
+\subsection{FJSP} \label{results_fjsp}
+
+Average gaps for different model and instance categories are shown in Table 4.6. The model with the lowest average gap is highlighted in bold. Average runtimes for different models and instance categories are shown in Table 4.7. A negative gap means that the model found a better solution than the one listed in \cite{fjsp_benchmarks}.
+
+\begin{table}
+    Table 4.6: Average FJSP gaps for different models and instance categories\\
     \vspace{1mm}
     \label{table:4.4}
     \footnotesize 
@@ -242,7 +273,7 @@ Average gaps for different model and instance categories are shown in Table 4.4.
 \end{table}
 
 \begin{table}
-    Table 4.5: Average FJSP runtimes for different models and instance categories\\
+    Table 4.7: Average FJSP runtimes for different models and instance categories\\
     \vspace{1mm}
     \label{table:4.5}
     \footnotesize 
@@ -290,10 +321,10 @@ We tested the null hypothesis that the median values of gaps of all models and P
 
 \subsection{DJSP}
 
-For DJSP, we don't have any upper bound available and can't compute the gap. Therefore, we will compare absolute makespans produced by different models for each size and load factor. Average DJSP makespans with load factor 1 are shown in Table 4.5, with load factor 2 in Table 4.6, and with load factor 4 in Table 4.7. The model with the smallest average makespan is highlighted in bold. For each size and load factor, we also tested the null hypothesis, which is that all models are equal. The corresponding p-values are also shown in each table.
+For DJSP, we don't have any upper bound available and can't compute the gap. Therefore, we will compare absolute makespans produced by different models for each size and load factor. Average DJSP makespans with load factor 1 are shown in Table 4.8, with load factor 2 in Table 4.9, and with load factor 4 in Table 4.10. The model with the smallest average makespan is highlighted in bold. For each size and load factor, we also tested the null hypothesis, which is that all models are equal. The corresponding p-values are also shown in each table.
 
 \begin{table}
-    Table 4.6: Average DJSP makespan with load factor 1\\
+    Table 4.8: Average DJSP makespan with load factor 1\\
     \vspace{1mm}
     \label{table:4.6}
     \footnotesize 
@@ -325,7 +356,7 @@ For DJSP, we don't have any upper bound available and can't compute the gap. The
 \end{table}
     
 \begin{table}
-    Table 4.7: Average DJSP makespan with load factor 2\\
+    Table 4.9: Average DJSP makespan with load factor 2\\
     \vspace{1mm}
     \label{table:4.7}
     \footnotesize 
@@ -357,7 +388,7 @@ For DJSP, we don't have any upper bound available and can't compute the gap. The
 \end{table}
     
 \begin{table}
-    Table 4.8: Average DJSP makespan with load factor 4\\
+    Table 4.10: Average DJSP makespan with load factor 4\\
     \vspace{1mm}
     \label{table:4.8}
     \footnotesize 
@@ -388,10 +419,10 @@ For DJSP, we don't have any upper bound available and can't compute the gap. The
     \end{tabular}
 \end{table}
     
-We can reject the null hypothesis for almost all sizes and load factors. We also tested the null hypothesis for each load factor and instance size, that the pair of models are equal using the Mann-Whitney \textit{U} test. The majority of instance sizes and load factors had p-value $< 5\%$, and thus, we rejected the null hypothesis for them. Cases, where we could not reject the null hypothesis, are shown in Table 4.8.
+We can reject the null hypothesis for almost all sizes and load factors. We also tested the null hypothesis for each load factor and instance size, that the pair of models are equal using the Mann-Whitney \textit{U} test. The majority of instance sizes and load factors had p-value $< 5\%$, and thus, we rejected the null hypothesis for them. Cases, where we could not reject the null hypothesis, are shown in Table 4.11.
 
 \begin{table}
-    Table 4.9: DJSP cases without rejected null hypothesis\\
+    Table 4.11: DJSP cases without rejected null hypothesis\\
     \vspace{1mm}
     \label{table:4.9}
     \begin{tabular}{ccccc}
