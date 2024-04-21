@@ -113,9 +113,9 @@ Average gaps for different models and instance categories are shown in Table 4.1
     Table 4.1: Average JSSP gaps for different models and categories\\
     \vspace{1mm}
     \small 
-    \begin{tabular}{lllll}
+    \begin{tabular}{ccccc}
         \toprule
-        Model / Category & large & medium & small & all \\ 
+         & Large & Medium & Small & All \\ 
         \midrule
         EDD & 0.30 ± 0.09 & 0.44 ± 0.11 & 0.35 ± 0.13 & 0.36 ± 0.12 \\
         FIFO & 0.28 ± 0.18 & 0.33 ± 0.11 & 0.25 ± 0.09 & 0.30 ± 0.13  \\
@@ -141,9 +141,9 @@ Average gaps for different models and instance categories are shown in Table 4.1
     \vspace{1mm}
     \label{table:4.2}
     \small
-    \begin{tabular}{lllll}
+    \begin{tabular}{ccccc}
         \toprule
-        Category & large & medium & small & all \\
+        & Large & Medium & Small & All \\
         \midrule
         EDD & 8.13 ± 7.10 & 0.75 ± 0.62 & 0.06 ± 0.05 & 4.04 ± 6.11 \\
         FIFO & 4.99 ± 5.67 & 0.70 ± 0.61 & 0.06 ± 0.05 & 1.69 ± 3.51 \\
@@ -166,20 +166,20 @@ Average gaps for different models and instance categories are shown in Table 4.1
 A boxplot for JSSP gaps for small instances is shown in Figure 4.1, for medium instances in Figure 4.2, for large instances in Figure 4.3, and for all instances in Figure 4.4. The model with the lowest average gap is highlighted as a blue box.
 
 \begin{center}
-    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_jssp_small.pdf}\\
+    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_jssp_small.pdf}\\
     Figure 4.1: JSSP gaps for small instances
 \end{center}
 
 \begin{center}
-    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_jssp_medium.pdf}\\
+    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_jssp_medium.pdf}\\
     Figure 4.2: JSSP gaps for medium instances
 \end{center}
 \begin{center}
-    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_jssp_large.pdf}\\
+    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_jssp_large.pdf}\\
     Figure 4.3: JSSP gaps for large instances
 \end{center}
 \begin{center}
-    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_jssp_all.pdf}\\
+    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_jssp_all.pdf}\\
     Figure 4.4: JSSP gaps for all instances
 \end{center}
 
@@ -192,22 +192,25 @@ For each pair of these three models, we then tested the null hypothesis using th
     Table 4.3: p-values for Mann-Whitney \textit{U} test between pairs of JSSP models\\
     \vspace{1mm}
     \label{table:4.3}
-    \begin{tabular}{ccc}
+    \begin{tabular}{cccc}
     \toprule
-    Category & Models & p-value \\
+    Category & First model & Second model & p-value \\
     \midrule
-    large & MWKR + fjsp-drl & 85.1$\%$ \\
-    large & MWKR + IEEE-ICCE-RL-JSP & 3.0$\%$ \\
-    large & fjsp-drl + IEEE-ICCE-RL-JSP & 10.8$\%$ \\
-    medium & MWKR + fjsp-drl & 0.6$\%$ \\
-    medium & MWKR + IEEE-ICCE-RL-JSP & 0.4$\%$ \\
-    medium & fjsp-drl + IEEE-ICCE-RL-JSP & 61.6$\%$ \\
-    small & MWKR + fjsp-drl & 48.3$\%$ \\
-    small & MWKR + IEEE-ICCE-RL-JSP & 22.7$\%$ \\
-    small & fjsp-drl + IEEE-ICCE-RL-JSP & 48.0$\%$ \\
-    all & MWKR + fjsp-drl & 48.3$\%$ \\
-    all & MWKR + IEEE-ICCE-RL-JSP & 22.7$\%$ \\
-    all & fjsp-drl + IEEE-ICCE-RL-JSP & 48.0$\%$ \\
+    large & MWKR & fjsp-drl & 85.1$\%$ \\
+    large & MWKR & IEEE-ICCE-RL-JSP & 3.0$\%$ \\
+    large & fjsp-drl & IEEE-ICCE-RL-JSP & 10.8$\%$ \\
+    \hline
+    medium & MWKR & fjsp-drl & 0.6$\%$ \\
+    medium & MWKR & IEEE-ICCE-RL-JSP & 0.4$\%$ \\
+    medium & fjsp-drl & IEEE-ICCE-RL-JSP & 61.6$\%$ \\
+    \hline
+    small & MWKR & fjsp-drl & 48.3$\%$ \\
+    small & MWKR & IEEE-ICCE-RL-JSP & 22.7$\%$ \\
+    small & fjsp-drl & IEEE-ICCE-RL-JSP & 48.0$\%$ \\
+    \hline
+    all & MWKR & fjsp-drl & 48.3$\%$ \\
+    all & MWKR & IEEE-ICCE-RL-JSP & 22.7$\%$ \\
+    all & fjsp-drl & IEEE-ICCE-RL-JSP & 48.0$\%$ \\
     \bottomrule
     \end{tabular}
 \end{table}
@@ -220,7 +223,7 @@ Authors of \textbf{L2D} also reported that parameter sets trained on instances o
     \vspace{1mm}
 \begin{tabular}{ccccc}
     \toprule
-    Category & Large & Medium & Small & All \\
+    & Large & Medium & Small & All \\
     \midrule
     L2D & 0.29 ± 0.19 & 0.34 ± 0.12 & 0.25 ± 0.11 & 0.31 ± 0.16 \\
     L2D-LARGE & 0.27 ± 0.18 & 0.35 ± 0.12 & 0.27 ± 0.11 & 0.31 ± 0.15 \\
@@ -234,10 +237,10 @@ Authors of \textbf{L2D} also reported that parameter sets trained on instances o
         \toprule
         Category & p-value \\
         \midrule
-        large & 2.3$\%$ \\
-        medium & 0.5$\%$ \\
-        small & 1.0$\%$ \\
-        all & 26.6$\%$ \\
+        Large & 2.3$\%$ \\
+        Medium & 0.5$\%$ \\
+        Small & 1.0$\%$ \\
+        All & 26.6$\%$ \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -253,10 +256,9 @@ Average gaps for different model and instance categories are shown in Table 4.6.
     \vspace{1mm}
     \label{table:4.4}
     \footnotesize 
-    \begin{tabular}{lllll}
+    \begin{tabular}{ccccc}
         \toprule
-        category & large & medium & small & all \\
-        model &  &  &  &  \\
+        & Large & Medium & Small & All \\
         \midrule
         FIFO-EET & 3.03 ± 0.23 & 0.54 ± 0.86 & 0.44 ± 0.96 & 0.67 ± 1.13 \\
         FIFO-SPT & 0.06 ± 0.12 & 0.37 ± 0.20 & 0.41 ± 0.22 & 0.37 ± 0.22 \\
@@ -277,10 +279,9 @@ Average gaps for different model and instance categories are shown in Table 4.6.
     \vspace{1mm}
     \label{table:4.5}
     \footnotesize 
-    \begin{tabular}{lllll}
+    \begin{tabular}{ccccc}
         \toprule
-        category & large & medium & small & all \\
-        model &  &  &  &  \\
+        & Large & Medium & Small & All \\
         \midrule
         FIFO-EET & 0.79 ± 0.47 & 0.14 ± 0.09 & 0.05 ± 0.05 & 0.13 ± 0.24 \\
         FIFO-SPT & 0.75 ± 0.45 & 0.14 ± 0.09 & 0.05 ± 0.05 & 0.13 ± 0.23 \\
@@ -300,20 +301,20 @@ Average gaps for different model and instance categories are shown in Table 4.6.
 A boxplot for FJSP gaps for small instances is shown in Figure 4.5, for medium instances in Figure 4.6, for large instances in Figure 4.7, and for all instances in Figure 4.8. The model with the lowest average gap is highlighted as a blue box.
 
 \begin{center}
-    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_fjsp_small.pdf}\\
+    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_fjsp_small.pdf}\\
     Figure 4.5: FJSP gaps for small instances
 \end{center}
 
 \begin{center}
-    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_fjsp_medium.pdf}\\
+    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_fjsp_medium.pdf}\\
     Figure 4.6: FJSP gaps for medium instances
 \end{center}
 \begin{center}
-    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_fjsp_large.pdf}\\
+    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_fjsp_large.pdf}\\
     Figure 4.7: FJSP gaps for large instances
 \end{center}
 \begin{center}
-    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_fjsp_all.pdf}\\
+    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_fjsp_all.pdf}\\
     Figure 4.8: FJSP gaps for all instances
 \end{center}
 
@@ -332,8 +333,11 @@ Table 4.6 shows that when PDR \textbf{SPT} is used for machine selection, the av
         Large & LWKR-SPT & MOPNR-SPT & 22.9$\%$ \\
         Large & LWKR-SPT & MWKR-SPT & 09.4$\%$ \\
         Large & MOPNR-SPT & MWKR-SPT & 52.4$\%$ \\
+        \hline
         Medium & MOPNR-SPT & MWKR-SPT & 73.4$\%$ \\
+        \hline
         Small & MOPN-SPT & MWKR-SPT & 09.6$\%$ \\
+        \hline
         All & MOPNR-SPT & MWKR-SPT & 28.5$\%$ \\
         \bottomrule
         \end{tabular}
