@@ -39,6 +39,8 @@ def correct_label(label: str) -> str:
         return 'fjsp-drl'
     if label == 'ieee_icce_rl_jsp':
         return 'IEEE-ICCE-RL-JSP'
+    if label == 'LRPT':
+        return 'MWKR'
         
     return label.replace('_', '-')
 

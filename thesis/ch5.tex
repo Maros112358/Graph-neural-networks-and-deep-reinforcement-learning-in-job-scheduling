@@ -1,0 +1,10 @@
+\chapter{Discussion}
+
+This chapter will discuss and interpret our findings from the previous chapter.
+
+\section{JSSP}
+As can be seen from table 4.1 and figures 4.1, 4.2, 4.3, and 4.4 in \ref{results_jssp}, the best performance model was achieved by model \textbf{IEEE-ICCE-RL-JSP}, followed by model \textbf{fjsp-drl} and priority dispatching rule \textbf{MWKR}. We would like to point out that the results of \textbf{MWKR} PDR performance we obtained are much better than those reported by authors of \textbf{L2D} in their paper \cite{zhang2020learning}. However, their MWKR PDR's source code is unavailable, so we could not investigate the cause of this difference.
+\par
+Good performance of \textbf{MWKR} PDRs hints at the importance of the sum of processing times of remaining operations as an operation feature. Models \textbf{L2D} and \textbf{End-to-end-DRL-for-FJSP} did not include this feature. We also did not select this as a feature for \textbf{Wheatley}. Since \textbf{Wheatley} has easily customizable operation features, the idea for further research would be to add this operation feature to \textbf{Wheatley}. On the other hand, model \textbf{IEEE-ICCE-RL-JSP} used the number of remaining operations in the current job as a feature, as discussed in \ref{model_iee_icce_rl_jsp}. Model \textbf{fjsp-drl} also included the number of unscheduled operations in the job as a feature, as discussed in \ref{model_fjsp_drl}. This further points to the importance of the remaining work as a feature. 
+
+\section{FJSP}

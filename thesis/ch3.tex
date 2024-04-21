@@ -4,7 +4,7 @@ This chapter will present five publicly available job scheduling models based on
 
 \section{JSSP Models}
 
-\subsection{L2D}
+\subsection{L2D} \label{l2d_model}
 \textbf{L2D} is a model published in \cite{zhang2020learning}, source code was obtained from \cite{github_l2d}. To represent the JSSP, it employs a modified disjunctive graph described in \ref{JSSP as a disjunctive graph}, where the authors start with the original disjunctive graph containing only conjunctive arcs, and after each dispatched operation, they add a conjunctive arc representing new precedence constraint. This process is shown in the Figure 3.1 below \cite{zhang2020learning}. This design solves the problem: replacing each disjunctive edge with a pair of opposite conjunctive arcs results in a fully oriented graph with too many conjunctive arcs to compute the GIN efficiently \cite{zhang2020learning}.
 \par
 To parametrize the policy $\pi_\theta(a_t|s_t)$, GIN for oriented graphs described in \ref{graph Isomorphism network} is used to obtain graph node embeddings $\vec{h}_o^{(K)}$ in the message passing phase. Initial node features were a 2-elementer vector $\vec{h}_o^{(0)} = (I(o), C_{LB}(o))$, where $I(o)$ is equal to 1 only if $o \in O$ is scheduled, otherwise 0, and $C_{LB}(o)$ is the lower bound of the estimated time of completion. 
@@ -65,7 +65,7 @@ To train the agent, \textbf{Wheatley} uses the PPO algorithm discussed in \ref{p
 \subsubsection*{Dynamic Wheatley} \label{dynamicwheatley}
 To extend Wheatley to DJSP, we consulted Wheatley's authors in the Github issue \cite{github_wheatley_djsp}. To enforce the arrival time of the job $t_a$, we were advised to add a "virtual" operation at the start of the job with processing time $t_a$ being processed by a "virtual" machine. To avoid different jobs interfering with each other, we add one "virtual" machine per one "virtual" operation.
 
-\subsection{IEEE-ICCE-RL-JSP}
+\subsection{IEEE-ICCE-RL-JSP} \label{model_iee_icce_rl_jsp}
 
 \textbf{IEEE-ICCE-RL-JSP} was published in \cite{10226873}, code was obtained from Github repository \cite{github_ieee_icce_rl_jsp}. Its authors represent JSSP as a heterogeneous graph discussed in \ref{FJSP as a heterogenous graph}. In each step, this model chooses one of the traditional PDRs to determine the operation to dispatch.
 \par
@@ -144,7 +144,7 @@ To train the agent, the authors propose a multi-agent version of the PPO algorit
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{fjsp-drl}
+\subsection{fjsp-drl} \label{model_fjsp_drl}
 
 The model \textbf{fjsp-drl} was published in \cite{9826438}, and the source code was obtained from \cite{github_fjsp_drl}.
 \par
