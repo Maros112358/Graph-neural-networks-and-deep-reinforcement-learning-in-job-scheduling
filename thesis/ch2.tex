@@ -49,7 +49,7 @@ For GIN on heterogeneous graphs, the equation \ref{equation:2.4} is applied sepa
 \end{equation}
 where $\text{MLP}^{(t)}_{r}$ is a multilayer perceptron for edge type $r$ \cite{pytorch_hetero_conv}. New embeddings for the node for each edge type $\vec{h}_{o, r}^{(k+1)}$ are then combined via some aggregation function \cite{pytorch_hetero_conv}, for example, a sum.
 
-\subsection{Graph Attention Network}
+\subsection{Graph Attention Network} \label{Graph Attention Network}
 Graph Attention Network (GAT) is a graph neural network architecture leveraging an attention mechanism \cite{veličković2018graph}. In each step (layer) $k$, nodes assign different importance weights to different nodes in their neighborhood by attending over their features. In job scheduling, higher importance weights may be assigned to operations expected to start sooner \cite{9826438}.
 \par
 In the first step, \textit{attention coefficients} $e_{ij}$ are computed as follows \cite{9826438, veličković2018graph}

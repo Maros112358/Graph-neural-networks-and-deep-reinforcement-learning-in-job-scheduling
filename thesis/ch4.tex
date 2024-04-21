@@ -26,7 +26,7 @@ where $C$ is the makespan produced by the model or PDR, and $C_\text{best}$ is t
 \par
 We also separated JSSP instances into three categories based on the number of jobs. Instances with less than 20 jobs are \textit{"small"}, instances with at least 50 jobs are \textit{"large"}, and \textit{"medium"} otherwise.
 
-\subsubsection*{FJSP}
+\subsubsection{FJSP}
 
 To compare two models capable of solving FJSP presented in the previous chapter, we obtained 402 benchmark FJSP instances and their best known solutions from \cite{fjsp_benchmarks}. Each instance is again a text file, where on the first line are at least two numbers: the number of jobs, the number of machines, and the last number corresponding to the average number of machines per operation is optional. Then, the next $|\mathcal{J}|$ lines represent one job. The first number is the number of operations in that job; the second number is the number of machines $k$ that can process the first operation, and then there are $k$ pairs of numbers corresponding to the eligible machine and its processing time of the given operation. This is followed by the data for the second operation, and so on. An example of an FJSP instance is shown below.
 \begin{verbatim}
@@ -317,7 +317,27 @@ A boxplot for FJSP gaps for small instances is shown in Figure 4.5, for medium i
     Figure 4.8: FJSP gaps for all instances
 \end{center}
 
-We tested the null hypothesis that the median values of gaps of all models and PDRs are from the same population using the Kruskal-Wallis test. The p-value is less than 1$\%$. Therefore, we reject this hypothesis. We also tested the null hypothesis that models \textbf{End-to-end-DRL-for-FJSP} and \textbf{fjsp-drl} are equal. The p-value was less than $1\%$ for small, medium, large, and all instances. Therefore, we rejected this null hypothesis.
+We tested the null hypothesis that the median values of gaps of all models and PDRs are from the same population using the Kruskal-Wallis test. The p-value is less than 1$\%$. Therefore, we reject this hypothesis. We also tested the null hypothesis that models \textbf{End-to-end-DRL-for-FJSP} and \textbf{fjsp-drl} are equal. The p-value was less than $1\%$ for small, medium, large, and all instances. Therefore, we rejected this null hypothesis. 
+\par
+Table 4.6 shows that when PDR \textbf{SPT} is used for machine selection, the average makespan is lower than when \textbf{EET} is used. Therefore, we tested the null hypothesis that all PDR pairs that use \textbf{SPT} for machine selection are the same. For all instance sizes, the p-value is less than $1\%$. Therefore, we can reject this null hypothesis. We also tested each pair of PDRs using the Mann-Whitney U test. Cases where we could not reject the null hypothesis are in Table 4.8.
+
+\begin{table}
+    Table 4.8: FJSP PDR cases without statistically significant results\\
+    \vspace{1mm}
+    \footnotesize 
+    \begin{tabular}{cccc}
+        \toprule
+        Category & First PDR & Second PDR & p-value \\
+        \midrule
+        Large & LWKR-SPT & MOPNR-SPT & 22.9$\%$ \\
+        Large & LWKR-SPT & MWKR-SPT & 09.4$\%$ \\
+        Large & MOPNR-SPT & MWKR-SPT & 52.4$\%$ \\
+        Medium & MOPNR-SPT & MWKR-SPT & 73.4$\%$ \\
+        Small & MOPN-SPT & MWKR-SPT & 09.6$\%$ \\
+        All & MOPNR-SPT & MWKR-SPT & 28.5$\%$ \\
+        \bottomrule
+        \end{tabular}
+\end{table}
 
 \subsection{DJSP}
 

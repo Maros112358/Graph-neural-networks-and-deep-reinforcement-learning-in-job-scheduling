@@ -33,17 +33,35 @@ def correct_label(label: str) -> str:
 if __name__ == '__main__':  
     df = pd.read_csv('fjsp_preprocess_data.csv')
     df = df[df['gap'].notna()]
+    df = df[df['model'].str.endswith('SPT')]
 
-
+    test_results = pd.DataFrame(columns=["Category", "First PDR", "Second PDR", "p-value"])
+    index = 0
     grouped_by_size = df.groupby(['category'])
     models = ['fjsp_drl', "end_to_end_drl_for_fjsp"]
     for size_name, size_group in grouped_by_size:
-        # size_name, size_group = ('all', 0), df
         results = test_models(size_group, 'model')
         for result in results:
             if result['p_value'] > 0.05:
-                print(size_name[0], result)
-            # if result['first_model'] in models and result['second_model'] in models:
-            #     print(size_name[0], result)
+                test_results.loc[index] = [
+                    size_name[0],
+                    result['first_model'],
+                    result['second_model'],
+                    result['p_value']
+                ]
+                index += 1
 
+    size_name, size_group = ('all', 0), df
+    results = test_models(size_group, 'model')
+    for result in results:
+        if result['p_value'] > 0.05:
+            test_results.loc[index] = [
+                size_name[0],
+                result['first_model'],
+                result['second_model'],
+                result['p_value']
+            ]
+            index += 1
+
+    print(test_results.to_latex(index=False))
 

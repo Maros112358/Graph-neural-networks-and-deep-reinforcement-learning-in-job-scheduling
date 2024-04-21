@@ -6,6 +6,9 @@ if __name__ == '__main__':
     df = pd.read_csv('fjsp_preprocess_data.csv')
     df = df[df['gap'].notna()]
 
+    df = df[df['model'].str.endswith('SPT')]
+    print(df)
+
     # Group by 'jobs' and 'machines'
     test_results = pd.DataFrame(columns=["category", "number_of_data_points", "p_value"])
 
