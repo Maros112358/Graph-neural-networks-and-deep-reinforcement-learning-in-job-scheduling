@@ -12,6 +12,10 @@ def correct_label(label: str) -> str:
         return 'fjsp-drl'
     if label == 'ieee_icce_rl_jsp':
         return 'IEEE-ICCE-RL-JSP'
+    if label == 'wheatley':
+        return 'Wheatley'
+    if label == 'l2d':
+        return 'L2D'
         
     return label.replace('_', '-')
 
@@ -22,14 +26,14 @@ if __name__ == '__main__':
 
     test_results = pd.DataFrame(columns=["Size", "Load factor", "First model", "Second model", "p-value"])
     index = 0
-    for load_factor in [1, 2, 4]:
-        load_factor_group = df[df['load_factor'] == load_factor]
-        for size, size_group in load_factor_group.groupby(['jobs', 'machines']):
-            jobs, machines = size
+    for size, size_group in df.groupby(['jobs', 'machines']):
+        jobs, machines = size
+        for load_factor in [1, 2, 4]:
+            load_factor_group = size_group[size_group['load_factor'] == load_factor]
             
             test_groups = []
             models = []
-            for model, model_group in size_group.groupby(['model']):
+            for model, model_group in load_factor_group.groupby(['model']):
                 test_groups.append(model_group['makespan'])
                 models.append(model)        
 
