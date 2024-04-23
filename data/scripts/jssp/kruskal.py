@@ -20,12 +20,11 @@ def correct_name(label: str) -> str:
     return label.replace('_', '-')
 
 if __name__ == '__main__':
-    df = pd.read_csv('fjsp_preprocess_data.csv')
-    df = df[df['gap'].notna()]
+    df = pd.read_csv('jssp_preprocess_data.csv')
     groups = []
     models = []
 
-    # df = df[df['model'].isin(['LRPT', 'ieee_icce_rl_jsp', 'fjsp_drl'])]
+    df = df[df['model'].isin(['LRPT', 'ieee_icce_rl_jsp', 'fjsp_drl'])]
     for model_name, model_group in df.groupby('model'):
         groups.append(model_group['gap'])
         models.append(correct_name(model_name))

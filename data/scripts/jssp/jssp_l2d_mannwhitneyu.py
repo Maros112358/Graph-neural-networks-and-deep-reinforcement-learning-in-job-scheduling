@@ -12,6 +12,8 @@ def test_models(df, column='model'):
         test_groups.append(model_group['gap'])
         models.append(model_name)
 
+    print(models)
+    print(test_groups)
     results = []
     for i in range(len(models)):
         for j in range(i + 1, len(models)):
@@ -46,24 +48,6 @@ if __name__ == '__main__':
         boxplot_data = [group['gap'] for model, group in grouped_data]
         means = [group['gap'].mean() for model, group in grouped_data]
         labels = [model for model in size_group['model'].unique()]
-
-        # make a boxplot
-        plt.figure(figsize=(16, 10))  # Adjusted size
-        boxplot_data = [group['gap'] * 100 for _, group in size_group.groupby('model')]
-        box = plt.boxplot(boxplot_data, labels=[correct_label(model) for model in size_group['model'].unique()], patch_artist=True)
-        # Highlight the boxplot with the lowest mean
-        for patch in box['boxes']:
-            patch.set_facecolor('lightgray')  # Default color
-        plt.ylabel('Gap [%]', fontsize=22)
-        plt.xticks(rotation=45, fontsize=18, ha='right', rotation_mode='anchor')  # Rotate y-axis labels
-        max_gap = max([max(group) for group in boxplot_data])
-        max_y_limit = min(1, max_gap) * 100 # Cap the y-axis at 1 or lower if the max value is less than 1
-        plt.gca().set_ylim(top=max_y_limit, bottom=-5) 
-        # plot_filename = f'/home/maros_b/Graph-neural-networks-and-deep-reinforcement-learning-in-job-scheduling/thesis/images/horizontal_boxplot_jssp_{size_name[0]}.pdf'
-        plot_filename = f'horizontal_boxplot_jssp_{size_name[0]}.pdf'
-        plt.savefig(plot_filename, bbox_inches='tight')
-        plt.close()
-
 
         results = test_models(size_group, 'model')
         print(len(size_group), size_name)
