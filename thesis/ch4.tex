@@ -24,7 +24,7 @@ For each model and each JSSP instance, we run the experiment with 10 different s
 \end{equation}
 where $C$ is the makespan produced by the model or PDR, and $C_\text{best}$ is the best-known makespan from the literature \cite{jssp_benchmarks}.
 \par
-We also separated JSSP instances into three categories based on the number of jobs. Instances with less than 20 jobs are \textit{"small"}, instances with at least 50 jobs are \textit{"large"}, and \textit{"medium"} otherwise.
+We also separated JSSP instances into three categories based on the number of jobs. Instances with less than 20 jobs are \textit{"small"}, instances with at least 50 jobs are \textit{"large"}, and all other instances are \textit{"medium"}.
 
 \subsubsection{FJSP}
 
@@ -44,25 +44,25 @@ To compare our extensions of JSSP models to DJSP presented in the previous chapt
 \begin{equation}
     \Delta t_\text{avg} = \frac{\mu_a}{U} \, ,
 \end{equation}
-where $\mu_a$ is the average processing time of all operations, and $U$ is a load factor of the dynamic job shop. We use $U = \{1,2,4 \}$ in the experiment. 
+where $\mu_a$ is the average processing time of all operations, and $U$ is a load factor of the dynamic job shop. We use $U \in \{1,2,4 \}$ in the experiment. 
 \par
 To generate the set of known and arriving jobs, we take the JSSP benchmark instance, shuffle the order of jobs in the text file, and use the first half of the shuffled instance as known jobs and the rest as arriving jobs. Again, we repeat each experiment with 10 different seeds.
 
-\subsection{Models}
+\subsection{Model training and hyperparameters}
 \subsubsection{L2D}
 Authors of \textbf{L2D} trained \textbf{L2D} on randomly generated JSSP instances \cite{zhang2020learning}. They trained multiple parameter sets to examine the ability of the \text{L2D} to generalize to bigger JSSP instances. Each parameter set was trained on random instances of constant size. From their GitHub repository \cite{github_l2d}, we obtained parameter sets trained on instances with size 6x6, 10x10, 15x15, 20x15, 20x20, 30x15, 30x20. Number of trainable parameters in each parameter set is 19458. In our experiments, we use each obtained parameter set. 
 \par
-In each parameter set, each $\text{MLP}^{(k)}$ has two hidden layers, each with 64 neurons. The action selection and the value prediction networks have two hidden layers, each with 32 neurons. In PPO, the clipping parameter was set to $\epsilon = 0.2$. Number of GIN layers was set to $K = 2$. Parameters update was done using Adam optimizer with learning rate $2\times10^{-5}$. For specific details of the training process, we refer the reader to the supplementary material of \cite{zhang2020learning}.
+In each parameter set, each $\text{MLP}^{(k)}$ has two hidden layers, each with 64 neurons. The action selection and the value prediction networks have two hidden layers, each with 32 neurons. In PPO, the clipping parameter was set to $\epsilon = 0.2$. Number of GIN layers was set to $K = 2$. Parameters update was done using the Adam optimizer with learning rate $2\times10^{-5}$. For specific details of the training process, we refer the reader to the supplementary material of \cite{zhang2020learning}.
 
 \subsubsection{Wheatley}
-For the experiment, we had to train \textbf{Wheatley} ourselves. To make \textbf{Wheatley} as similar to \textbf{L2D} as possible, we chose the same training hyperparameters as \text{L2D}. \textbf{Wheatley} has one extra training Hyperparameter specifying the maximum number of jobs and machines that the model will be able to process. 
+For the experiment, we had to train \textbf{Wheatley} ourselves. To make \textbf{Wheatley} as similar to \textbf{L2D} as possible, we chose the same training hyperparameters as \text{L2D}. \textbf{Wheatley} has one extra training hyperparameter specifying the maximum number of jobs and machines that the model will be able to process. 
 \par
 We trained three parameter sets capable of solving JSSP and one capable of solving DJSP. The first parameter set was trained on randomly generated 30x20 instances, capable of solving instances of size up to 100x20. The second parameter set was trained on randomly generated 20x20 instances, capable of solving instances of size up to 100x20. The last third parameter set was trained on randomly generated 20x20 instances and is able to solve instances of size up to \textbf{100x70} because, as discussed in \ref{dynamicwheatley}, for each arriving job, we add a new machine. And since the maximum number of jobs is 100, and half of them will be known at the start, we will have at most 70 machines. As a result, we used only the last parameter set for DJSP.
 \par
 The listed parameter sets were trained using a CPU on an Arm-based Ampere A1 virtual machine with 4 CPUs and 24 GB of RAM in Oracle Cloud Infrastructure with Ubuntu 20.04 64-bit operating system. We stopped the training when the model had not improved its objective for at least two days. Training of each parameter set took at least 3 weeks.
 
 \subsubsection{IEEE-ICCE-RL-JSP}
-Authors of \textbf{IEEE-ICCE-RL-JSP} trained the model on randomly generated 3x3 and 10x10 JSSP instances. Parameter updates are done using Adam optimizer with a $10^{-5}$ learning rate. As PDRs for agents to select in each step, we used FIFO, MOR, SPT, and MWKR discussed in \ref{priority dispatching rules}, the same choice as the authors made. The number of layers in HGIN was set to $K=3$. The value network has three dense layers. All hidden layers in both networks have dimension 128.
+Authors of \textbf{IEEE-ICCE-RL-JSP} trained the model on randomly generated 3x3 and 10x10 JSSP instances. Parameter updates are done using the Adam optimizer with a $10^{-5}$ learning rate. As PDRs for agents to select in each step, we used FIFO, MOR, SPT, and MWKR discussed in \ref{priority dispatching rules}, the same choice as the authors made. The number of layers in HGIN was set to $K=3$. The value network has three dense layers. All hidden layers in both networks have dimension 128.
 \par
 No parameter sets were found in the GitHub repository\cite{github_ieee_icce_rl_jsp}, so we had to train our own parameter sets using a script found in the repository. The script trains the model until the \textit{gap} between the best-known solution and the solution given by the model is not smaller than 20$\%$. We trained five parameter sets. We trained the model using CPU on an Arm-based Ampere A1 virtual machine with 4 CPUs and 24 GB of RAM in Oracle Cloud Infrastructure with Ubuntu 20.04 64-bit operating system.
 
