@@ -110,12 +110,12 @@ We ran all experiments on a MacBook Pro with an Apple M2 Max chip, 32 GB of RAM,
 Average gaps for different models and instance categories are shown in Table 4.1. The model with the lowest average gap is highlighted in bold. Average runtimes are in Table 4.2. 
 
 \begin{table}
-    Table 4.1: Average JSSP gaps for different models and categories\\
+    Table 4.1: Average JSSP gaps from optimal solutions for different models and categories; Lowest values are in \textbf{bold}\\
     \vspace{1mm}
     \small 
     \begin{tabular}{ccccc}
         \toprule
-         & Large & Medium & Small & All \\ 
+        Model & Large [\%] & Medium [\%] & Small [\%] & All [\%] \\ 
         \midrule
         EDD & 0.30 ± 0.09 & 0.44 ± 0.11 & 0.35 ± 0.13 & 0.36 ± 0.12 \\
         FIFO & 0.28 ± 0.18 & 0.33 ± 0.11 & 0.25 ± 0.09 & 0.30 ± 0.13  \\
@@ -143,7 +143,7 @@ Average gaps for different models and instance categories are shown in Table 4.1
     \small
     \begin{tabular}{ccccc}
         \toprule
-        & Large & Medium & Small & All \\
+        Model & Large [s] & Medium [s] & Small [s] & All [s] \\
         \midrule
         EDD & 8.13 ± 7.10 & 0.75 ± 0.62 & 0.06 ± 0.05 & 4.04 ± 6.11 \\
         FIFO & 4.99 ± 5.67 & 0.70 ± 0.61 & 0.06 ± 0.05 & 1.69 ± 3.51 \\
@@ -166,38 +166,38 @@ Average gaps for different models and instance categories are shown in Table 4.1
 A boxplot for JSSP gaps for small instances is shown in Figure 4.1, for medium instances in Figure 4.2, for large instances in Figure 4.3, and for all instances in Figure 4.4. The model with the lowest average gap is highlighted as a blue box.
 
 \begin{center}
-    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_jssp_small.pdf}\\
-    Figure 4.1: JSSP gaps for small instances
+    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_jssp_small.pdf}\\
+    Figure 4.1: JSSP gaps from optimal solutions for small instances; The model with the lowest average gap is highlighted as a blue box
 \end{center}
 
 \begin{center}
-    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_jssp_medium.pdf}\\
-    Figure 4.2: JSSP gaps for medium instances
+    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_jssp_medium.pdf}\\
+    Figure 4.2: JSSP gaps from optimal solutions for medium instances; The model with the lowest average gap is highlighted as a blue box
 \end{center}
 \begin{center}
-    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_jssp_large.pdf}\\
-    Figure 4.3: JSSP gaps for large instances
+    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_jssp_large.pdf}\\
+    Figure 4.3: JSSP gaps from optimal solutions for large instances; The model with the lowest average gap is highlighted as a blue box
 \end{center}
 \begin{center}
-    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_jssp_all.pdf}\\
-    Figure 4.4: JSSP gaps for all instances
+    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_jssp_all.pdf}\\
+    Figure 4.4: JSSP gaps from optimal solutions for all instances; The model with the lowest average gap is highlighted as a blue box
 \end{center}
 
-To test the null hypothesis that the median values of all models and PDRs over all JSSP benchmark instances are from the same population, we used the Kruskal-Wallis test \cite{doi:10.1080/01621459.1952.10483441}. The p-value of this null hypothesis was $p < 5\%$ instances, so we rejected this null hypothesis.
+To test the null hypothesis that the median values of all models and PDRs over all JSSP benchmark instances are from the same population, we used the Kruskal-Wallis test \cite{doi:10.1080/01621459.1952.10483441}. The p-value for this null hypothesis was $p < 5\%$, so we rejected this null hypothesis.
 \par
-We also compared all models and PDRs pairwise using the Mann-Whitney \textit{U} test \cite{mannwhitneyutest} adjusted using Holm method \cite{holmmethod}. Almost all pairwise comparisons produced statistically significant differences, with the adjusted p-value being less than $5\%$. Comparisons that did not produce statistically significant differences are \textbf{FIFO} vs. \textbf{LS}, \textbf{FIFO} vs \textbf{End-to-end-DRL-for-FJSP}, \textbf{FIFO} vs. \textbf{L2D}, \textbf{LOR} vs. \textbf{SRPT}, \textbf{LOR} vs. \textbf{Wheatley}, \textbf{MWKR} vs. \textbf{fjsp-drl}, \textbf{LS} vs. \textbf{End-to-end-DRL-for-FJSP}, \textbf{LS} vs. \textbf{L2D}, \textbf{SRPT} vs. \textbf{Wheatley}, \textbf{End-to-end-DRL-for-FJSP} vs. \textbf{L2D}, and \textbf{fjsp-drl} vs \textbf{IEEE-ICCE-RL-JSP}.
+Due to the rejection of the null hypothesis, we compared all models and PDRs pairwise using the Mann-Whitney \textit{U} test \cite{mannwhitneyutest} adjusted using Holm method \cite{holmmethod}. Almost all pairwise comparisons produced statistically significant differences, with the adjusted p-value being less than $5\%$. Comparisons that did not produce statistically significant differences are \textbf{FIFO} vs. \textbf{LS}, \textbf{FIFO} vs \textbf{End-to-end-DRL-for-FJSP}, \textbf{FIFO} vs. \textbf{L2D}, \textbf{LOR} vs. \textbf{SRPT}, \textbf{LOR} vs. \textbf{Wheatley}, \textbf{MWKR} vs. \textbf{fjsp-drl}, \textbf{LS} vs. \textbf{End-to-end-DRL-for-FJSP}, \textbf{LS} vs. \textbf{L2D}, \textbf{SRPT} vs. \textbf{Wheatley}, \textbf{End-to-end-DRL-for-FJSP} vs. \textbf{L2D}, and \textbf{fjsp-drl} vs \textbf{IEEE-ICCE-RL-JSP}.
 \par
-From Table 4.1 and Figures 4.1, 4.2, 4.3, and 4.4, we observed that priority dispatching rule \textbf{MWKR} and model \textbf{fjsp-drl} produced similar results as the model \textbf{IEEE-ICCE-RL-JSP}, which had the lowest mean gap. Therefore, we tested the null hypothesis that \textbf{MWKR}, \textbf{fjsp-drl}, and \textbf{IEEE-ICCE-RL-JSP} are from the same population. We tested this null hypothesis for different JSSP instance categories and all JSSP instances together. The Holm method adjusted p-value for small instances is $45.8\%$, for medium instances $3.4\%$, $7.7\%$ for large instances, and 0.3$\%$ for all instances. We, therefore, reject the null hypothesis that these three models are from the same population for medium JSSP instances and across all JSSP instances.
+From Table 4.1 and Figures 4.1, 4.2, 4.3, and 4.4, we observed that priority dispatching rule \textbf{MWKR} and model \textbf{fjsp-drl} produced similar results as the model \textbf{IEEE-ICCE-RL-JSP}, which had the lowest mean gap. Therefore, we tested the null hypothesis that \textbf{MWKR}, \textbf{fjsp-drl}, and \textbf{IEEE-ICCE-RL-JSP} are from the same population. We tested this null hypothesis for different JSSP instance categories and all JSSP instances together. The Holm-method-adjusted p-value for small instances is $45.8\%$, for medium instances $3.4\%$, $7.7\%$ for large instances, and 0.3$\%$ for all instances. We, therefore, reject the null hypothesis that these three models are from the same population for medium JSSP instances and across all JSSP instances.
 \par
-We compared these three models pairwise using the Holm method adjusted Mann-Whitney \textit{U} test for medium instances and for all instances. Adjusted p-values are shown in Table 4.3.
+We compared these three models pairwise using the Holm-method-adjusted Mann-Whitney \textit{U} test for medium instances and for all instances. Holm-adjusted p-values are shown in Table 4.3.
 
 \begin{table}
-    Table 4.3: Adjusted p-values of comparisons between three best models\\
+    Table 4.3: Holm-adjusted p-values of comparisons between three best models\\
     \vspace{1mm}
     \label{table:4.3}
     \begin{tabular}{ccc}
         \toprule
-        Category & Comparison & Adjusted p-value \\
+        Instances & Comparison & Adjusted p-value \\
         \midrule
         Medium & MWKR vs. fjsp-drl & 2.2$\%$ \\
         Medium & MWKR vs. IEEE-ICCE-RL-JSP & 2.0$\%$ \\
@@ -210,14 +210,14 @@ We compared these three models pairwise using the Holm method adjusted Mann-Whit
 \end{table}
 
 
-Authors of \textbf{L2D} also reported that checkpoints trained on instances of size 30x20 and 20x20 generalize better to large instances \cite{zhang2020learning}. To investigate this, we separated checkpoints trained on instances of size 30x20 and 20x20 into a separate "model" we call \textbf{L2D-LARGE}. Using the Mann-Whitney U test, we then tested the difference between \textbf{L2D} containing only checkpoints trained on small instances and \textbf{L2D-LARGE}. Average makespans are in Table 4.4, and the Holm method adjusted p-values for the Mann-Whitney \textit{U} test are in Table 4.5.
+The authors of \textbf{L2D} also reported that checkpoints trained on instances of size 30x20 and 20x20 generalize better to large instances \cite{zhang2020learning}. To investigate this, we separated checkpoints trained on instances of size 30x20 and 20x20 into a separate "model" we call \textbf{L2D-LARGE}. Using the Mann-Whitney U test, we then tested the difference between \textbf{L2D} containing only checkpoints trained on small instances and \textbf{L2D-LARGE}. Average makespans are in Table 4.4, and the Holm-adjusted p-values for the Mann-Whitney \textit{U} test are in Table 4.5.
 
 \begin{table}
-    Table 4.4: Average JSSP makespans of \textbf{L2D} and \textbf{L2D-LARGE}\\
+    Table 4.4: Average JSSP gaps from optimal solutions of \textbf{L2D} and \textbf{L2D-LARGE}\\
     \vspace{1mm}
 \begin{tabular}{ccccc}
     \toprule
-    & Large & Medium & Small & All \\
+    Instances & Large [\%] & Medium [\%] & Small [\%] & All [\%] \\
     \midrule
     L2D & 0.29 ± 0.19 & 0.34 ± 0.12 & 0.25 ± 0.11 & 0.31 ± 0.16 \\
     L2D-LARGE & 0.27 ± 0.18 & 0.35 ± 0.12 & 0.27 ± 0.11 & 0.31 ± 0.15 \\
@@ -229,7 +229,7 @@ Authors of \textbf{L2D} also reported that checkpoints trained on instances of s
     Table 4.5: Mann-Whitney U test p-values between \textbf{L2D} and \textbf{L2D-LARGE}\\
     \begin{tabular}{cc}
         \toprule
-        Category & Adjusted p-value \\
+        Instances & Holm-adjusted p-value \\
         \midrule
         Large & 38$\%$ \\
         Medium & 100$\%$ \\
@@ -246,13 +246,13 @@ The difference between \textbf{L2D} and \textbf{L2D-LARGE} is not statistically 
 Average FJSP gaps for different models and instance categories are shown in Table 4.6. The model with the lowest average gap is highlighted in bold. Average runtimes for different models and instance categories are shown in Table 4.7. A negative gap means that the model found a better solution than the one listed in \cite{fjsp_benchmarks}.
 
 \begin{table}
-    Table 4.6: Average FJSP gaps for different models and instance categories\\
+    Table 4.6: Average FJSP gaps from optimal solutions for different models and instance categories; Lowest values are in \textbf{bold}\\
     \vspace{1mm}
     \label{table:4.4}
     \footnotesize 
     \begin{tabular}{ccccc}
         \toprule
-        & Large & Medium & Small & All \\
+        Model & Large [\%] & Medium [\%] & Small [\%] & All [\%] \\
         \midrule
         FIFO-EET & 3.03 ± 0.23 & 0.54 ± 0.86 & 0.44 ± 0.96 & 0.67 ± 1.13 \\
         FIFO-SPT & 0.06 ± 0.12 & 0.37 ± 0.20 & 0.41 ± 0.22 & 0.37 ± 0.22 \\
@@ -275,7 +275,7 @@ Average FJSP gaps for different models and instance categories are shown in Tabl
     \footnotesize 
     \begin{tabular}{ccccc}
         \toprule
-        & Large & Medium & Small & All \\
+        Model & Large & Medium & Small & All \\
         \midrule
         FIFO-EET & 0.79 ± 0.47 & 0.14 ± 0.09 & 0.05 ± 0.05 & 0.13 ± 0.24 \\
         FIFO-SPT & 0.75 ± 0.45 & 0.14 ± 0.09 & 0.05 ± 0.05 & 0.13 ± 0.23 \\
@@ -295,21 +295,21 @@ Average FJSP gaps for different models and instance categories are shown in Tabl
 A boxplot for FJSP gaps for small instances is shown in Figure 4.5, for medium instances in Figure 4.6, for large instances in Figure 4.7, and for all instances in Figure 4.8. The model with the lowest average gap is highlighted as a blue box.
 
 \begin{center}
-    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_fjsp_small.pdf}\\
-    Figure 4.5: FJSP gaps for small instances
+    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_fjsp_small.pdf}\\
+    Figure 4.5: FJSP gaps from optimal solutions for small instances; The model with the lowest average gap is highlighted as a blue box
 \end{center}
 
 \begin{center}
-    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_fjsp_medium.pdf}\\
-    Figure 4.6: FJSP gaps for medium instances
+    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_fjsp_medium.pdf}\\
+    Figure 4.6: FJSP gaps from optimal solutions for medium instances; The model with the lowest average gap is highlighted as a blue box
 \end{center}
 \begin{center}
-    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_fjsp_large.pdf}\\
-    Figure 4.7: FJSP gaps for large instances
+    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_fjsp_large.pdf}\\
+    Figure 4.7: FJSP gaps from optimal solutions for large instances; The model with the lowest average gap is highlighted as a blue box
 \end{center}
 \begin{center}
-    \includegraphics[width=0.9\linewidth]{images/horizontal_boxplot_fjsp_all.pdf}\\
-    Figure 4.8: FJSP gaps for all instances
+    \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_fjsp_all.pdf}\\
+    Figure 4.8: FJSP gaps from optimal solutions for all instances; The model with the lowest average gap is highlighted as a blue box
 \end{center}
 
 We tested the null hypothesis that the median values of gaps of all models and PDRs over all FJSP benchmark instances are from the same population using the Kruskal-Wallis test. The p-value of this hypothesis is less than 5$\%$, so we rejected it. 
