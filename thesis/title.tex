@@ -49,9 +49,6 @@
 \noalign{\vspace{2mm}}
 \ifEN Study programme: \else Studijní program: \fi
 & \StudyProgramme \cr
-\noalign{\vspace{2mm}}
-\ifEN Study branch: \else Studijní obor: \fi
-& \StudyBranch \cr
 }}}}
 
 \vfill
@@ -72,9 +69,8 @@
 
 \ifEN
 \noindent
-I declare that I carried out this \ThesisAccusative thesis independently, and only with the cited
-sources, literature and other professional sources. It has not been used to obtain another
-or the same degree.
+I declare that I carried out this master thesis on my own, and only with the
+cited sources, literature and other professional sources.
 \else
 \noindent
 Prohlašuji, že jsem tuto \ThesisAccusative práci vypracoval(a) samostatně a výhradně
@@ -84,10 +80,10 @@ Tato práce nebyla využita k získání jiného nebo stejného titulu.
 
 \ifEN
 \medskip\noindent
-I understand that my work relates to the rights and obligations under the Act No.~121/2000 Sb.,
-the Copyright Act, as amended, in particular the fact that the Charles
-University has the right to conclude a license agreement on the use of this
-work as a school work pursuant to Section 60 subsection 1 of the Copyright~Act.
+I understand that my work relates to the rights and obligations under the Act No. 121/2000 Sb., the
+Copyright Act, as amended, in particular the fact that the Charles University has
+the right to conclude a license agreement on the use of this work as a school work
+pursuant to Section 60 subsection 1 of the Copyright Act.
 \else
 \medskip\noindent
 Beru na~vědomí, že se na moji práci vztahují práva a povinnosti vyplývající
@@ -174,6 +170,27 @@ Keywords:
 
 \vss}
 \fi
+
+\newpage
+
+\vbox to 0.49\vsize{\InfoPageFont
+\setlength\parindent{0mm}
+\setlength\parskip{5mm}
+
+
+Název práce: Grafové neuronové sítě a hluboké posilované učení při rozvrhování prací
+
+Autor: Maroš Bratko
+
+Katedra: Katedra teoretické informatiky a matematické logiky
+
+Vedoucí diplomové práce: prof. RNDr. Ing. Martin Holeňa, CSc.
+
+Abstrakt: Prioritní rozhodovací pravidla (PDRs) jsou hladové heuristické algoritmy používané ke získaní přibližného řešení NP-těžkého úkolu organizace práce (JSP). Manuální příprava PDR vyžaduje zkušenosti v dané oblasti pro získaní dobrých výsledků. V posledních letech bylo k automatizaci přípravy PDR využito zpětnovazební učení, kde jsou PDR formulováný jako Markovův rozhodovací proces využívajíci grafovou reprezentaci JSP, ve které grafová neurónová síť (GNN) vybírá operace ke spuštění. V této prácí uvádíme přehled pěti modelů publikovaných v literatuře, kterých zdrojové kódy jsou volně dostupné na GitHubu, a experimentálňe porovnáme jejich výsledky. Naše experimentuji ukazují, že volba vstupních příznaků, napr. množství zbývající práce, významně ovlivňuje kvalitu výsledných řešení bez ohledu na architekturu GNN. To naznačuje, že výběr vstupních příznaků je pro přípravu kvalitních PDR zásadní.
+
+Klíčová slova: organizace práce, grafové neurónové sítě, hluboké zpětnovazební učení, Markovův rozhodovací proces
+
+\vss}
 
 \newpage
 
