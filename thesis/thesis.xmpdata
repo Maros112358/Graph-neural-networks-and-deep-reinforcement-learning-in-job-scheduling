@@ -1,7 +1,7 @@
 % Metadata to be stored in PDF, see documentation of the pdfx package for more details.
 
-\Author{Name Surname}
-\Title{Thesis title}
-\Keywords{keywords\sep more such\sep yet another}
-\Subject{Abstract of thesis}
+\Author{Maroš Bratko}
+\Title{Graph neural networks and deep reinforcement learning in job scheduling}
+\Keywords{job-shop scheduling\sep graph neural networks\sep deep reinforcement learning\sep markov decision process}
+\Subject{The priority dispatching rule (PDR) is a greedy heuristic algorithm used to obtain approximate solutions to the NP-hard job scheduling problem (JSP). The manual design of PDRs requires domain knowledge to achieve good results. Recently, deep reinforcement learning has been used to automate the process of designing PDRs, where PDRs are formulated as a Markov Decision Process exploiting graph representation of JSP, and a graph neural network (GNN) selects the operations to be dispatched. In this thesis, we present the overview of five models published in literature with their source code publicly available on GitHub and experimentally compare their performance on three different variants of JSP. Our experiments show that the choice of input features, e.g., the amount of remaining work, significantly affects the model's performance regardless of the GNN architecture. This suggests that the feature selection is essential for learning high-quality PDRs.}
 \Publisher{Charles University}
