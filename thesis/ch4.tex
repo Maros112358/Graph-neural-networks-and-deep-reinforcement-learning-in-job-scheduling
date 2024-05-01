@@ -165,7 +165,7 @@ Average gaps for different models and instance categories are shown in Table 4.1
         \end{tabular}        
 \end{table}
 
-A boxplot for JSSP gaps for small instances is shown in Figure 4.1, for medium instances in Figure 4.2, for large instances in Figure 4.3, and for all instances in Figure 4.4. The model with the lowest average gap is highlighted as a blue box. It is important to note that the red line in the boxplot represents the median, the gray box extends from the first quartile to the third quartile, and the whiskers extend from the box to the farthest data lying withing 1.5x the inter-quartile range. Points outside the whiskers represent the outliers \cite{matplotlib_boxplot}.
+A boxplot for JSSP gaps for small instances is shown in Figure 4.1, for medium instances in Figure 4.2, for large instances in Figure 4.3, and for all instances in Figure 4.4. The model with the lowest average gap is highlighted as a blue box. It is important to note that the red line in the boxplot represents the median, the gray box extends from the first quartile to the third quartile, and the whiskers extend from the box to the farthest data lying within 1.5x the interquartile range. Points outside the whiskers represent the outliers \cite{matplotlib_boxplot}. 
 
 \begin{center}
     \includegraphics[width=0.8\linewidth]{images/horizontal_boxplot_jssp_small.pdf}\\
@@ -245,7 +245,7 @@ The difference between \textbf{L2D} and \textbf{L2D-LARGE} is not statistically 
 
 \subsection{FJSP} \label{results_fjsp}
 
-Average FJSP gaps for different models and instance categories are shown in Table 4.6. The model with the lowest average gap is highlighted in bold. Average runtimes for different models and instance categories are shown in Table 4.7. A negative gap means that the model found a better solution than the one listed in \cite{fjsp_benchmarks}.
+Average FJSP gaps for different models and instance categories are shown in Table 4.6. The model with the lowest average gap is highlighted in bold. Average runtimes for different models and instance categories are shown in Table 4.7. A negative gap means that the model found a better solution than the one listed in \cite{fjsp_benchmarks}. Notice the difference between the average values in Table 4.6 and the median values in Figure 4.6. PDR \textbf{FIFO-EET} has higher average gap values than \textbf{FIFO-SPT} while having lower median gap values than \textbf{FIFO-SPT} because \textbf{FIFO-EET} has a lot of very high outliers, while \textbf{FIFO-SPT} has smaller outliers.
 
 \begin{table}
     Table 4.6: Average FJSP gaps from optimal solutions for different models and instance categories; Lowest values are in \textbf{bold}\\
@@ -320,7 +320,7 @@ We also compared all models and PDRs pairwise using the Holm-adjusted Mann-Whitn
 
 \subsection{DJSP}
 
-For DJSP, we don't have any upper bound available and can't compute the gap. Therefore, we will compare absolute makespans produced by different models for each size and load factor. Average DJSP makespans with load factor 1 are shown in Table 4.9, with load factor 2 in Table 4.10, and with load factor 4 in Table 4.11. The model with the smallest average makespan is highlighted in bold. We also tested the null hypothesis for each size and load factor that the medians of the performance of all models are equal using the Holm-adjusted Kruskal-Wallis \textit{U} test. The corresponding p-values are also shown in each table.
+For DJSP, we don't have any upper bound available and can't compute the gap. Therefore, we will compare absolute makespans produced by different models for each size and load factor. Average DJSP makespans with load factor 1 are shown in Table 4.9, with load factor 2 in Table 4.10, and with load factor 4 in Table 4.11. The model with the smallest average makespan is highlighted in bold. We also tested the null hypothesis for each size and load factor that the medians of the performance of all models are equal using the Holm-adjusted Kruskal-Wallis \textit{U} test. The corresponding p-values are also shown in each table. We didn't include PDRs in the DJSP experiment as a baseline because the tables would be too large.
 
 \begin{table}
     Table 4.9: Average DJSP makespan with load factor 1; Lowest values are shown in \textbf{bold}\\
