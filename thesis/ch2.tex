@@ -50,7 +50,7 @@ For GIN on heterogeneous graphs, the equation \ref{equation:2.4} is applied sepa
 where $\text{MLP}^{(t)}_{r}$ is a multilayer perceptron for edge type $r$ \cite{pytorch_hetero_conv}. New embeddings for the node for each edge type $\vec{h}_{o, r}^{(k+1)}$ are then combined via some aggregation function \cite{pytorch_hetero_conv}, for example, a sum.
 
 \subsection{Graph Attention Network} \label{Graph Attention Network}
-Graph Attention Network (GAT) is a graph neural network architecture leveraging an attention mechanism \cite{veličković2018graph}. In each step (layer) $k$, nodes assign different importance weights to different nodes in their neighborhood by attending over their features. In job scheduling, higher importance weights may be assigned to operations expected to start sooner \cite{9826438}.
+Graph Attention Network (GAT) is a graph neural network architecture leveraging an attention mechanism \cite{veličković2018graph}. In each step (layer) $k$, nodes assign different importance to different nodes in their neighborhood by performing attention over their features. In job scheduling, higher importance weights may be assigned to operations expected to start sooner \cite{9826438}.
 \par
 In the first step, \textit{attention coefficients} $e_{ij}$ are computed as follows \cite{9826438, veličković2018graph}
 \begin{equation} \label{equation:2.6}
@@ -78,11 +78,11 @@ It is also possible to use \textit{multi-head attention} to stabilize the learni
 	Figure 3.1: Illustration of multi-head attention with three heads. Different arrow colors denote independent attention mechanisms. Reproduced from \cite{veličković2018graph}
 \end{center}
 \par
-One straightforward strategy to extend GAT on heterogeneous graphs is constructing separate learnable linear transformation $\boldsymbol{W}_{b_i}$ for each node type $b_i$ in equations \ref{equation:2.6}, \ref{equation:2.7}, \ref{equation:2.9}, projecting each node type to a shared latent space with the same dimension.
+One straightforward strategy to extend GAT on heterogeneous graphs is constructing separate learnable linear transformation $\boldsymbol{W}_{b_i}$ for each node type $b_i$ in equations \ref{equation:2.6}, \ref{equation:2.7}, \ref{equation:2.9}, projecting each node type to a shared latent space with the same dimension \cite{9826438}.
 
 \section{Deep reinforcement learning}
 
-For a given MDP tuple $(\mathcal{S}, \mathcal{A}, \mathcal{R}, \mathcal{P}, \gamma)$ as described in \ref{MDP for JSSP}, at each time step $t$, the agent receives a state $s_t \in \mathcal{S}$, selects an action $a_t \in \mathcal{A}$ following a policy $\pi(a_t|s_t)$, receives a reward $r_t$ and a new state $s_{t+1}$ according to the probability distribution $\mathcal{P}(s_{t+1} | s_t, a_t)$, and the cycle repeats \cite{DBLP:journals/corr/Li17b}. A sequence of states, actions, and rewards is called a trajectory. The discounted cumulative reward of the trajectory with length $T$ starting at time $t$ is the sum $G_t = \sum_{k=0}^T \gamma^k r_{t+k}$. The probability of the trajectory is $P_t = \Pi_{k=0}^T \mathcal{P}(s_{t+k+1} | s_{t+k}, a_{t+k})$. The goal of an agent is to maximize the expected discounted cumulative reward $\mathbb{E}[G_t]$ over all possible trajectories \cite{DBLP:journals/corr/Li17b}. Long term value of a state $s$ defined as $v(s) = \mathbb{E}\left [ G_t | s_t = s \right ]$ is the expected cumulative reward from the state $s$ following policy $\pi$. An optimal state value $v_*(s) = \max_\pi v_\pi(s)$ is the maximum achievable value for the state $s$. For the optimal state value, the Bellman equation holds \cite{DBLP:journals/corr/Li17b}
+For a given MDP tuple $(\mathcal{S}, \mathcal{A}, \mathcal{R}, \mathcal{P}, \gamma)$ as described in \ref{MDP for JSSP}, at each time step $t$, the agent receives a state $s_t \in \mathcal{S}$, selects an action $a_t \in \mathcal{A}$ following a policy $\pi(a_t|s_t)$, receives a reward $r_t$ and a new state $s_{t+1}$ according to the probability distribution $\mathcal{P}(s_{t+1} | s_t, a_t)$, and the cycle repeats \cite{DBLP:journals/corr/Li17b}. A sequence of states, actions, and rewards is called a trajectory. The discounted cumulative reward of the trajectory with length $T$ starting at time $t$ is the sum $G_t = \sum_{k=0}^T \gamma^k r_{t+k}$, where $\gamma \in (0,1]$. The probability of the trajectory is $P_t = \Pi_{k=0}^T \mathcal{P}(s_{t+k+1} | s_{t+k}, a_{t+k})$. The goal of an agent is to maximize the expected discounted cumulative reward $\mathbb{E}[G_t]$ over all possible trajectories \cite{DBLP:journals/corr/Li17b}. Long term value of a state $s$ defined as $v_\pi(s) = \mathbb{E}\left [ G_t | s_t = s \right ]$ is the expected cumulative reward from the state $s$ following policy $\pi$. An optimal state value $v_*(s) = \max_\pi v_\pi(s)$ is the maximum achievable value for the state $s$. For the optimal state value, the Bellman equation holds \cite{DBLP:journals/corr/Li17b}
 \begin{equation}
 	v_*(s) = \max_a \sum_{s'} \mathcal{P} (s' | s,a)\left [ \mathcal{R}(s, a) + \gamma v_*(s') \right ] \, .
 \end{equation}
@@ -118,7 +118,7 @@ where $r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_\text{old}}(a_t|s_t)
 \end{equation}
 where $\delta_t = r_t + \gamma v(s_{t+1}) - v(s_t)$, $\lambda$ is a hyperparameter, and $t \in \left [ 0, T \right ]$.
 \par
-The full PPO algorithm is shown below \cite{DBLP:journals/corr/SchulmanWDRK17}. In each iteration, $N$ actors collect $T$ timesteps of data. Then, the surrogate loss of these $NT$ timesteps of data is calculated and parameters $\theta$ are optimized.
+The full PPO algorithm is shown below \cite{DBLP:journals/corr/SchulmanWDRK17}. In each iteration, $N$ actors collect $T$ timesteps of data. Then, the loss of these $NT$ timesteps of data is calculated and parameters $\theta$ are optimized.
 
 \begin{algorithm}[H]
 	\caption{Proximal Policy Optimization algorithm}\label{algorithm:ppo}
@@ -133,7 +133,7 @@ The full PPO algorithm is shown below \cite{DBLP:journals/corr/SchulmanWDRK17}. 
 			\State Run Policy $\pi_{\theta_\text{old}}$ in environment for $T$ timesteps
 			\State Compute advantage estimates $\hat{A_1}$, ..., $\hat{A_T}$
 		\EndFor
-		\State Optimize $L$ wrt $\theta$, with $K$ epochs and minibatch size $M \leq NT$
+		\State Optimize $L$ w.r.t. $\theta$, with $K$ epochs and minibatch size $M \leq NT$
 		\State $\theta_{\text{old}} \gets \theta$
 	\EndFor
 	\State return $\pi_{\theta_\text{old}}$
@@ -146,7 +146,7 @@ Deep Q-network (DQN) is an algorithm using a neural network to approximate the a
 \begin{equation} \label{equation:2.16}
 	L_i(\theta_i) = \mathbb{E} \left [\left ( r + \gamma \max_{a'}\hat{q}_{\theta^-_i}(s',a') -\hat{q}_{\theta_i}(s,a) \right )^2 \right ] \, ,
 \end{equation}
-where the expectation is with respect to the batch of $e_t$,
+where the expectation is with respect to the batch of experiences,
 $\hat{q}_{\theta_i}(s,a)$ is the Q-network at iteration $i$, and $\hat{q}_{\theta^-_i}(s,a)$ is the target network used to compute targets at iteration $i$. The target network is updated with the Q-network parameters every $C$ step and fixed between updates. The full algorithm is shown below \cite{mnih2015human}.
 
 \begin{algorithm}[H]
@@ -154,7 +154,7 @@ $\hat{q}_{\theta_i}(s,a)$ is the Q-network at iteration $i$, and $\hat{q}_{\thet
 	\begin{algorithmic}[1]
 	\renewcommand{\algorithmicrequire}{\hspace*{\algorithmicindent}  \textbf{Input:}}
 	\renewcommand{\algorithmicensure}{\hspace*{\algorithmicindent}  \textbf{Output:}}
-	\Require Emulator
+	\Require Emulator (simulation model)
 	\Ensure Action-value function
 	\State Initialize replay memory $D$ to capacity $N$
 	\State Initialize action-value function $\hat{q}_\theta$ with random weights
@@ -169,7 +169,7 @@ $\hat{q}_{\theta_i}(s,a)$ is the Q-network at iteration $i$, and $\hat{q}_{\thet
 			\State Store transition $(\phi_t, a_t, r_t, \phi_{t+1})$ in $D$
 			\State Sample random minibatch of transitions $(\phi_j, a_j, r_j, \phi_{j+1})$ from $D$
 			\State Set $ y_j = \begin{cases} r_j & \mbox{if episode ends at step } j+1 \\ r_j + \gamma \max_{a'}\hat{q}_{\theta^-}(\phi_{j+1}, a') & \mbox{otherwise} \end{cases}$
-			\State Perform a gradient descent step on $(y_j - \hat{q}_\theta(\phi_j, a_j))^2$ w.r.t to $\hat{q}_\theta$
+			\State Perform a gradient descent step on $(y_j - \hat{q}_\theta(\phi_j, a_j))^2$ w.r.t. to $\hat{q}_\theta$
 			\State Every $C$ steps reset $\hat{q}_{\theta^-} = \hat{q}_{\theta}$
 		\EndFor
 	\EndFor
