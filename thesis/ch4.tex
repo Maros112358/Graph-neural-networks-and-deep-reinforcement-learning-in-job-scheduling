@@ -183,11 +183,11 @@ A boxplot for JSSP gaps for small instances is shown in Figure 4.1, for medium i
     Figure 4.4: JSSP gaps from optimal solutions for all instances; The model with the lowest average gap is highlighted as a blue box
 \end{center}
 
-To test the null hypothesis that the median values of all models and PDRs over all JSSP benchmark instances are from the same population, we used the Kruskal-Wallis test \cite{doi:10.1080/01621459.1952.10483441}. The p-value for this null hypothesis was $p < 5\%$, so we rejected this null hypothesis.
+To test the null hypothesis that the medians of the performance of models and PDRs over all JSSP benchmark instances are equal, we used the Kruskal-Wallis test \cite{doi:10.1080/01621459.1952.10483441}. The p-value for this null hypothesis was $p < 5\%$, so we rejected this null hypothesis.
 \par
 Due to the rejection of the null hypothesis, we compared all models and PDRs pairwise using the Mann-Whitney \textit{U} test \cite{mannwhitneyutest} adjusted using Holm method \cite{holmmethod}. Almost all pairwise comparisons produced statistically significant differences, with the adjusted p-value being less than $5\%$. Comparisons that did not produce statistically significant differences are \textbf{FIFO} vs. \textbf{LS}, \textbf{FIFO} vs \textbf{End-to-end-DRL-for-FJSP}, \textbf{FIFO} vs. \textbf{L2D}, \textbf{LOR} vs. \textbf{SRPT}, \textbf{LOR} vs. \textbf{Wheatley}, \textbf{MWKR} vs. \textbf{fjsp-drl}, \textbf{LS} vs. \textbf{End-to-end-DRL-for-FJSP}, \textbf{LS} vs. \textbf{L2D}, \textbf{SRPT} vs. \textbf{Wheatley}, \textbf{End-to-end-DRL-for-FJSP} vs. \textbf{L2D}, and \textbf{fjsp-drl} vs \textbf{IEEE-ICCE-RL-JSP}.
 \par
-From Table 4.1 and Figures 4.1, 4.2, 4.3, and 4.4, we observed that priority dispatching rule \textbf{MWKR} and model \textbf{fjsp-drl} produced similar results as the model \textbf{IEEE-ICCE-RL-JSP}, which had the lowest mean gap. Therefore, we tested the null hypothesis that \textbf{MWKR}, \textbf{fjsp-drl}, and \textbf{IEEE-ICCE-RL-JSP} are from the same population. We tested this null hypothesis for different JSSP instance categories and all JSSP instances together. The Holm-method-adjusted p-value for small instances is $45.8\%$, for medium instances $3.4\%$, $7.7\%$ for large instances, and 0.3$\%$ for all instances. We, therefore, reject the null hypothesis that these three models are from the same population for medium JSSP instances and across all JSSP instances.
+From Table 4.1 and Figures 4.1, 4.2, 4.3, and 4.4, we observed that priority dispatching rule \textbf{MWKR} and model \textbf{fjsp-drl} produced similar results as the model \textbf{IEEE-ICCE-RL-JSP}, which had the lowest mean gap. Therefore, we tested the null hypothesis that the medians of the performance of \textbf{MWKR}, \textbf{fjsp-drl}, and \textbf{IEEE-ICCE-RL-JSP} are equal. We tested this null hypothesis for different JSSP instance categories and all JSSP instances together. The Holm-method-adjusted p-value for small instances is $45.8\%$, for medium instances $3.4\%$, $7.7\%$ for large instances, and 0.3$\%$ for all instances. We, therefore, reject the null hypotheses that the medians of the performance of these models are equal for medium JSSP instances and across all JSSP instances.
 \par
 We compared these three models pairwise using the Holm-method-adjusted Mann-Whitney \textit{U} test for medium instances and for all instances. Holm-adjusted p-values are shown in Table 4.3.
 
@@ -275,7 +275,7 @@ Average FJSP gaps for different models and instance categories are shown in Tabl
     \footnotesize 
     \begin{tabular}{ccccc}
         \toprule
-        Model & Large & Medium & Small & All \\
+        Model & Large [s] & Medium [s] & Small [s] & All [s] \\
         \midrule
         FIFO-EET & 0.79 ± 0.47 & 0.14 ± 0.09 & 0.05 ± 0.05 & 0.13 ± 0.24 \\
         FIFO-SPT & 0.75 ± 0.45 & 0.14 ± 0.09 & 0.05 ± 0.05 & 0.13 ± 0.23 \\
@@ -312,16 +312,16 @@ A boxplot for FJSP gaps for small instances is shown in Figure 4.5, for medium i
     Figure 4.8: FJSP gaps from optimal solutions for all instances; The model with the lowest average gap is highlighted as a blue box
 \end{center}
 
-We tested the null hypothesis that the median values of gaps of all models and PDRs over all FJSP benchmark instances are from the same population using the Kruskal-Wallis test. The p-value of this hypothesis is less than 5$\%$, so we rejected it. 
+We tested the null hypothesis that the medians of gaps of all models and PDRs over all FJSP benchmark instances are equal using the Kruskal-Wallis test. The p-value of this hypothesis is less than 5$\%$, so we rejected it. 
 \par
-We also compared all models and PDRs pairwise using the Holm method adjusted Mann-Whitney \textit{U} test \cite{mannwhitneyutest}. Almost all pairwise comparisons produced statistically significant differences, with the adjusted p-value being less than $5\%$. Comparisons that did not produce statistically significant differences are \textbf{MOPNR-SPT} vs. \textbf{MWKR-EET}, \textbf{MOPNR-SPT} vs. \textbf{MWKR-SPT}, and \textbf{MWKR-EET} vs. \textbf{MWKR-SPT}.
+We also compared all models and PDRs pairwise using the Holm-adjusted Mann-Whitney \textit{U} test \cite{mannwhitneyutest}. Almost all pairwise comparisons produced statistically significant differences, with the adjusted p-value being less than $5\%$. Comparisons that did not produce statistically significant differences are \textbf{MOPNR-SPT} vs. \textbf{MWKR-EET}, \textbf{MOPNR-SPT} vs. \textbf{MWKR-SPT}, and \textbf{MWKR-EET} vs. \textbf{MWKR-SPT}.
 
 \subsection{DJSP}
 
-For DJSP, we don't have any upper bound available and can't compute the gap. Therefore, we will compare absolute makespans produced by different models for each size and load factor. Average DJSP makespans with load factor 1 are shown in Table 4.9, with load factor 2 in Table 4.10, and with load factor 4 in Table 4.11. The model with the smallest average makespan is highlighted in bold. We also tested the null hypothesis for each size and load factor that all models are equal using the Holm method adjusted Kruskal-Wallis \textit{U} test. The corresponding p-values are also shown in each table.
+For DJSP, we don't have any upper bound available and can't compute the gap. Therefore, we will compare absolute makespans produced by different models for each size and load factor. Average DJSP makespans with load factor 1 are shown in Table 4.9, with load factor 2 in Table 4.10, and with load factor 4 in Table 4.11. The model with the smallest average makespan is highlighted in bold. We also tested the null hypothesis for each size and load factor that the medians of the performance of all models are equal using the Holm-adjusted Kruskal-Wallis \textit{U} test. The corresponding p-values are also shown in each table.
 
 \begin{table}
-    Table 4.9: Average DJSP makespan with load factor 1\\
+    Table 4.9: Average DJSP makespan with load factor 1; Lowest values are shown in \textbf{bold}\\
     \vspace{1mm}
     \label{table:4.6}
     \footnotesize 
@@ -353,7 +353,7 @@ For DJSP, we don't have any upper bound available and can't compute the gap. The
 \end{table}
     
 \begin{table}
-    Table 4.10: Average DJSP makespan with load factor 2\\
+    Table 4.10: Average DJSP makespan with load factor 2; Lowest values are shown in \textbf{bold}\\
     \vspace{1mm}
     \label{table:4.7}
     \footnotesize 
@@ -385,7 +385,7 @@ For DJSP, we don't have any upper bound available and can't compute the gap. The
 \end{table}
     
 \begin{table}
-    Table 4.11: Average DJSP makespan with load factor 4\\
+    Table 4.11: Average DJSP makespan with load factor 4; Lowest values are shown in \textbf{bold}\\
     \vspace{1mm}
     \label{table:4.8}
     \footnotesize 
@@ -416,44 +416,44 @@ For DJSP, we don't have any upper bound available and can't compute the gap. The
     \end{tabular}
 \end{table}
     
-We also compared all models and PDRs pairwise using the Holm method adjusted Mann-Whitney \textit{U} test \cite{mannwhitneyutest} for each size and load factor. Almost all pairwise comparisons produced statistically significant differences, with the adjusted p-value being less than $5\%$. Comparisons that did not produce statistically significant differences are shown in Table 4.12 with corresponding adjusted p-values.
+We also compared all models and PDRs pairwise using the Holm method adjusted Mann-Whitney \textit{U} test \cite{mannwhitneyutest} for each size and load factor. Almost all pairwise comparisons produced statistically significant differences, with the adjusted p-value being less than $5\%$. Comparisons that did not produce statistically significant differences are \textbf{IEEE-ICCE-RL-JSP} vs. \textbf{Wheatley} for size 10x5 and load factor 1, \textbf{L2D} vs. \textbf{Wheatley} for size 10x5 and load factor 1, \textbf{IEEE-ICCE-RL-JSP} vs. \textbf{Wheatley} for size 10x10 and load factor 1, \textbf{L2D} vs. \textbf{Wheatley} for size 10x10 and load factor 1, \textbf{IEEE-ICCE-RL-JSP} vs. \textbf{Wheatley} for size 15x10 and load factor 1, \textbf{L2D} vs. \textbf{Wheatley} for size 20x5 and load factor 1, \textbf{L2D} vs. \textbf{Wheatley} for size 20x10 and load factor 1, \textbf{IEEE-ICCE-RL-JSP} vs. \textbf{Wheatley} for size 20x15 and load factor 1, \textbf{IEEE-ICCE-RL-JSP} vs. \textbf{Wheatley} for size 30x10 and load factor 1, \textbf{IEEE-ICCE-RL-JSP} vs. \textbf{Wheatley} for size 10x5 and load factor 2, \textbf{IEEE-ICCE-RL-JSP} vs. \textbf{Wheatley} for size 10x10 and load factor 2, \textbf{L2D} vs. \textbf{Wheatley} for size 10x10 and load factor 2, \textbf{IEEE-ICCE-RL-JSP} vs. \textbf{Wheatley} for size 15x5 and load factor 2, \textbf{L2D} vs. \textbf{Wheatley} for size 15x5 and load factor 2, \textbf{L2D} vs. \textbf{Wheatey} for size 20x5 and load factor 2, \textbf{IEEE-ICCE-RL-JSP} vs. \textbf{L2D} for size 20x15 and load factor 2,\textbf{IEEE-ICCE-RL-JSP} vs. \textbf{L2D} for size 20x20 and load factor 2, \textbf{IEEE-ICCE-RL-JSP} vs. \textbf{L2D} for size 30x15 and load factor 2, \textbf{IEEE-ICCE-RL-JSP} vs. \textbf{L2D} for size 30x20 and load factor 2, \textbf{IEEE-ICCE-RL-JSP} vs. \textbf{L2D} for size 40x15 and load factor 2, \textbf{IEEE-ICCE-RL-JSP} vs. \textbf{L2D} for size 40x20 and load factor 2, \textbf{IEEE-ICCE-RL-JSP} vs. \textbf{L2D} for size 50x20 and load factor 2, \textbf{IEEE-ICCE-RL-JSP} vs. \textbf{Wheatley} for size 6x6 and load factor 4, \textbf{L2D} vs. \textbf{Wheatley} for size 6x6 and load factor 4, \textbf{L2D} vs. \textbf{Wheatley} for size 6x6 and load factor 4, \textbf{L2D} vs. \textbf{Wheatley} for size 10x10 and load factor 4, \textbf{IEEE-ICCE-RL-JSP} vs. \textbf{Wheatley} for size 15x5 and load factor 4, \textbf{L2D} vs. \textbf{Wheatley} for size 15x5 and load factor 4, \textbf{L2D} vs. \textbf{Wheatley} for size 20x10 and load factor 4.
 
-\begin{table}
-    Table 4.12: Statistically insignificant DJSP differences\\
-    \vspace{1mm}
-    \label{table:4.9}
-    \begin{tabular}{cccc}
-        \toprule
-        Load factor & Size & Comparison & Adjusted p-value \\
-        \midrule
-        1 & 10x5 & IEEE-ICCE-RL-JSP vs. Wheatley & 64.8$\%$ \\
-        1 & 10x5 & L2D vs. Wheatley & 13.4$\%$ \\
-        1 & 10x10 & IEEE-ICCE-RL-JSP vs. Wheatley & 20.9$\%$ \\
-        1 & 10x10 & L2D vs. Wheatley & 100.0$\%$ \\
-        1 & 15x10 & IEEE-ICCE-RL-JSP vs. Wheatley & 100.0$\%$ \\
-        1 & 20x5 & L2D vs. Wheatley & 100.0$\%$ \\
-        1 & 20x10 & L2D vs. Wheatley & 12.2$\%$ \\
-        1 & 20x15 & IEEE-ICCE-RL-JSP vs. Wheatley & 100.0$\%$ \\
-        1 & 30x10 & IEEE-ICCE-RL-JSP vs. Wheatley & 100.0$\%$ \\\hline
-        2 & 10x5 & IEEE-ICCE-RL-JSP vs. Wheatley & 100.0$\%$ \\
-        2 & 10x10 & IEEE-ICCE-RL-JSP vs. Wheatley & 5.2$\%$ \\
-        2 & 10x10 & L2D vs. Wheatley & 100.0$\%$ \\
-        2 & 15x5 & IEEE-ICCE-RL-JSP vs. Wheatley & 48.2$\%$ \\
-        2 & 15x5 & L2D vs. Wheatley & 67.6$\%$ \\
-        2 & 20x5 & L2D vs. Wheatley & 100.0$\%$ \\
-        2 & 20x15 & IEEE-ICCE-RL-JSP vs. L2D & 100.0$\%$ \\
-        2 & 20x20 & IEEE-ICCE-RL-JSP vs. L2D & 79.8$\%$ \\
-        2 & 30x15 & IEEE-ICCE-RL-JSP vs. L2D & 100.0$\%$ \\
-        2 & 30x20 & IEEE-ICCE-RL-JSP vs. L2D & 100.0$\%$ \\
-        2 & 40x15 & IEEE-ICCE-RL-JSP vs. L2D & 100.0$\%$ \\
-        2 & 40x20 & IEEE-ICCE-RL-JSP vs. L2D & 79.8$\%$ \\
-        2 & 50x20 & IEEE-ICCE-RL-JSP vs. L2D & 27.1$\%$ \\\hline
-        4 & 6x6 & IEEE-ICCE-RL-JSP vs. Wheatley & 5.2$\%$ \\
-        4 & 6x6 & L2D vs. Wheatley & 100.0$\%$ \\
-        4 & 10x10 & L2D vs. Wheatley & 100.0$\%$ \\
-        4 & 15x5 & IEEE-ICCE-RL-JSP vs. Wheatley & 17.6$\%$ \\
-        4 & 15x5 & L2D vs. Wheatley & 100.0$\%$ \\
-        4 & 20x10 & L2D vs. Wheatley & 100.0$\%$ \\
-        \bottomrule
-    \end{tabular}      
-\end{table}
+% \begin{table}
+%     Table 4.12: Statistically insignificant DJSP differences\\
+%     \vspace{1mm}
+%     \label{table:4.9}
+%     \begin{tabular}{cccc}
+%         \toprule
+%         Load factor & Size & Comparison & Adjusted p-value \\
+%         \midrule
+%         1 & 10x5 & IEEE-ICCE-RL-JSP vs. Wheatley & 64.8$\%$ \\
+%         1 & 10x5 & L2D vs. Wheatley & 13.4$\%$ \\
+%         1 & 10x10 & IEEE-ICCE-RL-JSP vs. Wheatley & 20.9$\%$ \\
+%         1 & 10x10 & L2D vs. Wheatley & 100.0$\%$ \\
+%         1 & 15x10 & IEEE-ICCE-RL-JSP vs. Wheatley & 100.0$\%$ \\
+%         1 & 20x5 & L2D vs. Wheatley & 100.0$\%$ \\
+%         1 & 20x10 & L2D vs. Wheatley & 12.2$\%$ \\
+%         1 & 20x15 & IEEE-ICCE-RL-JSP vs. Wheatley & 100.0$\%$ \\
+%         1 & 30x10 & IEEE-ICCE-RL-JSP vs. Wheatley & 100.0$\%$ \\\hline
+%         2 & 10x5 & IEEE-ICCE-RL-JSP vs. Wheatley & 100.0$\%$ \\
+%         2 & 10x10 & IEEE-ICCE-RL-JSP vs. Wheatley & 5.2$\%$ \\
+%         2 & 10x10 & L2D vs. Wheatley & 100.0$\%$ \\
+%         2 & 15x5 & IEEE-ICCE-RL-JSP vs. Wheatley & 48.2$\%$ \\
+%         2 & 15x5 & L2D vs. Wheatley & 67.6$\%$ \\
+%         2 & 20x5 & L2D vs. Wheatley & 100.0$\%$ \\
+%         2 & 20x15 & IEEE-ICCE-RL-JSP vs. L2D & 100.0$\%$ \\
+%         2 & 20x20 & IEEE-ICCE-RL-JSP vs. L2D & 79.8$\%$ \\
+%         2 & 30x15 & IEEE-ICCE-RL-JSP vs. L2D & 100.0$\%$ \\
+%         2 & 30x20 & IEEE-ICCE-RL-JSP vs. L2D & 100.0$\%$ \\
+%         2 & 40x15 & IEEE-ICCE-RL-JSP vs. L2D & 100.0$\%$ \\
+%         2 & 40x20 & IEEE-ICCE-RL-JSP vs. L2D & 79.8$\%$ \\
+%         2 & 50x20 & IEEE-ICCE-RL-JSP vs. L2D & 27.1$\%$ \\\hline
+%         4 & 6x6 & IEEE-ICCE-RL-JSP vs. Wheatley & 5.2$\%$ \\
+%         4 & 6x6 & L2D vs. Wheatley & 100.0$\%$ \\
+%         4 & 10x10 & L2D vs. Wheatley & 100.0$\%$ \\
+%         4 & 15x5 & IEEE-ICCE-RL-JSP vs. Wheatley & 17.6$\%$ \\
+%         4 & 15x5 & L2D vs. Wheatley & 100.0$\%$ \\
+%         4 & 20x10 & L2D vs. Wheatley & 100.0$\%$ \\
+%         \bottomrule
+%     \end{tabular}      
+% \end{table}
