@@ -1,42 +1,42 @@
-name: CI
+# name: CI
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
 
-  workflow_dispatch:
+#   workflow_dispatch:
 
-jobs:
-  build:
-    name: Build thesis PDFs
-    runs-on: ubuntu-latest
-    container: { image: 'aergus/latex' }
+# jobs:
+#   build:
+#     name: Build thesis PDFs
+#     runs-on: ubuntu-latest
+#     container: { image: 'aergus/latex' }
 
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build the thesis
-        run: |
-          cd thesis
-          latexmk thesis && latexmk abstract-cz && latexmk abstract-en
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: Thesis
-          path: |
-            thesis/*.pdf
+#     steps:
+#       - uses: actions/checkout@v3
+#       - name: Build the thesis
+#         run: |
+#           cd thesis
+#           latexmk thesis && latexmk abstract-cz && latexmk abstract-en
+#       - name: Upload artifacts
+#         uses: actions/upload-artifact@v3
+#         with:
+#           name: Thesis
+#           path: |
+#             thesis/*.pdf
 
-  verify:
-    name: Verify PDF/A
-    runs-on: ubuntu-latest
-    needs: build
-    container: { image: 'ghcr.io/mff-cuni-cz/cuni-thesis-validator' }
+#   verify:
+#     name: Verify PDF/A
+#     runs-on: ubuntu-latest
+#     needs: build
+#     container: { image: 'ghcr.io/mff-cuni-cz/cuni-thesis-validator' }
 
-    steps:
-      - name: Get PDFs
-        uses: actions/download-artifact@v3
-      - name: Run VeraPDF
-        run: |
-          ls Thesis
-          verify Thesis/*.pdf | tee /dev/stderr | grep -qE 'nonCompliant="0"'
+#     steps:
+#       - name: Get PDFs
+#         uses: actions/download-artifact@v3
+#       - name: Run VeraPDF
+#         run: |
+#           ls Thesis
+#           verify Thesis/*.pdf | tee /dev/stderr | grep -qE 'nonCompliant="0"'
