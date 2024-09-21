@@ -8,7 +8,7 @@
 
 ```
 root/
-├── benchmaks/        # Benchmarks used for testing the models
+├── benchmarks/        # Benchmarks used for testing the models
 │   ├── jssp/         # Benchmarks for Job-Shop Scheduling (JSSP)
 │   └── fjsp/         # Benchmarks for Flexible Job-Shop Scheduling (FJSP)
 ├── data/             # Data produced by testing the models on the benchmarks
@@ -19,6 +19,7 @@ root/
 │       ├── jssp/     # PDRs for JSSP used from the model IEEE-ICCE-RL-JSP 
 │       └── jssp/     # PDRs for FJSP used from the model End-to-end-DRL-for-FJSP
 │   └── <model>/      # Each folder is named after the model in the section ## Compared models below
+├── thesis/           # Diploma thesis in LaTeX
 └── literature.md     # Relevant literature.md
 ```
 
