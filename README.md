@@ -18,7 +18,6 @@ root/
 │   ├── baseline/     # Priority Dispatching Rules (PDRs) used as a baselines for the experimental comparison
 │       ├── jssp/     # PDRs for JSSP used from the model IEEE-ICCE-RL-JSP 
 │       └── jssp/     # PDRs for FJSP used from the model End-to-end-DRL-for-FJSP
-│   ├── baseline/     # Priority Dispatching Rules used as a baselines for the experimental comparison
 │   └── <model>/      # Each folder is named after the model in the section ## Compared models below
 └── literature.md     # Relevant literature.md
 ```
