@@ -22,6 +22,15 @@ root/
 └── literature.md     # Relevant literature.md
 ```
 
+## Run the experiments yourself
+
+To run the experiments yourself, follow this steps:
+- 1. Go to `/models/<model>/repo`
+- 2. Run the script `experiment_{dynamic|static}_{jssp|fjsp}_<model>.py`
+    - it's possible that if the file is not found, it is in some subdirectory of the `repo` directory
+    - to setup dependencies, I used **poetry** or regular pip `requirements.txt` for some models
+        - unfortunately, some models do not have dependencies, because it was really hard to set them up and then I forgot to save them after the experiments :(
+
 ## Compared Models
 
 ### [Wheatley](models/Wheatley/)
@@ -108,5 +117,3 @@ Description of FJSP instances is available at [DataSetExplanation.txt](benchmark
 - [Instances for the general FJSSP with total flexibility by Kacem et al.](benchmarks/fjsp/5_Kacem/)
 
 - [FJSSP-instances for Mathematical Programming by Fattahi et al.](benchmarks/fjsp/6_Fattahi/)
-
-## [Relevant literature](/literature.md)
