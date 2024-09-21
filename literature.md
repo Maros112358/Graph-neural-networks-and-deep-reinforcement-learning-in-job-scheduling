@@ -51,3 +51,17 @@
 ## [Masters Thesis - Devloping the scheduler for the standard JSSP using GNN based RL.](https://github.com/sachin301195/Thesis/tree/main)
 
 ## [Implementations of combinatorial optimization ML papers](https://github.com/valeman/awesome-ml4co/blob/841a4f24c893bf45e83147414548763b22e54685/data/papers.csv#L166)
+
+## Interesting sources 
+
+### [Masters Thesis - Devloping the scheduler for the standard JSSP using GNN based RL.](https://github.com/sachin301195/Thesis/tree/main)
+
+### [RL-Scheduling](https://github.com/hliangzhao/RL-Scheduling)
+
+- someone tried to implement the algorithm Decima, published in SIGCOMM '19 (https://web.mit.edu/decima/). 
+- repository almost 3 years without activity
+
+### [DRL-for-Job-Shop-Scheduling](https://github.com/hexiao5886/DRL-for-Job-Shop-Scheduling/tree/master)
+
+- repository doing similar research as this thesis, may be useful
+- last activity during May

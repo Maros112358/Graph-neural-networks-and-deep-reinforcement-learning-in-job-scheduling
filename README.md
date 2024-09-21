@@ -1,8 +1,29 @@
-# [Diploma thesis](https://dspace.cuni.cz/handle/20.500.11956/190558)
+# Graph Neural Networks and Deep Reinforcement Learning in Job Scheduling
 
-# [diplomka68.html](https://www.cs.cas.cz/~martin/diplomka68.html)
+- diploma thesis download: https://dspace.cuni.cz/handle/20.500.11956/190558
+- diploma thesis assignment: https://www.cs.cas.cz/~martin/diplomka68.html
 
-## Models
+
+## Repository structure
+
+```
+root/
+├── benchmaks/        # Benchmarks used for testing the models
+│   ├── jssp/         # Benchmarks for Job-Shop Scheduling (JSSP)
+│   └── fjsp/         # Benchmarks for Flexible Job-Shop Scheduling (FJSP)
+├── data/             # Data produced by testing the models on the benchmarks
+│   ├── scripts/      # Scripts used for analysing the data (very messy, I do not advise reusing it)
+│   └── experiment_{dynamic|static}_{jssp|fjsp}_<model>.csv      # Experimental data from the testing of <model> on dynamic|static version of jssp|fjsp 
+├── models/           # Tested models
+│   ├── baseline/     # Priority Dispatching Rules (PDRs) used as a baselines for the experimental comparison
+│       ├── jssp/     # PDRs for JSSP used from the model IEEE-ICCE-RL-JSP 
+│       └── jssp/     # PDRs for FJSP used from the model End-to-end-DRL-for-FJSP
+│   ├── baseline/     # Priority Dispatching Rules used as a baselines for the experimental comparison
+│   └── <model>/      # Each folder is named after the model in the section ## Compared models below
+└── literature.md     # Relevant literature.md
+```
+
+## Compared Models
 
 ### [Wheatley](models/Wheatley/)
 
@@ -51,7 +72,7 @@
 
 ## Benchmarks
 
-### [JSSP](benchmarks/jssp/)
+### JSSP
 
 Description of JSSP instances is available at http://jobshop.jjvh.nl/explanation.php
 
@@ -71,7 +92,7 @@ Description of JSSP instances is available at http://jobshop.jjvh.nl/explanation
 
 - [Yamada and Nakano](benchmarks/jssp/yn_instances/)
 
-### [FJSP](benchmarks/fjsp/)
+### FJSP
 
 Description of FJSP instances is available at [DataSetExplanation.txt](benchmarks/fjsp/DataSetExplanation.txt)
 
@@ -89,16 +110,4 @@ Description of FJSP instances is available at [DataSetExplanation.txt](benchmark
 
 - [FJSSP-instances for Mathematical Programming by Fattahi et al.](benchmarks/fjsp/6_Fattahi/)
 
-## Interesting sources 
-
-### [Masters Thesis - Devloping the scheduler for the standard JSSP using GNN based RL.](https://github.com/sachin301195/Thesis/tree/main)
-
-### [RL-Scheduling](https://github.com/hliangzhao/RL-Scheduling)
-
-- someone tried to implement the algorithm Decima, published in SIGCOMM '19 (https://web.mit.edu/decima/). 
-- repository almost 3 years without activity
-
-### [DRL-for-Job-Shop-Scheduling](https://github.com/hexiao5886/DRL-for-Job-Shop-Scheduling/tree/master)
-
-- repository doing similar research as this thesis, may be useful
-- last activity during May
+## [Relevant literature](/literature.md)
