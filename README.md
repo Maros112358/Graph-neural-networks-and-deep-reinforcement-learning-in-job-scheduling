@@ -1,3 +1,5 @@
+# [Diploma thesis](https://dspace.cuni.cz/handle/20.500.11956/190558)
+
 # [diplomka68.html](https://www.cs.cas.cz/~martin/diplomka68.html)
 
 ## Models
